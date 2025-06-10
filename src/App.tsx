@@ -7,6 +7,7 @@ import StudentModal from './components/Students/StudentModal';
 import FacultyList from './components/Faculty/FacultyList';
 import FacultyModal from './components/Faculty/FacultyModal';
 import CourseList from './components/Courses/CourseList';
+import DepartmentList from './components/Departments/DepartmentList';
 import { Student, Faculty, Course } from './types';
 
 function App() {
@@ -80,6 +81,7 @@ function App() {
       case 'students': return 'Students';
       case 'faculty': return 'Faculty';
       case 'courses': return 'Courses';
+      case 'departments': return 'Departments';
       case 'schedule': return 'Schedule';
       case 'attendance': return 'Attendance';
       case 'reports': return 'Reports';
@@ -95,6 +97,7 @@ function App() {
       case 'students': return 'Manage student records and information';
       case 'faculty': return 'Manage faculty members and their details';
       case 'courses': return 'Manage course offerings and schedules';
+      case 'departments': return 'Manage academic departments and curriculum';
       case 'schedule': return 'View and manage class schedules';
       case 'attendance': return 'Track and manage student attendance';
       case 'reports': return 'Generate and view various reports';
@@ -132,6 +135,8 @@ function App() {
             onAddCourse={handleAddCourse}
           />
         );
+      case 'departments':
+        return <DepartmentList />;
       case 'schedule':
         return (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">

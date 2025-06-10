@@ -1,4 +1,4 @@
-import { Student, Faculty, Course } from '../types';
+import { Student, Faculty, Course, Department, Subject } from '../types';
 
 export const mockStudents: Student[] = [
   {
@@ -375,3 +375,335 @@ export const mockCourses: Course[] = [
     enrolledStudents: 28
   }
 ];
+
+export const mockDepartments: Department[] = [
+  {
+    id: '1',
+    name: 'Computer Science',
+    code: 'CS',
+    description: 'Department of Computer Science and Engineering focusing on software development, algorithms, and emerging technologies.',
+    head: 'Dr. Sarah Johnson',
+    establishedYear: 1995,
+    totalStudents: 245,
+    totalFaculty: 18,
+    totalCourses: 42,
+    building: 'Technology Building A',
+    contactEmail: 'cs@college.edu',
+    contactPhone: '+1-555-0301',
+    status: 'Active',
+    subjects: [
+      {
+        id: 'cs1',
+        name: 'Programming Fundamentals',
+        code: 'CS101',
+        credits: 4,
+        semester: 1,
+        type: 'Core',
+        description: 'Introduction to programming concepts and problem-solving techniques',
+        prerequisites: [],
+        status: 'Active'
+      },
+      {
+        id: 'cs2',
+        name: 'Data Structures',
+        code: 'CS201',
+        credits: 4,
+        semester: 2,
+        type: 'Core',
+        description: 'Fundamental data structures and their applications',
+        prerequisites: ['CS101'],
+        status: 'Active'
+      },
+      {
+        id: 'cs3',
+        name: 'Algorithms',
+        code: 'CS301',
+        credits: 3,
+        semester: 3,
+        type: 'Core',
+        description: 'Design and analysis of algorithms',
+        prerequisites: ['CS201'],
+        status: 'Active'
+      },
+      {
+        id: 'cs4',
+        name: 'Database Systems',
+        code: 'CS302',
+        credits: 3,
+        semester: 3,
+        type: 'Core',
+        description: 'Database design, implementation, and management',
+        prerequisites: ['CS201'],
+        status: 'Active'
+      },
+      {
+        id: 'cs5',
+        name: 'Machine Learning',
+        code: 'CS501',
+        credits: 3,
+        semester: 5,
+        type: 'Elective',
+        description: 'Introduction to machine learning algorithms and applications',
+        prerequisites: ['CS301', 'MATH201'],
+        status: 'Active'
+      },
+      {
+        id: 'cs6',
+        name: 'Computer Networks',
+        code: 'CS401',
+        credits: 3,
+        semester: 4,
+        type: 'Core',
+        description: 'Network protocols, architecture, and security',
+        prerequisites: ['CS201'],
+        status: 'Active'
+      }
+    ]
+  },
+  {
+    id: '2',
+    name: 'Electrical Engineering',
+    code: 'EE',
+    description: 'Department of Electrical Engineering specializing in electronics, power systems, and telecommunications.',
+    head: 'Dr. Michael Brown',
+    establishedYear: 1987,
+    totalStudents: 189,
+    totalFaculty: 15,
+    totalCourses: 38,
+    building: 'Engineering Complex B',
+    contactEmail: 'ee@college.edu',
+    contactPhone: '+1-555-0302',
+    status: 'Active',
+    subjects: [
+      {
+        id: 'ee1',
+        name: 'Circuit Analysis',
+        code: 'EE101',
+        credits: 4,
+        semester: 1,
+        type: 'Core',
+        description: 'Basic electrical circuit analysis and design',
+        prerequisites: ['MATH101'],
+        status: 'Active'
+      },
+      {
+        id: 'ee2',
+        name: 'Electronics',
+        code: 'EE201',
+        credits: 4,
+        semester: 2,
+        type: 'Core',
+        description: 'Electronic devices and circuit design',
+        prerequisites: ['EE101'],
+        status: 'Active'
+      },
+      {
+        id: 'ee3',
+        name: 'Digital Systems',
+        code: 'EE301',
+        credits: 3,
+        semester: 3,
+        type: 'Core',
+        description: 'Digital logic design and computer architecture',
+        prerequisites: ['EE201'],
+        status: 'Active'
+      },
+      {
+        id: 'ee4',
+        name: 'Power Systems',
+        code: 'EE401',
+        credits: 3,
+        semester: 4,
+        type: 'Core',
+        description: 'Power generation, transmission, and distribution',
+        prerequisites: ['EE201'],
+        status: 'Active'
+      },
+      {
+        id: 'ee5',
+        name: 'Control Systems',
+        code: 'EE402',
+        credits: 3,
+        semester: 4,
+        type: 'Elective',
+        description: 'Automatic control systems design and analysis',
+        prerequisites: ['EE301', 'MATH301'],
+        status: 'Active'
+      }
+    ]
+  },
+  {
+    id: '3',
+    name: 'Mechanical Engineering',
+    code: 'ME',
+    description: 'Department of Mechanical Engineering covering thermodynamics, fluid mechanics, and manufacturing.',
+    head: 'Dr. Emily Davis',
+    establishedYear: 1982,
+    totalStudents: 167,
+    totalFaculty: 12,
+    totalCourses: 35,
+    building: 'Engineering Complex C',
+    contactEmail: 'me@college.edu',
+    contactPhone: '+1-555-0303',
+    status: 'Active',
+    subjects: [
+      {
+        id: 'me1',
+        name: 'Engineering Mechanics',
+        code: 'ME101',
+        credits: 4,
+        semester: 1,
+        type: 'Core',
+        description: 'Statics and dynamics of engineering systems',
+        prerequisites: ['MATH101', 'PHYS101'],
+        status: 'Active'
+      },
+      {
+        id: 'me2',
+        name: 'Thermodynamics',
+        code: 'ME201',
+        credits: 4,
+        semester: 2,
+        type: 'Core',
+        description: 'Principles of thermodynamics and heat transfer',
+        prerequisites: ['ME101'],
+        status: 'Active'
+      },
+      {
+        id: 'me3',
+        name: 'Fluid Mechanics',
+        code: 'ME301',
+        credits: 3,
+        semester: 3,
+        type: 'Core',
+        description: 'Fluid statics, dynamics, and applications',
+        prerequisites: ['ME201'],
+        status: 'Active'
+      },
+      {
+        id: 'me4',
+        name: 'Manufacturing Processes',
+        code: 'ME401',
+        credits: 3,
+        semester: 4,
+        type: 'Core',
+        description: 'Manufacturing techniques and process optimization',
+        prerequisites: ['ME101'],
+        status: 'Active'
+      }
+    ]
+  },
+  {
+    id: '4',
+    name: 'Civil Engineering',
+    code: 'CE',
+    description: 'Department of Civil Engineering focusing on infrastructure, construction, and environmental engineering.',
+    head: 'Dr. Robert Chen',
+    establishedYear: 1978,
+    totalStudents: 134,
+    totalFaculty: 10,
+    totalCourses: 32,
+    building: 'Engineering Complex D',
+    contactEmail: 'ce@college.edu',
+    contactPhone: '+1-555-0304',
+    status: 'Active',
+    subjects: [
+      {
+        id: 'ce1',
+        name: 'Structural Analysis',
+        code: 'CE101',
+        credits: 4,
+        semester: 1,
+        type: 'Core',
+        description: 'Analysis of structural systems and load calculations',
+        prerequisites: ['MATH101', 'PHYS101'],
+        status: 'Active'
+      },
+      {
+        id: 'ce2',
+        name: 'Concrete Technology',
+        code: 'CE201',
+        credits: 3,
+        semester: 2,
+        type: 'Core',
+        description: 'Properties and applications of concrete materials',
+        prerequisites: ['CE101'],
+        status: 'Active'
+      },
+      {
+        id: 'ce3',
+        name: 'Transportation Engineering',
+        code: 'CE301',
+        credits: 3,
+        semester: 3,
+        type: 'Elective',
+        description: 'Design and planning of transportation systems',
+        prerequisites: ['CE101'],
+        status: 'Active'
+      }
+    ]
+  },
+  {
+    id: '5',
+    name: 'Mathematics',
+    code: 'MATH',
+    description: 'Department of Mathematics providing foundational mathematical education and research.',
+    head: 'Dr. Robert Wilson',
+    establishedYear: 1975,
+    totalStudents: 89,
+    totalFaculty: 8,
+    totalCourses: 28,
+    building: 'Science Building A',
+    contactEmail: 'math@college.edu',
+    contactPhone: '+1-555-0305',
+    status: 'Active',
+    subjects: [
+      {
+        id: 'math1',
+        name: 'Calculus I',
+        code: 'MATH101',
+        credits: 4,
+        semester: 1,
+        type: 'Core',
+        description: 'Differential calculus and applications',
+        prerequisites: [],
+        status: 'Active'
+      },
+      {
+        id: 'math2',
+        name: 'Calculus II',
+        code: 'MATH102',
+        credits: 4,
+        semester: 2,
+        type: 'Core',
+        description: 'Integral calculus and series',
+        prerequisites: ['MATH101'],
+        status: 'Active'
+      },
+      {
+        id: 'math3',
+        name: 'Linear Algebra',
+        code: 'MATH201',
+        credits: 3,
+        semester: 3,
+        type: 'Core',
+        description: 'Vector spaces, matrices, and linear transformations',
+        prerequisites: ['MATH102'],
+        status: 'Active'
+      },
+      {
+        id: 'math4',
+        name: 'Discrete Mathematics',
+        code: 'MATH301',
+        credits: 3,
+        semester: 3,
+        type: 'Core',
+        description: 'Logic, sets, combinatorics, and graph theory',
+        prerequisites: ['MATH201'],
+        status: 'Active'
+      }
+    ]
+  }
+];
+
+export const mockSubjects: Subject[] = mockDepartments.flatMap(dept => dept.subjects);

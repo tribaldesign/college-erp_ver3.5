@@ -50,6 +50,35 @@ export interface Course {
   enrolledStudents: number;
 }
 
+export interface Department {
+  id: string;
+  name: string;
+  code: string;
+  description: string;
+  head: string;
+  establishedYear: number;
+  totalStudents: number;
+  totalFaculty: number;
+  totalCourses: number;
+  subjects: Subject[];
+  status: 'Active' | 'Inactive';
+  building: string;
+  contactEmail: string;
+  contactPhone: string;
+}
+
+export interface Subject {
+  id: string;
+  name: string;
+  code: string;
+  credits: number;
+  semester: number;
+  type: 'Core' | 'Elective' | 'Lab' | 'Project';
+  description: string;
+  prerequisites: string[];
+  status: 'Active' | 'Inactive';
+}
+
 export interface Attendance {
   id: string;
   studentId: string;

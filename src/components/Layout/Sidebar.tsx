@@ -8,7 +8,8 @@ import {
   ClipboardCheck, 
   BarChart3, 
   Settings,
-  User
+  User,
+  Building
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -21,6 +22,7 @@ const menuItems = [
   { id: 'students', label: 'Students', icon: Users },
   { id: 'faculty', label: 'Faculty', icon: GraduationCap },
   { id: 'courses', label: 'Courses', icon: BookOpen },
+  { id: 'departments', label: 'Departments', icon: Building },
   { id: 'schedule', label: 'Schedule', icon: Calendar },
   { id: 'attendance', label: 'Attendance', icon: ClipboardCheck },
   { id: 'reports', label: 'Reports', icon: BarChart3 },
