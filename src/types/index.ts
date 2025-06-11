@@ -13,6 +13,25 @@ export interface Student {
   status: 'Active' | 'Inactive' | 'Graduated';
   gpa: number;
   profileImage?: string;
+  // New fields for enhanced profile
+  idNumber: string; // Admin only
+  bloodType?: string;
+  age: number;
+  homeAddress: string;
+  presentAddress: string;
+  country: string;
+  subjectsTaken: string[];
+  facultyMembers: string[];
+  emergencyContact?: {
+    name: string;
+    relationship: string;
+    phone: string;
+  };
+  medicalInfo?: {
+    allergies: string[];
+    medications: string[];
+    conditions: string[];
+  };
 }
 
 export interface Faculty {
@@ -29,6 +48,42 @@ export interface Faculty {
   joiningDate: string;
   status: 'Active' | 'Inactive';
   profileImage?: string;
+  // New fields for enhanced profile
+  idNumber: string; // Admin only
+  bloodType?: string;
+  age: number;
+  dateOfBirth: string;
+  homeAddress: string;
+  presentAddress: string;
+  country: string;
+  emergencyContact?: {
+    name: string;
+    relationship: string;
+    phone: string;
+  };
+  researchInterests?: string[];
+  publications?: {
+    title: string;
+    year: number;
+    journal: string;
+  }[];
+  awards?: {
+    title: string;
+    year: number;
+    organization: string;
+  }[];
+}
+
+export interface UserProfile {
+  id: string;
+  type: 'student' | 'faculty' | 'admin';
+  permissions: {
+    canEditPersonalDetails: boolean;
+    canEditAcademicDetails: boolean;
+    canEditIdNumber: boolean;
+    canViewAllProfiles: boolean;
+    canDeleteProfiles: boolean;
+  };
 }
 
 export interface Course {

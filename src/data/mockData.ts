@@ -14,7 +14,26 @@ export const mockStudents: Student[] = [
     parentContact: '+1-555-0102',
     admissionDate: '2021-08-15',
     status: 'Active',
-    gpa: 3.8
+    gpa: 3.8,
+    // Enhanced profile fields
+    idNumber: 'STU001',
+    bloodType: 'A+',
+    age: 22,
+    homeAddress: '456 Home Street, Hometown, State 54321',
+    presentAddress: '123 College Ave, University City, State 12345',
+    country: 'United States',
+    subjectsTaken: ['Data Structures', 'Algorithms', 'Database Systems', 'Software Engineering', 'Machine Learning'],
+    facultyMembers: ['Dr. Sarah Johnson', 'Dr. Kevin Zhang', 'Dr. Michael Brown'],
+    emergencyContact: {
+      name: 'Mary Johnson',
+      relationship: 'Mother',
+      phone: '+1-555-0102'
+    },
+    medicalInfo: {
+      allergies: ['Peanuts', 'Shellfish'],
+      medications: ['Vitamin D'],
+      conditions: []
+    }
   },
   {
     id: '2',
@@ -29,7 +48,26 @@ export const mockStudents: Student[] = [
     parentContact: '+1-555-0104',
     admissionDate: '2021-08-15',
     status: 'Active',
-    gpa: 3.6
+    gpa: 3.6,
+    // Enhanced profile fields
+    idNumber: 'STU002',
+    bloodType: 'B+',
+    age: 21,
+    homeAddress: '789 Oak Avenue, Hometown, State 54321',
+    presentAddress: '456 Oak Street, University City, State 12345',
+    country: 'United States',
+    subjectsTaken: ['Circuit Analysis', 'Digital Systems', 'Electronics', 'Signal Processing'],
+    facultyMembers: ['Dr. Michael Brown', 'Dr. Emily Davis'],
+    emergencyContact: {
+      name: 'John Smith',
+      relationship: 'Father',
+      phone: '+1-555-0104'
+    },
+    medicalInfo: {
+      allergies: [],
+      medications: [],
+      conditions: ['Asthma']
+    }
   },
   {
     id: '3',
@@ -44,7 +82,26 @@ export const mockStudents: Student[] = [
     parentContact: '+1-555-0106',
     admissionDate: '2020-08-15',
     status: 'Active',
-    gpa: 3.9
+    gpa: 3.9,
+    // Enhanced profile fields
+    idNumber: 'STU003',
+    bloodType: 'O-',
+    age: 23,
+    homeAddress: '321 Pine Street, Hometown, State 54321',
+    presentAddress: '789 Pine Road, University City, State 12345',
+    country: 'United States',
+    subjectsTaken: ['Thermodynamics', 'Fluid Mechanics', 'Heat Transfer', 'Manufacturing Processes'],
+    facultyMembers: ['Dr. Emily Davis', 'Dr. Robert Wilson'],
+    emergencyContact: {
+      name: 'Susan Davis',
+      relationship: 'Mother',
+      phone: '+1-555-0106'
+    },
+    medicalInfo: {
+      allergies: ['Latex'],
+      medications: ['Iron supplements'],
+      conditions: []
+    }
   },
   {
     id: '4',
@@ -59,7 +116,26 @@ export const mockStudents: Student[] = [
     parentContact: '+1-555-0108',
     admissionDate: '2022-08-15',
     status: 'Active',
-    gpa: 3.7
+    gpa: 3.7,
+    // Enhanced profile fields
+    idNumber: 'STU004',
+    bloodType: 'AB+',
+    age: 21,
+    homeAddress: '654 Elm Road, Hometown, State 54321',
+    presentAddress: '321 Elm Street, University City, State 12345',
+    country: 'United States',
+    subjectsTaken: ['Programming Fundamentals', 'Data Structures', 'Discrete Mathematics'],
+    facultyMembers: ['Dr. Sarah Johnson', 'Dr. Robert Wilson'],
+    emergencyContact: {
+      name: 'Robert Wilson Sr.',
+      relationship: 'Father',
+      phone: '+1-555-0108'
+    },
+    medicalInfo: {
+      allergies: [],
+      medications: [],
+      conditions: []
+    }
   },
   {
     id: '5',
@@ -74,7 +150,26 @@ export const mockStudents: Student[] = [
     parentContact: '+1-555-0110',
     admissionDate: '2021-08-15',
     status: 'Active',
-    gpa: 3.5
+    gpa: 3.5,
+    // Enhanced profile fields
+    idNumber: 'STU005',
+    bloodType: 'A-',
+    age: 22,
+    homeAddress: '987 Maple Avenue, Hometown, State 54321',
+    presentAddress: '654 Maple Drive, University City, State 12345',
+    country: 'United States',
+    subjectsTaken: ['Structural Analysis', 'Concrete Technology', 'Surveying', 'Soil Mechanics'],
+    facultyMembers: ['Dr. Robert Chen', 'Dr. Emily Davis'],
+    emergencyContact: {
+      name: 'James Thompson',
+      relationship: 'Father',
+      phone: '+1-555-0110'
+    },
+    medicalInfo: {
+      allergies: ['Dust'],
+      medications: ['Allergy medication'],
+      conditions: ['Allergic rhinitis']
+    }
   },
   {
     id: '6',
@@ -89,7 +184,26 @@ export const mockStudents: Student[] = [
     parentContact: '+1-555-0112',
     admissionDate: '2020-08-15',
     status: 'Active',
-    gpa: 3.4
+    gpa: 3.4,
+    // Enhanced profile fields
+    idNumber: 'STU006',
+    bloodType: 'B-',
+    age: 23,
+    homeAddress: '147 Cedar Street, Hometown, State 54321',
+    presentAddress: '987 Cedar Lane, University City, State 12345',
+    country: 'United States',
+    subjectsTaken: ['Circuit Analysis', 'Digital Systems', 'Power Systems', 'Control Systems'],
+    facultyMembers: ['Dr. Michael Brown', 'Dr. James Taylor'],
+    emergencyContact: {
+      name: 'Linda Miller',
+      relationship: 'Mother',
+      phone: '+1-555-0112'
+    },
+    medicalInfo: {
+      allergies: [],
+      medications: [],
+      conditions: []
+    }
   },
   {
     id: '7',
@@ -104,7 +218,26 @@ export const mockStudents: Student[] = [
     parentContact: '+1-555-0114',
     admissionDate: '2023-08-15',
     status: 'Active',
-    gpa: 3.9
+    gpa: 3.9,
+    // Enhanced profile fields
+    idNumber: 'STU007',
+    bloodType: 'O+',
+    age: 20,
+    homeAddress: '258 Birch Avenue, Hometown, State 54321',
+    presentAddress: '147 Birch Street, University City, State 12345',
+    country: 'United States',
+    subjectsTaken: ['Programming Fundamentals', 'Mathematics I'],
+    facultyMembers: ['Dr. Sarah Johnson', 'Dr. Robert Wilson'],
+    emergencyContact: {
+      name: 'Helen Lee',
+      relationship: 'Mother',
+      phone: '+1-555-0114'
+    },
+    medicalInfo: {
+      allergies: [],
+      medications: [],
+      conditions: []
+    }
   },
   {
     id: '8',
@@ -119,7 +252,26 @@ export const mockStudents: Student[] = [
     parentContact: '+1-555-0116',
     admissionDate: '2021-08-15',
     status: 'Active',
-    gpa: 3.2
+    gpa: 3.2,
+    // Enhanced profile fields
+    idNumber: 'STU008',
+    bloodType: 'A+',
+    age: 22,
+    homeAddress: '369 Willow Street, Hometown, State 54321',
+    presentAddress: '258 Willow Way, University City, State 12345',
+    country: 'United States',
+    subjectsTaken: ['Engineering Mechanics', 'Thermodynamics', 'Materials Science'],
+    facultyMembers: ['Dr. Emily Davis', 'Dr. Robert Wilson'],
+    emergencyContact: {
+      name: 'Patricia Brown',
+      relationship: 'Mother',
+      phone: '+1-555-0116'
+    },
+    medicalInfo: {
+      allergies: ['Penicillin'],
+      medications: [],
+      conditions: []
+    }
   },
   {
     id: '9',
@@ -134,7 +286,26 @@ export const mockStudents: Student[] = [
     parentContact: '+1-555-0118',
     admissionDate: '2022-08-15',
     status: 'Active',
-    gpa: 3.7
+    gpa: 3.7,
+    // Enhanced profile fields
+    idNumber: 'STU009',
+    bloodType: 'B+',
+    age: 22,
+    homeAddress: '741 Spruce Avenue, Hometown, State 54321',
+    presentAddress: '369 Spruce Court, University City, State 12345',
+    country: 'United States',
+    subjectsTaken: ['Chemical Process Principles', 'Organic Chemistry', 'Thermodynamics'],
+    facultyMembers: ['Dr. Maria Rodriguez', 'Dr. Emily Davis'],
+    emergencyContact: {
+      name: 'Carlos Garcia',
+      relationship: 'Father',
+      phone: '+1-555-0118'
+    },
+    medicalInfo: {
+      allergies: [],
+      medications: [],
+      conditions: []
+    }
   },
   {
     id: '10',
@@ -149,7 +320,26 @@ export const mockStudents: Student[] = [
     parentContact: '+1-555-0120',
     admissionDate: '2019-08-15',
     status: 'Graduated',
-    gpa: 3.8
+    gpa: 3.8,
+    // Enhanced profile fields
+    idNumber: 'STU010',
+    bloodType: 'AB-',
+    age: 23,
+    homeAddress: '852 Aspen Street, Hometown, State 54321',
+    presentAddress: '741 Aspen Avenue, University City, State 12345',
+    country: 'United States',
+    subjectsTaken: ['Data Structures', 'Algorithms', 'Software Engineering', 'Machine Learning', 'Capstone Project'],
+    facultyMembers: ['Dr. Sarah Johnson', 'Dr. Kevin Zhang'],
+    emergencyContact: {
+      name: 'Nancy Anderson',
+      relationship: 'Mother',
+      phone: '+1-555-0120'
+    },
+    medicalInfo: {
+      allergies: [],
+      medications: [],
+      conditions: []
+    }
   }
 ];
 
@@ -166,7 +356,29 @@ export const mockFaculty: Faculty[] = [
     experience: 12,
     subjects: ['Data Structures', 'Algorithms', 'Machine Learning'],
     joiningDate: '2012-01-15',
-    status: 'Active'
+    status: 'Active',
+    // Enhanced profile fields
+    idNumber: 'FAC001',
+    bloodType: 'A+',
+    age: 45,
+    dateOfBirth: '1978-05-20',
+    homeAddress: '123 Faculty Lane, University City, State 12345',
+    presentAddress: '123 Faculty Lane, University City, State 12345',
+    country: 'United States',
+    emergencyContact: {
+      name: 'Michael Johnson',
+      relationship: 'Spouse',
+      phone: '+1-555-0301'
+    },
+    researchInterests: ['Machine Learning', 'Data Mining', 'Artificial Intelligence'],
+    publications: [
+      { title: 'Advanced Machine Learning Techniques', year: 2023, journal: 'IEEE Transactions on AI' },
+      { title: 'Data Mining in Educational Systems', year: 2022, journal: 'Journal of Educational Technology' }
+    ],
+    awards: [
+      { title: 'Best Teacher Award', year: 2023, organization: 'University Excellence Committee' },
+      { title: 'Research Excellence Award', year: 2022, organization: 'Computer Science Department' }
+    ]
   },
   {
     id: '2',
@@ -180,7 +392,28 @@ export const mockFaculty: Faculty[] = [
     experience: 8,
     subjects: ['Circuit Analysis', 'Digital Systems', 'Power Electronics'],
     joiningDate: '2016-08-01',
-    status: 'Active'
+    status: 'Active',
+    // Enhanced profile fields
+    idNumber: 'FAC002',
+    bloodType: 'B+',
+    age: 40,
+    dateOfBirth: '1983-11-15',
+    homeAddress: '456 Professor Street, University City, State 12345',
+    presentAddress: '456 Professor Street, University City, State 12345',
+    country: 'United States',
+    emergencyContact: {
+      name: 'Lisa Brown',
+      relationship: 'Spouse',
+      phone: '+1-555-0302'
+    },
+    researchInterests: ['Power Electronics', 'Renewable Energy Systems', 'Smart Grids'],
+    publications: [
+      { title: 'Smart Grid Technologies', year: 2023, journal: 'IEEE Power Systems' },
+      { title: 'Renewable Energy Integration', year: 2022, journal: 'Energy Systems Journal' }
+    ],
+    awards: [
+      { title: 'Outstanding Faculty Award', year: 2022, organization: 'Engineering Department' }
+    ]
   },
   {
     id: '3',
@@ -194,7 +427,30 @@ export const mockFaculty: Faculty[] = [
     experience: 15,
     subjects: ['Thermodynamics', 'Fluid Mechanics', 'Heat Transfer'],
     joiningDate: '2009-01-10',
-    status: 'Active'
+    status: 'Active',
+    // Enhanced profile fields
+    idNumber: 'FAC003',
+    bloodType: 'O+',
+    age: 48,
+    dateOfBirth: '1975-08-30',
+    homeAddress: '789 Academic Drive, University City, State 12345',
+    presentAddress: '789 Academic Drive, University City, State 12345',
+    country: 'United States',
+    emergencyContact: {
+      name: 'David Davis',
+      relationship: 'Spouse',
+      phone: '+1-555-0303'
+    },
+    researchInterests: ['Thermal Systems', 'Energy Efficiency', 'Sustainable Engineering'],
+    publications: [
+      { title: 'Advanced Thermodynamics Applications', year: 2023, journal: 'Mechanical Engineering Review' },
+      { title: 'Energy Efficient Systems Design', year: 2022, journal: 'Energy Engineering' },
+      { title: 'Sustainable Manufacturing Processes', year: 2021, journal: 'Green Technology' }
+    ],
+    awards: [
+      { title: 'Distinguished Professor Award', year: 2023, organization: 'University Board' },
+      { title: 'Research Excellence in Engineering', year: 2021, organization: 'Engineering Society' }
+    ]
   },
   {
     id: '4',
@@ -208,7 +464,28 @@ export const mockFaculty: Faculty[] = [
     experience: 10,
     subjects: ['Calculus', 'Linear Algebra', 'Discrete Mathematics'],
     joiningDate: '2014-03-20',
-    status: 'Active'
+    status: 'Active',
+    // Enhanced profile fields
+    idNumber: 'FAC004',
+    bloodType: 'A-',
+    age: 42,
+    dateOfBirth: '1981-12-10',
+    homeAddress: '321 Scholar Way, University City, State 12345',
+    presentAddress: '321 Scholar Way, University City, State 12345',
+    country: 'United States',
+    emergencyContact: {
+      name: 'Jennifer Wilson',
+      relationship: 'Spouse',
+      phone: '+1-555-0304'
+    },
+    researchInterests: ['Applied Mathematics', 'Numerical Analysis', 'Mathematical Modeling'],
+    publications: [
+      { title: 'Numerical Methods in Engineering', year: 2023, journal: 'Applied Mathematics Quarterly' },
+      { title: 'Mathematical Modeling Techniques', year: 2022, journal: 'Mathematics in Science' }
+    ],
+    awards: [
+      { title: 'Excellence in Teaching Mathematics', year: 2022, organization: 'Mathematics Department' }
+    ]
   },
   {
     id: '5',
@@ -222,7 +499,28 @@ export const mockFaculty: Faculty[] = [
     experience: 6,
     subjects: ['Technical Writing', 'Communication Skills', 'Literature'],
     joiningDate: '2018-07-15',
-    status: 'Active'
+    status: 'Active',
+    // Enhanced profile fields
+    idNumber: 'FAC005',
+    bloodType: 'B-',
+    age: 35,
+    dateOfBirth: '1988-04-25',
+    homeAddress: '654 Literature Lane, University City, State 12345',
+    presentAddress: '654 Literature Lane, University City, State 12345',
+    country: 'United States',
+    emergencyContact: {
+      name: 'Mark Anderson',
+      relationship: 'Spouse',
+      phone: '+1-555-0305'
+    },
+    researchInterests: ['Technical Communication', 'Digital Literacy', 'Academic Writing'],
+    publications: [
+      { title: 'Effective Technical Communication', year: 2023, journal: 'Communication Studies' },
+      { title: 'Digital Age Writing Skills', year: 2022, journal: 'Educational Technology' }
+    ],
+    awards: [
+      { title: 'Innovative Teaching Award', year: 2023, organization: 'English Department' }
+    ]
   },
   {
     id: '6',
@@ -236,7 +534,30 @@ export const mockFaculty: Faculty[] = [
     experience: 18,
     subjects: ['Classical Mechanics', 'Quantum Physics', 'Electromagnetism'],
     joiningDate: '2006-09-01',
-    status: 'Active'
+    status: 'Active',
+    // Enhanced profile fields
+    idNumber: 'FAC006',
+    bloodType: 'AB+',
+    age: 52,
+    dateOfBirth: '1971-07-18',
+    homeAddress: '987 Physics Plaza, University City, State 12345',
+    presentAddress: '987 Physics Plaza, University City, State 12345',
+    country: 'United States',
+    emergencyContact: {
+      name: 'Susan Taylor',
+      relationship: 'Spouse',
+      phone: '+1-555-0306'
+    },
+    researchInterests: ['Quantum Mechanics', 'Theoretical Physics', 'Particle Physics'],
+    publications: [
+      { title: 'Quantum Mechanics in Modern Physics', year: 2023, journal: 'Physical Review' },
+      { title: 'Advanced Electromagnetic Theory', year: 2022, journal: 'Physics Today' },
+      { title: 'Particle Physics Fundamentals', year: 2021, journal: 'Journal of Physics' }
+    ],
+    awards: [
+      { title: 'Lifetime Achievement in Physics', year: 2023, organization: 'Physics Society' },
+      { title: 'Distinguished Researcher Award', year: 2020, organization: 'University Research Committee' }
+    ]
   },
   {
     id: '7',
@@ -250,7 +571,28 @@ export const mockFaculty: Faculty[] = [
     experience: 9,
     subjects: ['Organic Chemistry', 'Analytical Chemistry', 'Biochemistry'],
     joiningDate: '2015-01-12',
-    status: 'Active'
+    status: 'Active',
+    // Enhanced profile fields
+    idNumber: 'FAC007',
+    bloodType: 'O-',
+    age: 41,
+    dateOfBirth: '1982-09-05',
+    homeAddress: '147 Chemistry Circle, University City, State 12345',
+    presentAddress: '147 Chemistry Circle, University City, State 12345',
+    country: 'United States',
+    emergencyContact: {
+      name: 'Carlos Rodriguez',
+      relationship: 'Spouse',
+      phone: '+1-555-0307'
+    },
+    researchInterests: ['Organic Synthesis', 'Green Chemistry', 'Pharmaceutical Chemistry'],
+    publications: [
+      { title: 'Green Chemistry Applications', year: 2023, journal: 'Green Chemistry Letters' },
+      { title: 'Organic Synthesis Methods', year: 2022, journal: 'Organic Chemistry Review' }
+    ],
+    awards: [
+      { title: 'Green Chemistry Innovation Award', year: 2022, organization: 'Chemistry Department' }
+    ]
   },
   {
     id: '8',
@@ -264,7 +606,28 @@ export const mockFaculty: Faculty[] = [
     experience: 4,
     subjects: ['Artificial Intelligence', 'Neural Networks', 'Computer Vision'],
     joiningDate: '2020-08-25',
-    status: 'Active'
+    status: 'Active',
+    // Enhanced profile fields
+    idNumber: 'FAC008',
+    bloodType: 'A+',
+    age: 33,
+    dateOfBirth: '1990-03-12',
+    homeAddress: '258 Innovation Street, University City, State 12345',
+    presentAddress: '258 Innovation Street, University City, State 12345',
+    country: 'United States',
+    emergencyContact: {
+      name: 'Amy Zhang',
+      relationship: 'Spouse',
+      phone: '+1-555-0308'
+    },
+    researchInterests: ['Deep Learning', 'Computer Vision', 'Natural Language Processing'],
+    publications: [
+      { title: 'Deep Learning in Computer Vision', year: 2023, journal: 'AI Research Quarterly' },
+      { title: 'Neural Network Architectures', year: 2022, journal: 'Machine Learning Today' }
+    ],
+    awards: [
+      { title: 'Young Researcher Award', year: 2023, organization: 'AI Research Society' }
+    ]
   }
 ];
 

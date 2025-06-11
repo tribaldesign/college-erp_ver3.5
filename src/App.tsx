@@ -8,6 +8,7 @@ import FacultyList from './components/Faculty/FacultyList';
 import FacultyModal from './components/Faculty/FacultyModal';
 import CourseList from './components/Courses/CourseList';
 import DepartmentList from './components/Departments/DepartmentList';
+import ProfileDashboard from './components/Profile/ProfileDashboard';
 import { Student, Faculty, Course } from './types';
 
 function App() {
@@ -137,6 +138,8 @@ function App() {
         );
       case 'departments':
         return <DepartmentList />;
+      case 'profile':
+        return <ProfileDashboard />;
       case 'schedule':
         return (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
@@ -156,13 +159,6 @@ function App() {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Reports & Analytics</h3>
             <p className="text-gray-600">Reporting features coming soon...</p>
-          </div>
-        );
-      case 'profile':
-        return (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Profile Management</h3>
-            <p className="text-gray-600">Profile management features coming soon...</p>
           </div>
         );
       case 'settings':
