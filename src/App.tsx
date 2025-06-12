@@ -9,6 +9,10 @@ import FacultyModal from './components/Faculty/FacultyModal';
 import CourseList from './components/Courses/CourseList';
 import DepartmentList from './components/Departments/DepartmentList';
 import ProfileDashboard from './components/Profile/ProfileDashboard';
+import ScheduleDashboard from './components/Schedule/ScheduleDashboard';
+import AttendanceDashboard from './components/Attendance/AttendanceDashboard';
+import ReportsDashboard from './components/Reports/ReportsDashboard';
+import SettingsDashboard from './components/Settings/SettingsDashboard';
 import { Student, Faculty, Course } from './types';
 
 function App() {
@@ -83,9 +87,9 @@ function App() {
       case 'faculty': return 'Faculty';
       case 'courses': return 'Courses';
       case 'departments': return 'Departments';
-      case 'schedule': return 'Schedule';
-      case 'attendance': return 'Attendance';
-      case 'reports': return 'Reports';
+      case 'schedule': return 'Schedule & Calendar';
+      case 'attendance': return 'Attendance Management';
+      case 'reports': return 'Reports & Analytics';
       case 'profile': return 'Profile';
       case 'settings': return 'Settings';
       default: return 'Dashboard';
@@ -99,7 +103,7 @@ function App() {
       case 'faculty': return 'Manage faculty members and their details';
       case 'courses': return 'Manage course offerings and schedules';
       case 'departments': return 'Manage academic departments and curriculum';
-      case 'schedule': return 'View and manage class schedules';
+      case 'schedule': return 'Manage class schedules and academic calendar';
       case 'attendance': return 'Track and manage student attendance';
       case 'reports': return 'Generate and view various reports';
       case 'profile': return 'Manage your profile information';
@@ -138,36 +142,16 @@ function App() {
         );
       case 'departments':
         return <DepartmentList />;
+      case 'schedule':
+        return <ScheduleDashboard />;
+      case 'attendance':
+        return <AttendanceDashboard />;
+      case 'reports':
+        return <ReportsDashboard />;
       case 'profile':
         return <ProfileDashboard />;
-      case 'schedule':
-        return (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Schedule Management</h3>
-            <p className="text-gray-600">Schedule management features coming soon...</p>
-          </div>
-        );
-      case 'attendance':
-        return (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Attendance Tracking</h3>
-            <p className="text-gray-600">Attendance management features coming soon...</p>
-          </div>
-        );
-      case 'reports':
-        return (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Reports & Analytics</h3>
-            <p className="text-gray-600">Reporting features coming soon...</p>
-          </div>
-        );
       case 'settings':
-        return (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">System Settings</h3>
-            <p className="text-gray-600">Settings panel coming soon...</p>
-          </div>
-        );
+        return <SettingsDashboard />;
       default:
         return <Dashboard />;
     }
