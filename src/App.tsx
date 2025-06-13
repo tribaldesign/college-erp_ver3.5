@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AuthWrapper from './components/Auth/AuthWrapper';
 import Sidebar from './components/Layout/Sidebar';
 import Header from './components/Layout/Header';
 import Dashboard from './components/Dashboard/Dashboard';
@@ -16,6 +17,7 @@ import SettingsDashboard from './components/Settings/SettingsDashboard';
 import { Student, Faculty, Course } from './types';
 
 function App() {
+  const [user, setUser] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [selectedFaculty, setSelectedFaculty] = useState<Faculty | null>(null);
@@ -25,6 +27,11 @@ function App() {
   const [isStudentModalOpen, setIsStudentModalOpen] = useState(false);
   const [isFacultyModalOpen, setIsFacultyModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // If user is not authenticated, show auth pages
+  if (!user?.isAuthenticated) {
+    return <AuthWrapper onAuthenticated={setUser} />;
+  }
 
   const handleViewStudent = (student: Student) => {
     setSelectedStudent(student);
@@ -64,19 +71,16 @@ function App() {
 
   const handleViewCourse = (course: Course) => {
     setSelectedCourse(course);
-    // For now, just log - you can implement a course modal similar to student modal
     console.log('View course:', course);
   };
 
   const handleEditCourse = (course: Course) => {
     setSelectedCourse(course);
-    // For now, just log - you can implement a course modal similar to student modal
     console.log('Edit course:', course);
   };
 
   const handleAddCourse = () => {
     setSelectedCourse(null);
-    // For now, just log - you can implement a course modal similar to student modal
     console.log('Add course');
   };
 
