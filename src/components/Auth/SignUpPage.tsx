@@ -89,7 +89,7 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
                   <img src="/src/logo.png" alt="College Logo" className="h-13 w-auto object-contain" />
                 </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">EduManage</h1>
+                <h1 className="text-3xl font-bold text-gray-900">St. Dominic's College</h1>
                 <p className="text-gray-600">College ERP System</p>
               </div>
             </div>
