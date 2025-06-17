@@ -101,7 +101,7 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
                   <GraduationCap className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">EduManage</h1>
+                  <h1 className="text-2xl font-bold text-gray-900">St. Dominc's College</h1>
                   <p className="text-sm text-gray-600">College ERP System</p>
                 </div>
               </div>
