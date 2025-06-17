@@ -94,11 +94,11 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
               </div>
             </div>
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Join Our
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600"> Academic Community</span>
+              Access your
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600"> Academic Profile</span>
             </h2>
             <p className="text-xl text-gray-600 mb-8">
-              Create your account and become part of a thriving educational ecosystem designed for modern learning.
+              Creating your account here and please note that the profile shall be previewed by the admin upon which you username and password shall be assigned to you for login.
             </p>
           </div>
 
