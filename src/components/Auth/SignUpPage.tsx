@@ -85,9 +85,9 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
         <div className="hidden lg:block space-y-8">
           <div className="text-center lg:text-left">
             <div className="flex items-center justify-center lg:justify-start space-x-3 mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-green-600 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
-                <GraduationCap className="h-8 w-8 text-white" />
-              </div>
+               <div>
+                  <img src="/src/logo.png" alt="College Logo" className="h-13 w-auto object-contain" />
+                </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">EduManage</h1>
                 <p className="text-gray-600">College ERP System</p>
