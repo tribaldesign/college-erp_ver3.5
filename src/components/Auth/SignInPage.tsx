@@ -52,7 +52,7 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600"> Digital Campus</span>
             </h2>
             <p className="text-xl text-gray-600 mb-8">
-              Access your academic world with a single sign-in. Manage courses, track progress, and stay connected with your educational journey.
+              Access your academic world with a single sign-in. Manage courses, track progress, and stay connected with your education.
             </p>
           </div>
 
