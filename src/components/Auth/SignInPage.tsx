@@ -97,8 +97,8 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
             {/* Mobile Header */}
             <div className="lg:hidden text-center mb-8">
               <div className="flex items-center justify-center space-x-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
-                  <GraduationCap className="h-6 w-6 text-white" />
+                <div>
+                  <img src="/src/logo.png" alt="College Logo" className="h-13 w-auto object-contain" />
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">St. Dominc's College</h1>
