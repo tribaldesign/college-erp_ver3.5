@@ -40,7 +40,7 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
           <div className="text-center lg:text-left">
             <div className="flex items-center justify-center lg:justify-start space-x-3 mb-6">
                 <div>
-                  <img src="/src/logo.png" alt="College Logo" className="h-13 w-auto object-contain" />
+                  <img src="/src/logo.png" alt="College Logo" className="h-12 w-auto object-contain" />
                 </div>
             <div>
                 <h1 className="text-3xl font-bold text-gray-900">St. Domini's College</h1>
