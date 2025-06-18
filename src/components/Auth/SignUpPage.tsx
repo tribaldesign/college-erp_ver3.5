@@ -80,8 +80,8 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
           <div className="text-center lg:text-left">
             <div className="flex items-center justify-center lg:justify-start space-x-3 mb-6">
               <div className="w-12 h-12 rounded-lg overflow-hidden flex items-center justify-center">
-                <img 
-                  src="https://i.ibb.co/1GyxzVc0/logo.png" 
+                <img
+                  img src="https://i.ibb.co/1GyxzVc0/logo.png" alt="logo" border="0"
                   alt="St. Dominic's College Logo" 
                   className="w-full h-full object-contain"
                   onError={(e) => {
