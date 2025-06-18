@@ -27,7 +27,8 @@ import {
   Bookmark,
   UserCheck,
   BookMarked,
-  ArrowUpDown
+  ArrowUpDown,
+  X
 } from 'lucide-react';
 
 interface Book {
