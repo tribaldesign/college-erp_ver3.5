@@ -231,7 +231,7 @@ function App() {
       case 'reports': return 'Generate and view various reports';
       case 'profile': return 'Manage your profile information';
       case 'settings': return 'System settings and configuration';
-      default: return 'Overview of your college management system';
+      default: return 'Overview of your college management';
     }
   };
 
