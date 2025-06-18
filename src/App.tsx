@@ -33,6 +33,14 @@ function App() {
     return <AuthWrapper onAuthenticated={setUser} />;
   }
 
+  const handleLogout = () => {
+    setUser(null);
+    setActiveTab('dashboard');
+    // Clear any stored session data
+    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
+  };
+
   const handleViewStudent = (student: Student) => {
     setSelectedStudent(student);
     setStudentModalMode('view');
@@ -165,7 +173,7 @@ function App() {
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
       <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out`}>
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} user={user} />
       </div>
 
       {/* Mobile overlay */}
@@ -182,6 +190,8 @@ function App() {
           title={getPageTitle()} 
           subtitle={getPageSubtitle()}
           onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          user={user}
+          onLogout={handleLogout}
         />
         
         <main className="flex-1 overflow-y-auto p-6">

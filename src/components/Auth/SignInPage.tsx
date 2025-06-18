@@ -1,26 +1,35 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock, GraduationCap, Users, BookOpen, Shield } from 'lucide-react';
+import { Eye, EyeOff, User, Lock, GraduationCap, Users, BookOpen, Shield } from 'lucide-react';
 
 interface SignInPageProps {
-  onSignIn: (email: string, password: string, userType: string) => void;
+  onSignIn: (usernameOrEmail: string, password: string, userType: string) => void;
   onSwitchToSignUp: () => void;
 }
 
 export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPageProps) {
-  const [email, setEmail] = useState('');
+  const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
   const [userType, setUserType] = useState('student');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
     
     // Simulate API call
     setTimeout(() => {
-      onSignIn(email, password, userType);
+      // Check for admin credentials
+      if (userType === 'admin' && usernameOrEmail === 'admin' && password === 'Tribalde@#53') {
+        onSignIn(usernameOrEmail, password, userType);
+      } else if (userType !== 'admin' && (usernameOrEmail === 'student@college.edu' || usernameOrEmail === 'faculty@college.edu' || usernameOrEmail === 'staff@college.edu') && password === 'demo123') {
+        onSignIn(usernameOrEmail, password, userType);
+      } else {
+        setError('Invalid username/email or password. Please check your credentials.');
+      }
       setIsLoading(false);
     }, 1500);
   };
@@ -43,7 +52,7 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
                   <img src="/src/logo.png" alt="College Logo" className="h-13 w-auto object-contain" />
                 </div>
             <div>
-                <h1 className="text-3xl font-bold text-gray-900">St. Domini's College</h1>
+                <h1 className="text-3xl font-bold text-gray-900">St. Dominic's College</h1>
                 <p className="text-gray-600">College ERP System</p>
               </div>
             </div>
@@ -101,7 +110,7 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
                   <img src="/src/logo.png" alt="College Logo" className="h-13 w-auto object-contain" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">St. Dominc's College</h1>
+                  <h1 className="text-2xl font-bold text-gray-900">St. Dominic's College</h1>
                   <p className="text-sm text-gray-600">College ERP System</p>
                 </div>
               </div>
@@ -111,6 +120,13 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Sign In</h2>
               <p className="text-gray-600">Welcome back! Please sign in to your account</p>
             </div>
+
+            {/* Error Message */}
+            {error && (
+              <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-600">{error}</p>
+              </div>
+            )}
 
             {/* User Type Selection */}
             <div className="mb-6">
@@ -138,19 +154,19 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Email Field */}
+              {/* Username/Email Field */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address
+                  {userType === 'admin' ? 'Username' : 'Email Address'}
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    type={userType === 'admin' ? 'text' : 'email'}
+                    value={usernameOrEmail}
+                    onChange={(e) => setUsernameOrEmail(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors bg-white/50 backdrop-blur-sm"
-                    placeholder="Enter your email"
+                    placeholder={userType === 'admin' ? 'Enter your username' : 'Enter your email'}
                     required
                   />
                 </div>
@@ -192,12 +208,14 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
                   />
                   <span className="ml-2 text-sm text-gray-600">Remember me</span>
                 </label>
-                <button
-                  type="button"
-                  className="text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors"
-                >
-                  Forgot password?
-                </button>
+                {userType !== 'admin' && (
+                  <button
+                    type="button"
+                    className="text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                  >
+                    Forgot password?
+                  </button>
+                )}
               </div>
 
               {/* Sign In Button */}
@@ -217,33 +235,38 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
               </button>
             </form>
 
-            {/* Sign Up Link */}
-            <div className="mt-8 text-center">
-              <p className="text-gray-600">
-                Don't have an account?{' '}
-                <button
-                  onClick={onSwitchToSignUp}
-                  className="text-blue-600 hover:text-blue-800 font-semibold transition-colors"
-                >
-                  Sign up here
-                </button>
-              </p>
-            </div>
+            {/* Sign Up Link - Only for non-admin users */}
+            {userType !== 'admin' && (
+              <div className="mt-8 text-center">
+                <p className="text-gray-600">
+                  Don't have an account?{' '}
+                  <button
+                    onClick={onSwitchToSignUp}
+                    className="text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+                  >
+                    Request access from admin
+                  </button>
+                </p>
+              </div>
+            )}
 
             {/* Demo Credentials */}
             <div className="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
               <p className="text-xs text-gray-500 text-center mb-2">Demo Credentials:</p>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div>
-                  <p className="font-medium text-gray-700">Student:</p>
-                  <p className="text-gray-600">student@college.edu</p>
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Admin:</span>
+                  <span className="text-gray-600">admin / Tribalde@#53</span>
                 </div>
-                <div>
-                  <p className="font-medium text-gray-700">Faculty:</p>
-                  <p className="text-gray-600">faculty@college.edu</p>
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Student:</span>
+                  <span className="text-gray-600">student@college.edu / demo123</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Faculty:</span>
+                  <span className="text-gray-600">faculty@college.edu / demo123</span>
                 </div>
               </div>
-              <p className="text-xs text-gray-500 text-center mt-2">Password: demo123</p>
             </div>
           </div>
         </div>

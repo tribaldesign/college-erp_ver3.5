@@ -1,13 +1,15 @@
 import React from 'react';
-import { Bell, Search, Menu } from 'lucide-react';
+import { Bell, Search, Menu, LogOut, User } from 'lucide-react';
 
 interface HeaderProps {
   title: string;
   subtitle?: string;
   onMenuClick?: () => void;
+  user?: any;
+  onLogout?: () => void;
 }
 
-export default function Header({ title, subtitle, onMenuClick }: HeaderProps) {
+export default function Header({ title, subtitle, onMenuClick, user, onLogout }: HeaderProps) {
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
@@ -40,6 +42,29 @@ export default function Header({ title, subtitle, onMenuClick }: HeaderProps) {
             <Bell className="h-5 w-5" />
             <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
           </button>
+
+          {/* User Menu */}
+          {user && (
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2 px-3 py-2 bg-gray-50 rounded-lg">
+                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                  <User className="h-4 w-4 text-white" />
+                </div>
+                <div className="text-sm">
+                  <p className="font-medium text-gray-900">{user.name}</p>
+                  <p className="text-gray-500 capitalize">{user.userType}</p>
+                </div>
+              </div>
+              
+              <button
+                onClick={onLogout}
+                className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                title="Logout"
+              >
+                <LogOut className="h-5 w-5" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>
