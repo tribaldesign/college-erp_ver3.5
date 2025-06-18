@@ -9,13 +9,15 @@ import {
   BarChart3, 
   Settings,
   User,
-  Building
+  Building,
+  X
 } from 'lucide-react';
 
 interface SidebarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   user?: any;
+  onClose?: () => void;
 }
 
 const menuItems = [
@@ -31,7 +33,7 @@ const menuItems = [
   { id: 'settings', label: 'Settings', icon: Settings },
 ];
 
-export default function Sidebar({ activeTab, setActiveTab, user }: SidebarProps) {
+export default function Sidebar({ activeTab, setActiveTab, user, onClose }: SidebarProps) {
   // Filter menu items based on user permissions
   const getFilteredMenuItems = () => {
     if (!user) return menuItems;
@@ -61,17 +63,38 @@ export default function Sidebar({ activeTab, setActiveTab, user }: SidebarProps)
 
   const filteredMenuItems = getFilteredMenuItems();
 
+  const handleTabClick = (tabId: string) => {
+    setActiveTab(tabId);
+    // Auto-close sidebar on mobile/tablet when a tab is clicked
+    if (window.innerWidth < 1024 && onClose) {
+      onClose();
+    }
+  };
+
   return (
     <div className="w-64 bg-white shadow-lg h-screen fixed left-0 top-0 z-40">
       <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center space-x-3">
-           <div>
-             <img src="/src/logo.png" alt="College Logo" className="h-13 w-auto object-contain" />
-           </div>
-          <div>
-            <h1 className="text-xl font-bold text-gray-900">St. Dominic's College</h1>
-            <p className="text-sm text-gray-500">College ERP</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div>
+              <img src="/src/logo.png" alt="College Logo" className="h-13 w-auto object-contain" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">St. Dominic's College</h1>
+              <p className="text-sm text-gray-500">College ERP</p>
+            </div>
           </div>
+          
+          {/* Close button for mobile/tablet */}
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              aria-label="Close sidebar"
+            >
+              <X className="h-5 w-5 text-gray-600" />
+            </button>
+          )}
         </div>
       </div>
 
@@ -82,7 +105,7 @@ export default function Sidebar({ activeTab, setActiveTab, user }: SidebarProps)
             return (
               <li key={item.id}>
                 <button
-                  onClick={() => setActiveTab(item.id)}
+                  onClick={() => handleTabClick(item.id)}
                   className={`w-full flex items-center space-x-3 px-3 py-2.5 text-left rounded-lg transition-colors duration-200 ${
                     activeTab === item.id
                       ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'

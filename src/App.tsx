@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AuthWrapper from './components/Auth/AuthWrapper';
 import Sidebar from './components/Layout/Sidebar';
 import Header from './components/Layout/Header';
@@ -29,6 +29,26 @@ function App() {
   const [isFacultyModalOpen, setIsFacultyModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  // Auto-hide sidebar on mobile/tablet when clicking outside or changing tabs
+  useEffect(() => {
+    const handleResize = () => {
+      // Auto-close sidebar on mobile/tablet when resizing to larger screen
+      if (window.innerWidth >= 1024) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Auto-hide sidebar when tab changes on mobile/tablet
+  useEffect(() => {
+    if (window.innerWidth < 1024) {
+      setIsSidebarOpen(false);
+    }
+  }, [activeTab]);
+
   // If user is not authenticated, show auth pages
   if (!user?.isAuthenticated) {
     return <AuthWrapper onAuthenticated={setUser} />;
@@ -37,6 +57,7 @@ function App() {
   const handleLogout = () => {
     setUser(null);
     setActiveTab('dashboard');
+    setIsSidebarOpen(false);
     // Clear any stored session data
     localStorage.removeItem('user');
     sessionStorage.removeItem('user');
@@ -91,6 +112,21 @@ function App() {
   const handleAddCourse = () => {
     setSelectedCourse(null);
     console.log('Add course');
+  };
+
+  const handleSidebarToggle = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleSidebarClose = () => {
+    setIsSidebarOpen(false);
+  };
+
+  const handleMainContentClick = () => {
+    // Auto-close sidebar when clicking on main content on mobile/tablet
+    if (window.innerWidth < 1024 && isSidebarOpen) {
+      setIsSidebarOpen(false);
+    }
   };
 
   const getPageTitle = () => {
@@ -175,23 +211,28 @@ function App() {
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
       <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out`}>
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} user={user} />
+        <Sidebar 
+          activeTab={activeTab} 
+          setActiveTab={setActiveTab} 
+          user={user}
+          onClose={handleSidebarClose}
+        />
       </div>
 
       {/* Mobile overlay */}
       {isSidebarOpen && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
-          onClick={() => setIsSidebarOpen(false)}
+          onClick={handleSidebarClose}
         />
       )}
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col lg:ml-64">
+      <div className="flex-1 flex flex-col lg:ml-64" onClick={handleMainContentClick}>
         <Header 
           title={getPageTitle()} 
           subtitle={getPageSubtitle()}
-          onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          onMenuClick={handleSidebarToggle}
           user={user}
           onLogout={handleLogout}
         />
