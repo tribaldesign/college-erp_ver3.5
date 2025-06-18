@@ -28,7 +28,7 @@ export default function AuthWrapper({ onAuthenticated }: AuthWrapperProps) {
           canModifySystem: true
         }
       };
-    } else if (userType === 'student' && (usernameOrEmail === 'student@college.edu') && password === 'demo123') {
+    } else if (userType === 'student' && usernameOrEmail === 'student@college.edu' && password === 'demo123') {
       user = {
         id: 'student-1',
         email: usernameOrEmail,
@@ -40,7 +40,7 @@ export default function AuthWrapper({ onAuthenticated }: AuthWrapperProps) {
           canUpdateProfile: true
         }
       };
-    } else if (userType === 'faculty' && (usernameOrEmail === 'faculty@college.edu') && password === 'demo123') {
+    } else if (userType === 'faculty' && usernameOrEmail === 'faculty@college.edu' && password === 'demo123') {
       user = {
         id: 'faculty-1',
         email: usernameOrEmail,
@@ -51,18 +51,6 @@ export default function AuthWrapper({ onAuthenticated }: AuthWrapperProps) {
           canViewStudents: true,
           canManageCourses: true,
           canUpdateGrades: true
-        }
-      };
-    } else if (userType === 'staff' && (usernameOrEmail === 'staff@college.edu') && password === 'demo123') {
-      user = {
-        id: 'staff-1',
-        email: usernameOrEmail,
-        userType: 'staff',
-        name: 'Staff Member',
-        isAuthenticated: true,
-        permissions: {
-          canViewReports: true,
-          canManageSchedule: true
         }
       };
     }

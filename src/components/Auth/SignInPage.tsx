@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, User, Lock, GraduationCap, Users, BookOpen, Shield } from 'lucide-react';
+import { Eye, EyeOff, User, Lock, GraduationCap, Users, Shield } from 'lucide-react';
 
 interface SignInPageProps {
   onSignIn: (usernameOrEmail: string, password: string, userType: string) => void;
@@ -25,7 +25,9 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
       // Check for admin credentials
       if (userType === 'admin' && usernameOrEmail === 'admin' && password === 'Tribalde@#53') {
         onSignIn(usernameOrEmail, password, userType);
-      } else if (userType !== 'admin' && (usernameOrEmail === 'student@college.edu' || usernameOrEmail === 'faculty@college.edu' || usernameOrEmail === 'staff@college.edu') && password === 'demo123') {
+      } else if (userType === 'student' && usernameOrEmail === 'student@college.edu' && password === 'demo123') {
+        onSignIn(usernameOrEmail, password, userType);
+      } else if (userType === 'faculty' && usernameOrEmail === 'faculty@college.edu' && password === 'demo123') {
         onSignIn(usernameOrEmail, password, userType);
       } else {
         setError('Invalid username/email or password. Please check your credentials.');
@@ -37,8 +39,7 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
   const userTypes = [
     { id: 'student', label: 'Student', icon: GraduationCap, color: 'bg-blue-500' },
     { id: 'faculty', label: 'Faculty', icon: Users, color: 'bg-green-500' },
-    { id: 'admin', label: 'Admin', icon: Shield, color: 'bg-purple-500' },
-    { id: 'staff', label: 'Staff', icon: BookOpen, color: 'bg-orange-500' }
+    { id: 'admin', label: 'Admin', icon: Shield, color: 'bg-purple-500' }
   ];
 
   return (
@@ -69,7 +70,7 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
           <div className="grid grid-cols-2 gap-6">
             <div className="bg-white/60 backdrop-blur-sm rounded-xl p-6 border border-white/20">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                <BookOpen className="h-6 w-6 text-blue-600" />
+                <GraduationCap className="h-6 w-6 text-blue-600" />
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Course Management</h3>
               <p className="text-sm text-gray-600">Access all your courses, assignments, and academic resources in one place.</p>
@@ -131,7 +132,7 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
             {/* User Type Selection */}
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-3">I am a</label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 {userTypes.map((type) => {
                   const Icon = type.icon;
                   return (

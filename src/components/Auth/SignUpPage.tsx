@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock, User, Phone, GraduationCap, Users, BookOpen, Shield, ArrowLeft, Check } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, Phone, GraduationCap, Users, ArrowLeft, Check } from 'lucide-react';
 
 interface SignUpPageProps {
   onSignUp: (userData: any) => void;
@@ -47,8 +47,7 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
 
   const userTypes = [
     { id: 'student', label: 'Student', icon: GraduationCap, color: 'bg-blue-500' },
-    { id: 'faculty', label: 'Faculty', icon: Users, color: 'bg-green-500' },
-    { id: 'staff', label: 'Staff', icon: BookOpen, color: 'bg-orange-500' }
+    { id: 'faculty', label: 'Faculty', icon: Users, color: 'bg-green-500' }
   ];
 
   const departments = [
@@ -205,7 +204,7 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
                   {/* User Type Selection */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-3">I am a</label>
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-2 gap-3">
                       {userTypes.map((type) => {
                         const Icon = type.icon;
                         return (
@@ -220,7 +219,7 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
                             }`}
                           >
                             <Icon className="h-5 w-5 mx-auto mb-1" />
-                            <span className="text-xs font-medium">{type.label}</span>
+                            <span className="text-sm font-medium">{type.label}</span>
                           </button>
                         );
                       })}
