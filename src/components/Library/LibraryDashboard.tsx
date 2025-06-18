@@ -1,34 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  BookOpen, 
-  Users, 
-  Plus, 
   Search, 
   Filter, 
+  Plus, 
   Edit, 
   Trash2, 
   Eye, 
-  Calendar, 
-  Clock, 
-  CheckCircle, 
-  AlertCircle, 
   Download, 
   Upload, 
-  BarChart3, 
+  Book, 
+  Users, 
+  Calendar, 
+  Clock, 
+  ArrowLeft, 
+  ArrowRight, 
+  Save,
+  X,
+  BookOpen,
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  CheckCircle,
+  AlertCircle,
+  BarChart3,
+  PieChart,
   TrendingUp,
-  UserPlus,
-  BookPlus,
-  RefreshCw,
-  FileText,
-  Star,
-  Award,
-  Target,
-  Library,
-  Bookmark,
-  UserCheck,
-  BookMarked,
-  ArrowUpDown,
-  X
+  FileText
 } from 'lucide-react';
 import { LibraryBook, LibraryMember, LibraryTransaction } from '../../types';
 import { useAppContext, actions } from '../../context/AppContext';
@@ -39,7 +37,7 @@ interface LibraryDashboardProps {
 
 export default function LibraryDashboard({ user }: LibraryDashboardProps) {
   const { state, dispatch } = useAppContext();
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('books');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
@@ -48,7 +46,7 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
   const [isIssueBookModalOpen, setIsIssueBookModalOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<LibraryBook | null>(null);
   const [selectedMember, setSelectedMember] = useState<LibraryMember | null>(null);
-  const [newBookData, setNewBookData] = useState<Partial<LibraryBook>>({
+  const [bookFormData, setBookFormData] = useState<Partial<LibraryBook>>({
     title: '',
     author: '',
     isbn: '',
@@ -56,49 +54,339 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
     publisher: '',
     publishYear: new Date().getFullYear(),
     totalCopies: 1,
+    availableCopies: 1,
     location: '',
+    status: 'Available'
   });
-  const [newMemberData, setNewMemberData] = useState<Partial<LibraryMember>>({
+  const [memberFormData, setMemberFormData] = useState<Partial<LibraryMember>>({
     name: '',
     email: '',
     phone: '',
     memberType: 'Student',
+    membershipId: '',
     department: '',
+    status: 'Active',
+    booksIssued: 0,
+    maxBooks: 5,
+    fineAmount: 0
+  });
+  const [issueFormData, setIssueFormData] = useState({
+    bookId: '',
+    memberId: '',
+    dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 14 days from now
   });
 
-  // Check if user can manage library (admin or library faculty)
+  // Check if user has library permissions
   const canManageLibrary = user?.userType === 'admin' || 
-    (user?.userType === 'faculty' && user?.department === 'Library');
+                          (user?.userType === 'faculty' && 
+                           (user?.designation === 'Librarian' || user?.department === 'Library'));
 
-  const categories = [
-    'Computer Science',
-    'Political Science', 
-    'English',
-    'History',
-    'Education',
-    'Sociology',
-    'Economics',
-    'Geography',
-    'Mathematics',
-    'Physics',
-    'Chemistry',
-    'Biology',
-    'General'
-  ];
+  // Filter books based on search and filters
+  const filteredBooks = state.libraryBooks.filter(book => {
+    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         book.isbn.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = !filterCategory || book.category === filterCategory;
+    const matchesStatus = !filterStatus || book.status === filterStatus;
+    return matchesSearch && matchesCategory && matchesStatus;
+  });
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Available': case 'Active': case 'Returned': 
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'Limited': case 'Suspended': case 'Issued': 
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'Out of Stock': case 'Expired': case 'Overdue': 
-        return 'bg-red-100 text-red-800 border-red-200';
-      default: 
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+  // Filter members based on search
+  const filteredMembers = state.libraryMembers.filter(member => {
+    return member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           member.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           member.membershipId.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
+  // Filter transactions based on search
+  const filteredTransactions = state.libraryTransactions.filter(transaction => {
+    return transaction.bookTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           transaction.memberName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           transaction.status.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
+  // Get unique categories for filter
+  const categories = [...new Set(state.libraryBooks.map(book => book.category))];
+
+  // Handle book form input changes
+  const handleBookInputChange = (field: keyof LibraryBook, value: any) => {
+    setBookFormData(prev => ({ ...prev, [field]: value }));
+    
+    // Auto-update available copies when total copies change
+    if (field === 'totalCopies') {
+      setBookFormData(prev => ({ 
+        ...prev, 
+        availableCopies: value,
+        status: value > 0 ? 'Available' : 'Out of Stock'
+      }));
     }
   };
 
+  // Handle member form input changes
+  const handleMemberInputChange = (field: keyof LibraryMember, value: any) => {
+    setMemberFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Handle issue form input changes
+  const handleIssueInputChange = (field: string, value: any) => {
+    setIssueFormData(prev => ({ ...prev, [field]: value }));
+    
+    // Auto-update book details when book is selected
+    if (field === 'bookId') {
+      const book = state.libraryBooks.find(b => b.id === value);
+      if (book && book.availableCopies <= 0) {
+        alert('This book is not available for issue!');
+      }
+    }
+    
+    // Auto-update member details when member is selected
+    if (field === 'memberId') {
+      const member = state.libraryMembers.find(m => m.id === value);
+      if (member && member.booksIssued >= member.maxBooks) {
+        alert(`This member has already issued the maximum allowed books (${member.maxBooks})!`);
+      }
+    }
+  };
+
+  // Add new book
+  const handleAddBook = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const newBook: LibraryBook = {
+      id: Date.now().toString(),
+      title: bookFormData.title || '',
+      author: bookFormData.author || '',
+      isbn: bookFormData.isbn || '',
+      category: bookFormData.category || '',
+      publisher: bookFormData.publisher || '',
+      publishYear: bookFormData.publishYear || new Date().getFullYear(),
+      totalCopies: bookFormData.totalCopies || 1,
+      availableCopies: bookFormData.availableCopies || 1,
+      location: bookFormData.location || '',
+      status: bookFormData.totalCopies && bookFormData.totalCopies > 0 ? 'Available' : 'Out of Stock',
+      addedDate: new Date().toISOString().split('T')[0],
+      addedBy: user?.name || 'Admin'
+    };
+    
+    dispatch(actions.addLibraryBook(newBook));
+    setIsAddBookModalOpen(false);
+    setBookFormData({
+      title: '',
+      author: '',
+      isbn: '',
+      category: '',
+      publisher: '',
+      publishYear: new Date().getFullYear(),
+      totalCopies: 1,
+      availableCopies: 1,
+      location: '',
+      status: 'Available'
+    });
+  };
+
+  // Add new member
+  const handleAddMember = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const newMember: LibraryMember = {
+      id: Date.now().toString(),
+      name: memberFormData.name || '',
+      email: memberFormData.email || '',
+      phone: memberFormData.phone || '',
+      memberType: memberFormData.memberType as 'Student' | 'Faculty' | 'Staff',
+      membershipId: memberFormData.membershipId || `LIB${Math.floor(1000 + Math.random() * 9000)}`,
+      department: memberFormData.department || '',
+      joinDate: new Date().toISOString().split('T')[0],
+      status: 'Active',
+      booksIssued: 0,
+      maxBooks: memberFormData.memberType === 'Student' ? 5 : 
+                memberFormData.memberType === 'Faculty' ? 10 : 3,
+      fineAmount: 0
+    };
+    
+    dispatch(actions.addLibraryMember(newMember));
+    setIsAddMemberModalOpen(false);
+    setMemberFormData({
+      name: '',
+      email: '',
+      phone: '',
+      memberType: 'Student',
+      membershipId: '',
+      department: '',
+      status: 'Active',
+      booksIssued: 0,
+      maxBooks: 5,
+      fineAmount: 0
+    });
+  };
+
+  // Issue book to member
+  const handleIssueBook = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const book = state.libraryBooks.find(b => b.id === issueFormData.bookId);
+    const member = state.libraryMembers.find(m => m.id === issueFormData.memberId);
+    
+    if (!book || !member) {
+      alert('Please select both a book and a member!');
+      return;
+    }
+    
+    if (book.availableCopies <= 0) {
+      alert('This book is not available for issue!');
+      return;
+    }
+    
+    if (member.booksIssued >= member.maxBooks) {
+      alert(`This member has already issued the maximum allowed books (${member.maxBooks})!`);
+      return;
+    }
+    
+    // Create transaction
+    const newTransaction: LibraryTransaction = {
+      id: Date.now().toString(),
+      bookId: book.id,
+      bookTitle: book.title,
+      memberId: member.id,
+      memberName: member.name,
+      memberType: member.memberType,
+      issueDate: new Date().toISOString().split('T')[0],
+      dueDate: issueFormData.dueDate,
+      status: 'Issued',
+      fine: 0,
+      issuedBy: user?.name || 'Admin'
+    };
+    
+    // Update book available copies
+    const updatedBook: LibraryBook = {
+      ...book,
+      availableCopies: book.availableCopies - 1,
+      status: book.availableCopies - 1 > 0 ? (book.availableCopies - 1 < 3 ? 'Limited' : 'Available') : 'Out of Stock'
+    };
+    
+    // Update member books issued count
+    const updatedMember: LibraryMember = {
+      ...member,
+      booksIssued: member.booksIssued + 1
+    };
+    
+    // Dispatch actions
+    dispatch(actions.addLibraryTransaction(newTransaction));
+    dispatch(actions.updateLibraryBook(updatedBook));
+    dispatch(actions.updateLibraryMember(updatedMember));
+    
+    setIsIssueBookModalOpen(false);
+    setIssueFormData({
+      bookId: '',
+      memberId: '',
+      dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    });
+  };
+
+  // Return book
+  const handleReturnBook = (transaction: LibraryTransaction) => {
+    if (transaction.status === 'Returned') {
+      alert('This book has already been returned!');
+      return;
+    }
+    
+    const book = state.libraryBooks.find(b => b.id === transaction.bookId);
+    const member = state.libraryMembers.find(m => m.id === transaction.memberId);
+    
+    if (!book || !member) {
+      alert('Book or member information not found!');
+      return;
+    }
+    
+    // Calculate fine if overdue
+    const dueDate = new Date(transaction.dueDate);
+    const today = new Date();
+    const daysOverdue = Math.max(0, Math.floor((today.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24)));
+    const finePerDay = 1; // $1 per day
+    const fine = daysOverdue * finePerDay;
+    
+    // Update transaction
+    const updatedTransaction: LibraryTransaction = {
+      ...transaction,
+      status: 'Returned',
+      returnDate: today.toISOString().split('T')[0],
+      fine: fine,
+      returnedBy: user?.name || 'Admin'
+    };
+    
+    // Update book available copies
+    const updatedBook: LibraryBook = {
+      ...book,
+      availableCopies: book.availableCopies + 1,
+      status: 'Available'
+    };
+    
+    // Update member books issued count and fine amount
+    const updatedMember: LibraryMember = {
+      ...member,
+      booksIssued: Math.max(0, member.booksIssued - 1),
+      fineAmount: member.fineAmount + fine
+    };
+    
+    // Dispatch actions
+    dispatch(actions.updateLibraryTransaction(updatedTransaction));
+    dispatch(actions.updateLibraryBook(updatedBook));
+    dispatch(actions.updateLibraryMember(updatedMember));
+    
+    if (fine > 0) {
+      alert(`Book returned successfully! A fine of $${fine} has been added to the member's account.`);
+    } else {
+      alert('Book returned successfully!');
+    }
+  };
+
+  // Delete book
+  const handleDeleteBook = (bookId: string) => {
+    // Check if book is currently issued
+    const isIssued = state.libraryTransactions.some(t => t.bookId === bookId && t.status === 'Issued');
+    
+    if (isIssued) {
+      alert('This book cannot be deleted as it is currently issued to a member!');
+      return;
+    }
+    
+    if (window.confirm('Are you sure you want to delete this book? This action cannot be undone.')) {
+      dispatch(actions.deleteLibraryBook(bookId));
+    }
+  };
+
+  // Delete member
+  const handleDeleteMember = (memberId: string) => {
+    // Check if member has books issued
+    const hasIssuedBooks = state.libraryTransactions.some(t => t.memberId === memberId && t.status === 'Issued');
+    
+    if (hasIssuedBooks) {
+      alert('This member cannot be deleted as they have books currently issued!');
+      return;
+    }
+    
+    if (window.confirm('Are you sure you want to delete this member? This action cannot be undone.')) {
+      dispatch(actions.deleteLibraryMember(memberId));
+    }
+  };
+
+  // Get status color
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'Available': return 'bg-green-100 text-green-800 border-green-200';
+      case 'Limited': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'Out of Stock': return 'bg-red-100 text-red-800 border-red-200';
+      case 'Active': return 'bg-green-100 text-green-800 border-green-200';
+      case 'Suspended': return 'bg-red-100 text-red-800 border-red-200';
+      case 'Expired': return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'Issued': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'Returned': return 'bg-green-100 text-green-800 border-green-200';
+      case 'Overdue': return 'bg-red-100 text-red-800 border-red-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  // Get member type color
   const getMemberTypeColor = (type: string) => {
     switch (type) {
       case 'Student': return 'bg-blue-100 text-blue-800';
@@ -108,711 +396,656 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
     }
   };
 
-  const tabs = [
-    { id: 'overview', label: 'Overview', icon: BarChart3 },
-    { id: 'books', label: 'Books', icon: BookOpen },
-    { id: 'members', label: 'Members', icon: Users },
-    { id: 'transactions', label: 'Transactions', icon: ArrowUpDown },
-    { id: 'reports', label: 'Reports', icon: FileText },
-  ];
-
+  // Calculate library statistics
   const totalBooks = state.libraryBooks.reduce((sum, book) => sum + book.totalCopies, 0);
   const availableBooks = state.libraryBooks.reduce((sum, book) => sum + book.availableCopies, 0);
-  const issuedBooks = totalBooks - availableBooks;
-  const activeMembers = state.libraryMembers.filter(m => m.status === 'Active').length;
-  const overdueBooks = state.libraryTransactions.filter(t => t.status === 'Overdue').length;
-  const totalFines = state.libraryMembers.reduce((sum, member) => sum + member.fineAmount, 0);
-
-  const handleAddBook = () => {
-    const newBook: LibraryBook = {
-      id: Date.now().toString(),
-      title: newBookData.title || '',
-      author: newBookData.author || '',
-      isbn: newBookData.isbn || '',
-      category: newBookData.category || '',
-      publisher: newBookData.publisher || '',
-      publishYear: newBookData.publishYear || new Date().getFullYear(),
-      totalCopies: newBookData.totalCopies || 1,
-      availableCopies: newBookData.totalCopies || 1,
-      location: newBookData.location || '',
-      status: 'Available',
-      addedDate: new Date().toISOString().split('T')[0],
-      addedBy: user?.name || 'Admin'
-    };
-    
-    dispatch(actions.addLibraryBook(newBook));
-    setIsAddBookModalOpen(false);
-    setNewBookData({
-      title: '',
-      author: '',
-      isbn: '',
-      category: '',
-      publisher: '',
-      publishYear: new Date().getFullYear(),
-      totalCopies: 1,
-      location: '',
-    });
-  };
-
-  const handleAddMember = () => {
-    const newMember: LibraryMember = {
-      id: Date.now().toString(),
-      name: newMemberData.name || '',
-      email: newMemberData.email || '',
-      phone: newMemberData.phone || '',
-      memberType: newMemberData.memberType as 'Student' | 'Faculty' | 'Staff',
-      membershipId: `LIB${String(state.libraryMembers.length + 1).padStart(3, '0')}`,
-      department: newMemberData.department || '',
-      joinDate: new Date().toISOString().split('T')[0],
-      status: 'Active',
-      booksIssued: 0,
-      maxBooks: newMemberData.memberType === 'Faculty' ? 10 : 5,
-      fineAmount: 0
-    };
-    
-    dispatch(actions.addLibraryMember(newMember));
-    setIsAddMemberModalOpen(false);
-    setNewMemberData({
-      name: '',
-      email: '',
-      phone: '',
-      memberType: 'Student',
-      department: '',
-    });
-  };
-
-  const handleIssueBook = () => {
-    if (!selectedBook || !selectedMember) return;
-    
-    // Update book available copies
-    const updatedBook = {
-      ...selectedBook,
-      availableCopies: selectedBook.availableCopies - 1,
-      status: selectedBook.availableCopies <= 1 ? 'Out of Stock' : 
-              selectedBook.availableCopies <= 3 ? 'Limited' : 'Available'
-    };
-    
-    // Update member books issued
-    const updatedMember = {
-      ...selectedMember,
-      booksIssued: selectedMember.booksIssued + 1
-    };
-    
-    // Create transaction
-    const newTransaction: LibraryTransaction = {
-      id: Date.now().toString(),
-      bookId: selectedBook.id,
-      bookTitle: selectedBook.title,
-      memberId: selectedMember.id,
-      memberName: selectedMember.name,
-      memberType: selectedMember.memberType,
-      issueDate: new Date().toISOString().split('T')[0],
-      dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      status: 'Issued',
-      fine: 0,
-      issuedBy: user?.name || 'Librarian'
-    };
-    
-    dispatch(actions.updateLibraryBook(updatedBook));
-    dispatch(actions.updateLibraryMember(updatedMember));
-    dispatch(actions.addLibraryTransaction(newTransaction));
-    
-    setIsIssueBookModalOpen(false);
-    setSelectedBook(null);
-    setSelectedMember(null);
-  };
-
-  const handleBookInputChange = (field: keyof LibraryBook, value: any) => {
-    setNewBookData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleMemberInputChange = (field: keyof LibraryMember, value: any) => {
-    setNewMemberData(prev => ({ ...prev, [field]: value }));
-  };
+  const totalMembers = state.libraryMembers.length;
+  const activeTransactions = state.libraryTransactions.filter(t => t.status === 'Issued').length;
+  const overdueTransactions = state.libraryTransactions.filter(t => {
+    if (t.status !== 'Issued') return false;
+    const dueDate = new Date(t.dueDate);
+    const today = new Date();
+    return dueDate < today;
+  }).length;
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl p-6 text-white">
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6 text-white">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
           <div>
             <h2 className="text-3xl font-bold mb-2">Library Management</h2>
-            <p className="text-emerald-100">Manage books, members, and library transactions</p>
+            <p className="text-blue-100">Manage books, members, and transactions</p>
           </div>
           <div className="flex items-center space-x-6">
             <div className="text-center">
               <div className="flex items-center justify-center w-12 h-12 bg-white/20 rounded-lg mb-2">
-                <BookOpen className="h-6 w-6" />
+                <Book className="h-6 w-6" />
               </div>
               <p className="text-2xl font-bold">{totalBooks}</p>
-              <p className="text-sm text-emerald-100">Total Books</p>
+              <p className="text-sm text-blue-100">Total Books</p>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center w-12 h-12 bg-white/20 rounded-lg mb-2">
                 <Users className="h-6 w-6" />
               </div>
-              <p className="text-2xl font-bold">{activeMembers}</p>
-              <p className="text-sm text-emerald-100">Active Members</p>
+              <p className="text-2xl font-bold">{totalMembers}</p>
+              <p className="text-sm text-blue-100">Members</p>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center w-12 h-12 bg-white/20 rounded-lg mb-2">
-                <BookMarked className="h-6 w-6" />
+                <Calendar className="h-6 w-6" />
               </div>
-              <p className="text-2xl font-bold">{issuedBooks}</p>
-              <p className="text-sm text-emerald-100">Books Issued</p>
+              <p className="text-2xl font-bold">{activeTransactions}</p>
+              <p className="text-sm text-blue-100">Books Issued</p>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center w-12 h-12 bg-white/20 rounded-lg mb-2">
-                <AlertCircle className="h-6 w-6" />
+                <Clock className="h-6 w-6" />
               </div>
-              <p className="text-2xl font-bold">{overdueBooks}</p>
-              <p className="text-sm text-emerald-100">Overdue</p>
+              <p className="text-2xl font-bold">{overdueTransactions}</p>
+              <p className="text-sm text-blue-100">Overdue</p>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Quick Actions - Only for admin and library faculty */}
-      {canManageLibrary && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <button 
-            onClick={() => setIsAddBookModalOpen(true)}
-            className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all duration-200 hover:-translate-y-1 text-left"
-          >
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                <BookPlus className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <p className="font-semibold text-gray-900">Add Book</p>
-                <p className="text-sm text-gray-600">Add new book to library</p>
-              </div>
-            </div>
-          </button>
-          
-          <button 
-            onClick={() => setIsAddMemberModalOpen(true)}
-            className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all duration-200 hover:-translate-y-1 text-left"
-          >
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                <UserPlus className="h-5 w-5 text-green-600" />
-              </div>
-              <div>
-                <p className="font-semibold text-gray-900">Register Member</p>
-                <p className="text-sm text-gray-600">Add new library member</p>
-              </div>
-            </div>
-          </button>
-          
-          <button 
-            onClick={() => setIsIssueBookModalOpen(true)}
-            className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all duration-200 hover:-translate-y-1 text-left"
-          >
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                <Bookmark className="h-5 w-5 text-purple-600" />
-              </div>
-              <div>
-                <p className="font-semibold text-gray-900">Issue Book</p>
-                <p className="text-sm text-gray-600">Issue book to member</p>
-              </div>
-            </div>
-          </button>
-          
-          <button className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all duration-200 hover:-translate-y-1 text-left">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                <FileText className="h-5 w-5 text-orange-600" />
-              </div>
-              <div>
-                <p className="font-semibold text-gray-900">Generate Report</p>
-                <p className="text-sm text-gray-600">Library analytics</p>
-              </div>
-            </div>
-          </button>
-        </div>
-      )}
 
       {/* Tabs */}
       <div className="border-b border-gray-200 bg-white rounded-xl shadow-sm">
-        <nav className="flex space-x-8 px-6 overflow-x-auto">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
-                  activeTab === tab.id
-                    ? 'border-emerald-500 text-emerald-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                <Icon className="h-4 w-4" />
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
+        <nav className="flex space-x-8 px-6">
+          <button
+            onClick={() => setActiveTab('books')}
+            className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              activeTab === 'books'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            <Book className="h-4 w-4" />
+            <span>Books</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('members')}
+            className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              activeTab === 'members'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            <Users className="h-4 w-4" />
+            <span>Members</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('transactions')}
+            className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              activeTab === 'transactions'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            <Calendar className="h-4 w-4" />
+            <span>Transactions</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('reports')}
+            className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              activeTab === 'reports'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            <BarChart3 className="h-4 w-4" />
+            <span>Reports</span>
+          </button>
         </nav>
       </div>
 
-      {/* Content */}
-      <div className="space-y-6">
-        {activeTab === 'overview' && (
-          <div className="space-y-6">
-            {/* Quick Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Total Books</p>
-                    <p className="text-2xl font-bold text-gray-900">{totalBooks}</p>
-                    <p className="text-sm text-blue-600">{availableBooks} available</p>
-                  </div>
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <BookOpen className="h-6 w-6 text-blue-600" />
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Active Members</p>
-                    <p className="text-2xl font-bold text-gray-900">{activeMembers}</p>
-                    <p className="text-sm text-green-600">Library members</p>
-                  </div>
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <Users className="h-6 w-6 text-green-600" />
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Books Issued</p>
-                    <p className="text-2xl font-bold text-gray-900">{issuedBooks}</p>
-                    <p className="text-sm text-purple-600">Currently out</p>
-                  </div>
-                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <BookMarked className="h-6 w-6 text-purple-600" />
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Total Fines</p>
-                    <p className="text-2xl font-bold text-gray-900">${totalFines.toFixed(2)}</p>
-                    <p className="text-sm text-orange-600">{overdueBooks} overdue</p>
-                  </div>
-                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <AlertCircle className="h-6 w-6 text-orange-600" />
-                  </div>
-                </div>
-              </div>
+      {/* Books Tab */}
+      {activeTab === 'books' && (
+        <div className="space-y-6">
+          {/* Action Bar */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex items-center space-x-3">
+              {canManageLibrary && (
+                <button
+                  onClick={() => setIsAddBookModalOpen(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors shadow-sm"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Add Book</span>
+                </button>
+              )}
+              <button className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors shadow-sm">
+                <Download className="h-4 w-4" />
+                <span>Export</span>
+              </button>
+              {canManageLibrary && (
+                <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors shadow-sm">
+                  <Upload className="h-4 w-4" />
+                  <span>Import</span>
+                </button>
+              )}
             </div>
-
-            {/* Recent Activity & Popular Books */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Transactions</h3>
-                <div className="space-y-4">
-                  {state.libraryTransactions.slice(0, 5).map((transaction) => (
-                    <div key={transaction.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                          transaction.status === 'Issued' ? 'bg-blue-100' :
-                          transaction.status === 'Returned' ? 'bg-green-100' : 'bg-red-100'
-                        }`}>
-                          {transaction.status === 'Issued' && <BookMarked className="h-4 w-4 text-blue-600" />}
-                          {transaction.status === 'Returned' && <CheckCircle className="h-4 w-4 text-green-600" />}
-                          {transaction.status === 'Overdue' && <AlertCircle className="h-4 w-4 text-red-600" />}
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">{transaction.bookTitle}</p>
-                          <p className="text-xs text-gray-600">{transaction.memberName}</p>
-                        </div>
-                      </div>
-                      <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(transaction.status)}`}>
-                        {transaction.status}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Category Distribution</h3>
-                <div className="space-y-3">
-                  {categories.slice(0, 6).map((category, index) => {
-                    const categoryBooks = state.libraryBooks.filter(book => book.category === category).length;
-                    const percentage = totalBooks > 0 ? (categoryBooks / totalBooks) * 100 : 0;
-                    return (
-                      <div key={category} className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">{category}</span>
-                        <div className="flex items-center space-x-2">
-                          <div className="w-20 bg-gray-200 rounded-full h-2">
-                            <div 
-                              className="bg-emerald-600 h-2 rounded-full" 
-                              style={{ width: `${percentage}%` }}
-                            ></div>
-                          </div>
-                          <span className="text-sm font-medium text-gray-900">{categoryBooks}</span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
+            {canManageLibrary && (
+              <button
+                onClick={() => setIsIssueBookModalOpen(true)}
+                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors shadow-sm"
+              >
+                <Calendar className="h-4 w-4" />
+                <span>Issue Book</span>
+              </button>
+            )}
           </div>
-        )}
 
-        {activeTab === 'books' && (
-          <div className="space-y-6">
-            {/* Filters */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-1 relative">
+          {/* Filters */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="md:col-span-1">
+                <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <input
                     type="text"
                     placeholder="Search books by title, author, or ISBN..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   />
                 </div>
+              </div>
+              
+              <div>
                 <select
                   value={filterCategory}
                   onChange={(e) => setFilterCategory(e.target.value)}
-                  className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 >
                   <option value="">All Categories</option>
                   {categories.map(category => (
                     <option key={category} value={category}>{category}</option>
                   ))}
                 </select>
+              </div>
+
+              <div>
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 >
                   <option value="">All Status</option>
                   <option value="Available">Available</option>
                   <option value="Limited">Limited</option>
                   <option value="Out of Stock">Out of Stock</option>
                 </select>
-                {canManageLibrary && (
-                  <div className="flex space-x-2">
-                    <button className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
-                      <Download className="h-4 w-4" />
-                      <span>Export</span>
-                    </button>
-                    <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
-                      <Upload className="h-4 w-4" />
-                      <span>Import</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Books Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {state.libraryBooks.map((book) => (
-                <div key={book.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(book.status)}`}>
-                      {book.status}
-                    </span>
-                    {canManageLibrary && (
-                      <div className="flex space-x-1">
-                        <button className="text-gray-600 hover:text-emerald-600 p-1 rounded">
-                          <Eye className="h-4 w-4" />
-                        </button>
-                        <button className="text-gray-600 hover:text-blue-600 p-1 rounded">
-                          <Edit className="h-4 w-4" />
-                        </button>
-                        <button className="text-gray-600 hover:text-red-600 p-1 rounded">
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="mb-4">
-                    <h3 className="font-semibold text-gray-900 text-lg mb-1">{book.title}</h3>
-                    <p className="text-gray-600 text-sm">by {book.author}</p>
-                    <p className="text-gray-500 text-xs mt-1">{book.publisher} • {book.publishYear}</p>
-                  </div>
-
-                  <div className="space-y-2 mb-4">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">ISBN:</span>
-                      <span className="font-mono text-gray-900">{book.isbn}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Category:</span>
-                      <span className="text-gray-900">{book.category}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Location:</span>
-                      <span className="text-gray-900">{book.location}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Available:</span>
-                      <span className="font-semibold text-gray-900">{book.availableCopies}/{book.totalCopies}</span>
-                    </div>
-                  </div>
-
-                  <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-                    <div 
-                      className="bg-emerald-600 h-2 rounded-full" 
-                      style={{ width: `${(book.availableCopies / book.totalCopies) * 100}%` }}
-                    ></div>
-                  </div>
-
-                  {canManageLibrary && book.availableCopies > 0 && (
-                    <button 
-                      onClick={() => {
-                        setSelectedBook(book);
-                        setIsIssueBookModalOpen(true);
-                      }}
-                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg transition-colors"
-                    >
-                      Issue Book
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'members' && (
-          <div className="space-y-6">
-            {/* Members Table */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200">
-                    <tr>
-                      <th className="text-left py-4 px-6 font-semibold text-gray-900">Member</th>
-                      <th className="text-left py-4 px-6 font-semibold text-gray-900">Type</th>
-                      <th className="text-left py-4 px-6 font-semibold text-gray-900">Department</th>
-                      <th className="text-left py-4 px-6 font-semibold text-gray-900">Books Issued</th>
-                      <th className="text-left py-4 px-6 font-semibold text-gray-900">Fine Amount</th>
-                      <th className="text-left py-4 px-6 font-semibold text-gray-900">Status</th>
-                      <th className="text-left py-4 px-6 font-semibold text-gray-900">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {state.libraryMembers.map((member) => (
-                      <tr key={member.id} className="hover:bg-gray-50 transition-colors">
-                        <td className="py-4 px-6">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-semibold">
-                              {member.name.split(' ').map(n => n[0]).join('')}
-                            </div>
-                            <div>
-                              <p className="font-semibold text-gray-900">{member.name}</p>
-                              <p className="text-sm text-gray-600">{member.membershipId}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="py-4 px-6">
-                          <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getMemberTypeColor(member.memberType)}`}>
-                            {member.memberType}
-                          </span>
-                        </td>
-                        <td className="py-4 px-6 text-gray-700">{member.department}</td>
-                        <td className="py-4 px-6">
-                          <span className="font-semibold text-gray-900">{member.booksIssued}/{member.maxBooks}</span>
-                        </td>
-                        <td className="py-4 px-6">
-                          <span className={`font-semibold ${member.fineAmount > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                            ${member.fineAmount.toFixed(2)}
-                          </span>
-                        </td>
-                        <td className="py-4 px-6">
-                          <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(member.status)}`}>
-                            {member.status}
-                          </span>
-                        </td>
-                        <td className="py-4 px-6">
-                          <div className="flex items-center space-x-2">
-                            <button className="text-gray-600 hover:text-emerald-600 p-1 rounded">
-                              <Eye className="h-4 w-4" />
-                            </button>
-                            {canManageLibrary && (
-                              <>
-                                <button className="text-gray-600 hover:text-blue-600 p-1 rounded">
-                                  <Edit className="h-4 w-4" />
-                                </button>
-                                <button className="text-gray-600 hover:text-red-600 p-1 rounded">
-                                  <Trash2 className="h-4 w-4" />
-                                </button>
-                              </>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
               </div>
             </div>
           </div>
-        )}
 
-        {activeTab === 'transactions' && (
-          <div className="space-y-6">
-            {/* Transactions Table */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200">
-                    <tr>
-                      <th className="text-left py-4 px-6 font-semibold text-gray-900">Book</th>
-                      <th className="text-left py-4 px-6 font-semibold text-gray-900">Member</th>
-                      <th className="text-left py-4 px-6 font-semibold text-gray-900">Issue Date</th>
-                      <th className="text-left py-4 px-6 font-semibold text-gray-900">Due Date</th>
-                      <th className="text-left py-4 px-6 font-semibold text-gray-900">Return Date</th>
-                      <th className="text-left py-4 px-6 font-semibold text-gray-900">Fine</th>
-                      <th className="text-left py-4 px-6 font-semibold text-gray-900">Status</th>
-                      <th className="text-left py-4 px-6 font-semibold text-gray-900">Actions</th>
+          {/* Books Table */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Book</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">ISBN</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Category</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Publisher</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Copies</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Status</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Location</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredBooks.map((book) => (
+                    <tr key={book.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="py-4 px-6">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white">
+                            <Book className="h-5 w-5" />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-900">{book.title}</p>
+                            <p className="text-sm text-gray-600">{book.author}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className="font-mono text-sm">{book.isbn}</span>
+                      </td>
+                      <td className="py-4 px-6 text-gray-700">{book.category}</td>
+                      <td className="py-4 px-6">
+                        <div>
+                          <p className="text-gray-700">{book.publisher}</p>
+                          <p className="text-sm text-gray-500">{book.publishYear}</p>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6">
+                        <div>
+                          <p className="font-medium text-gray-900">{book.availableCopies} / {book.totalCopies}</p>
+                          <div className="w-24 bg-gray-200 rounded-full h-2 mt-1">
+                            <div 
+                              className={`h-2 rounded-full ${
+                                book.availableCopies === 0 ? 'bg-red-500' :
+                                book.availableCopies < book.totalCopies / 3 ? 'bg-yellow-500' : 'bg-green-500'
+                              }`}
+                              style={{ width: `${(book.availableCopies / book.totalCopies) * 100}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className={`inline-flex px-2.5 py-0.5 text-xs font-medium rounded-full border ${getStatusColor(book.status)}`}>
+                          {book.status}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6 text-gray-700">{book.location}</td>
+                      <td className="py-4 px-6">
+                        <div className="flex items-center space-x-2">
+                          <button
+                            className="text-gray-600 hover:text-blue-600 p-1.5 rounded-lg hover:bg-blue-50 transition-colors"
+                            title="View Details"
+                          >
+                            <Eye className="h-4 w-4" />
+                          </button>
+                          {canManageLibrary && (
+                            <>
+                              <button
+                                className="text-gray-600 hover:text-green-600 p-1.5 rounded-lg hover:bg-green-50 transition-colors"
+                                title="Edit Book"
+                              >
+                                <Edit className="h-4 w-4" />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteBook(book.id)}
+                                className="text-gray-600 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-50 transition-colors"
+                                title="Delete Book"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {state.libraryTransactions.map((transaction) => (
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Members Tab */}
+      {activeTab === 'members' && (
+        <div className="space-y-6">
+          {/* Action Bar */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex items-center space-x-3">
+              {canManageLibrary && (
+                <button
+                  onClick={() => setIsAddMemberModalOpen(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors shadow-sm"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Add Member</span>
+                </button>
+              )}
+              <button className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors shadow-sm">
+                <Download className="h-4 w-4" />
+                <span>Export</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Search */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search members by name, email, or ID..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+              />
+            </div>
+          </div>
+
+          {/* Members Table */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Member</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">ID</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Type</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Department</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Books Issued</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Fine Amount</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Status</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredMembers.map((member) => (
+                    <tr key={member.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="py-4 px-6">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                            {member.name.split(' ').map(n => n[0]).join('')}
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-900">{member.name}</p>
+                            <p className="text-sm text-gray-600">{member.email}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">
+                          {member.membershipId}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className={`inline-flex px-2.5 py-0.5 text-xs font-medium rounded-full ${getMemberTypeColor(member.memberType)}`}>
+                          {member.memberType}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6 text-gray-700">{member.department}</td>
+                      <td className="py-4 px-6">
+                        <div className="flex items-center space-x-2">
+                          <span className="font-medium text-gray-900">{member.booksIssued}</span>
+                          <span className="text-sm text-gray-500">/ {member.maxBooks}</span>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className={`font-medium ${member.fineAmount > 0 ? 'text-red-600' : 'text-gray-900'}`}>
+                          ${member.fineAmount.toFixed(2)}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className={`inline-flex px-2.5 py-0.5 text-xs font-medium rounded-full border ${getStatusColor(member.status)}`}>
+                          {member.status}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6">
+                        <div className="flex items-center space-x-2">
+                          <button
+                            className="text-gray-600 hover:text-blue-600 p-1.5 rounded-lg hover:bg-blue-50 transition-colors"
+                            title="View Details"
+                          >
+                            <Eye className="h-4 w-4" />
+                          </button>
+                          {canManageLibrary && (
+                            <>
+                              <button
+                                className="text-gray-600 hover:text-green-600 p-1.5 rounded-lg hover:bg-green-50 transition-colors"
+                                title="Edit Member"
+                              >
+                                <Edit className="h-4 w-4" />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteMember(member.id)}
+                                className="text-gray-600 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-50 transition-colors"
+                                title="Delete Member"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Transactions Tab */}
+      {activeTab === 'transactions' && (
+        <div className="space-y-6">
+          {/* Search */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search transactions by book title, member name, or status..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+              />
+            </div>
+          </div>
+
+          {/* Transactions Table */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Book</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Member</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Issue Date</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Due Date</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Return Date</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Status</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Fine</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-900">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredTransactions.map((transaction) => {
+                    // Check if overdue
+                    const isOverdue = transaction.status === 'Issued' && new Date(transaction.dueDate) < new Date();
+                    const displayStatus = isOverdue ? 'Overdue' : transaction.status;
+                    
+                    return (
                       <tr key={transaction.id} className="hover:bg-gray-50 transition-colors">
                         <td className="py-4 px-6">
-                          <p className="font-semibold text-gray-900">{transaction.bookTitle}</p>
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white">
+                              <Book className="h-5 w-5" />
+                            </div>
+                            <p className="font-semibold text-gray-900">{transaction.bookTitle}</p>
+                          </div>
                         </td>
                         <td className="py-4 px-6">
                           <div>
                             <p className="font-medium text-gray-900">{transaction.memberName}</p>
-                            <p className="text-sm text-gray-600">{transaction.memberType}</p>
+                            <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${getMemberTypeColor(transaction.memberType)}`}>
+                              {transaction.memberType}
+                            </span>
                           </div>
                         </td>
-                        <td className="py-4 px-6 text-gray-700">
-                          {new Date(transaction.issueDate).toLocaleDateString()}
-                        </td>
-                        <td className="py-4 px-6 text-gray-700">
-                          {new Date(transaction.dueDate).toLocaleDateString()}
-                        </td>
+                        <td className="py-4 px-6 text-gray-700">{new Date(transaction.issueDate).toLocaleDateString()}</td>
+                        <td className="py-4 px-6 text-gray-700">{new Date(transaction.dueDate).toLocaleDateString()}</td>
                         <td className="py-4 px-6 text-gray-700">
                           {transaction.returnDate ? new Date(transaction.returnDate).toLocaleDateString() : '-'}
                         </td>
                         <td className="py-4 px-6">
-                          <span className={`font-semibold ${transaction.fine > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                            ${transaction.fine.toFixed(2)}
+                          <span className={`inline-flex px-2.5 py-0.5 text-xs font-medium rounded-full border ${getStatusColor(displayStatus)}`}>
+                            {displayStatus}
                           </span>
                         </td>
                         <td className="py-4 px-6">
-                          <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(transaction.status)}`}>
-                            {transaction.status}
+                          <span className={`font-medium ${transaction.fine > 0 ? 'text-red-600' : 'text-gray-900'}`}>
+                            {transaction.fine > 0 ? `$${transaction.fine.toFixed(2)}` : '-'}
                           </span>
                         </td>
                         <td className="py-4 px-6">
                           <div className="flex items-center space-x-2">
+                            <button
+                              className="text-gray-600 hover:text-blue-600 p-1.5 rounded-lg hover:bg-blue-50 transition-colors"
+                              title="View Details"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </button>
                             {canManageLibrary && transaction.status === 'Issued' && (
-                              <button className="bg-green-100 text-green-800 px-3 py-1 rounded-lg text-sm hover:bg-green-200 transition-colors">
-                                Return
-                              </button>
-                            )}
-                            {canManageLibrary && transaction.status === 'Overdue' && (
-                              <button className="bg-red-100 text-red-800 px-3 py-1 rounded-lg text-sm hover:bg-red-200 transition-colors">
-                                Collect Fine
+                              <button
+                                onClick={() => handleReturnBook(transaction)}
+                                className="text-gray-600 hover:text-green-600 p-1.5 rounded-lg hover:bg-green-50 transition-colors"
+                                title="Return Book"
+                              >
+                                <ArrowLeft className="h-4 w-4" />
                               </button>
                             )}
                           </div>
                         </td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {activeTab === 'reports' && (
-          <div className="space-y-6">
-            {/* Report Generation */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center space-x-3 mb-4">
-                  <BarChart3 className="h-8 w-8 text-blue-600" />
-                  <h3 className="font-semibold text-gray-900">Library Statistics</h3>
-                </div>
-                <p className="text-sm text-gray-600 mb-4">Generate comprehensive library usage statistics</p>
-                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors">
-                  Generate Report
-                </button>
-              </div>
-              
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center space-x-3 mb-4">
-                  <TrendingUp className="h-8 w-8 text-green-600" />
-                  <h3 className="font-semibold text-gray-900">Popular Books</h3>
-                </div>
-                <p className="text-sm text-gray-600 mb-4">Most issued and popular books report</p>
-                <button className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition-colors">
-                  Generate Report
-                </button>
-              </div>
-              
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center space-x-3 mb-4">
-                  <AlertCircle className="h-8 w-8 text-red-600" />
-                  <h3 className="font-semibold text-gray-900">Overdue Report</h3>
-                </div>
-                <p className="text-sm text-gray-600 mb-4">Books overdue and fine collection report</p>
-                <button className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg transition-colors">
-                  Generate Report
-                </button>
-              </div>
-            </div>
-
-            {/* Quick Analytics */}
+      {/* Reports Tab */}
+      {activeTab === 'reports' && (
+        <div className="space-y-6">
+          {/* Quick Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Library Analytics</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-emerald-600">{((availableBooks / totalBooks) * 100).toFixed(1)}%</p>
-                  <p className="text-sm text-gray-600">Availability Rate</p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Books Available</p>
+                  <p className="text-2xl font-bold text-gray-900">{availableBooks} / {totalBooks}</p>
+                  <p className="text-sm text-green-600">{Math.round((availableBooks / totalBooks) * 100)}% available</p>
                 </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-blue-600">{((issuedBooks / totalBooks) * 100).toFixed(1)}%</p>
-                  <p className="text-sm text-gray-600">Utilization Rate</p>
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <Book className="h-6 w-6 text-blue-600" />
                 </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-purple-600">{(state.libraryMembers.reduce((sum, m) => sum + m.booksIssued, 0) / activeMembers || 0).toFixed(1)}</p>
-                  <p className="text-sm text-gray-600">Avg Books/Member</p>
+              </div>
+            </div>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Active Members</p>
+                  <p className="text-2xl font-bold text-gray-900">{state.libraryMembers.filter(m => m.status === 'Active').length}</p>
+                  <p className="text-sm text-blue-600">{Math.round((state.libraryMembers.filter(m => m.status === 'Active').length / totalMembers) * 100)}% of total</p>
                 </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-orange-600">{((overdueBooks / issuedBooks) * 100 || 0).toFixed(1)}%</p>
-                  <p className="text-sm text-gray-600">Overdue Rate</p>
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                  <Users className="h-6 w-6 text-green-600" />
+                </div>
+              </div>
+            </div>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Overdue Books</p>
+                  <p className="text-2xl font-bold text-gray-900">{overdueTransactions}</p>
+                  <p className="text-sm text-red-600">{Math.round((overdueTransactions / activeTransactions) * 100) || 0}% of issued</p>
+                </div>
+                <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                  <Clock className="h-6 w-6 text-red-600" />
+                </div>
+              </div>
+            </div>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Total Fines</p>
+                  <p className="text-2xl font-bold text-gray-900">${state.libraryMembers.reduce((sum, member) => sum + member.fineAmount, 0).toFixed(2)}</p>
+                  <p className="text-sm text-purple-600">From {state.libraryMembers.filter(m => m.fineAmount > 0).length} members</p>
+                </div>
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <FileText className="h-6 w-6 text-purple-600" />
                 </div>
               </div>
             </div>
           </div>
-        )}
-      </div>
+
+          {/* Reports Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Books by Category</h3>
+              <div className="space-y-4">
+                {categories.map(category => {
+                  const count = state.libraryBooks.filter(book => book.category === category).length;
+                  const percentage = Math.round((count / state.libraryBooks.length) * 100);
+                  
+                  return (
+                    <div key={category} className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">{category}</span>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-32 bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-blue-600 h-2 rounded-full" 
+                            style={{ width: `${percentage}%` }}
+                          ></div>
+                        </div>
+                        <span className="text-sm font-medium">{count} ({percentage}%)</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Member Distribution</h3>
+              <div className="space-y-4">
+                {['Student', 'Faculty', 'Staff'].map(type => {
+                  const count = state.libraryMembers.filter(member => member.memberType === type).length;
+                  const percentage = Math.round((count / state.libraryMembers.length) * 100) || 0;
+                  
+                  return (
+                    <div key={type} className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">{type}</span>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-32 bg-gray-200 rounded-full h-2">
+                          <div 
+                            className={`h-2 rounded-full ${
+                              type === 'Student' ? 'bg-blue-600' :
+                              type === 'Faculty' ? 'bg-purple-600' : 'bg-green-600'
+                            }`}
+                            style={{ width: `${percentage}%` }}
+                          ></div>
+                        </div>
+                        <span className="text-sm font-medium">{count} ({percentage}%)</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Monthly Activity */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Monthly Activity</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center p-4 bg-blue-50 rounded-lg">
+                <p className="text-2xl font-bold text-blue-600">42</p>
+                <p className="text-sm text-blue-600">Books Added</p>
+              </div>
+              <div className="text-center p-4 bg-green-50 rounded-lg">
+                <p className="text-2xl font-bold text-green-600">128</p>
+                <p className="text-sm text-green-600">Books Issued</p>
+              </div>
+              <div className="text-center p-4 bg-purple-50 rounded-lg">
+                <p className="text-2xl font-bold text-purple-600">15</p>
+                <p className="text-sm text-purple-600">New Members</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Add Book Modal */}
-      {isAddBookModalOpen && canManageLibrary && (
+      {isAddBookModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
               <div className="flex items-center space-x-3">
-                <BookPlus className="h-6 w-6" />
+                <Book className="h-6 w-6" />
                 <h2 className="text-xl font-semibold">Add New Book</h2>
               </div>
               <button
@@ -822,17 +1055,17 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                 <X className="h-5 w-5" />
               </button>
             </div>
-            
+
             <div className="flex-1 overflow-y-auto p-6">
-              <form className="space-y-6">
+              <form onSubmit={handleAddBook} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Book Title *</label>
                     <input
                       type="text"
-                      value={newBookData.title}
+                      value={bookFormData.title}
                       onChange={(e) => handleBookInputChange('title', e.target.value)}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                       placeholder="Enter book title"
                       required
                     />
@@ -841,94 +1074,93 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Author *</label>
                     <input
                       type="text"
-                      value={newBookData.author}
+                      value={bookFormData.author}
                       onChange={(e) => handleBookInputChange('author', e.target.value)}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                       placeholder="Enter author name"
                       required
                     />
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">ISBN *</label>
                     <input
                       type="text"
-                      value={newBookData.isbn}
+                      value={bookFormData.isbn}
                       onChange={(e) => handleBookInputChange('isbn', e.target.value)}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                      placeholder="978-0123456789"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      placeholder="e.g., 978-0123456789"
                       required
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Category *</label>
-                    <select 
-                      value={newBookData.category}
+                    <input
+                      type="text"
+                      value={bookFormData.category}
                       onChange={(e) => handleBookInputChange('category', e.target.value)}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent" 
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      placeholder="e.g., Computer Science"
                       required
-                    >
-                      <option value="">Select Category</option>
-                      {categories.map(category => (
-                        <option key={category} value={category}>{category}</option>
-                      ))}
-                    </select>
+                    />
                   </div>
                 </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Publisher</label>
                     <input
                       type="text"
-                      value={newBookData.publisher}
+                      value={bookFormData.publisher}
                       onChange={(e) => handleBookInputChange('publisher', e.target.value)}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                      placeholder="Publisher name"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      placeholder="Enter publisher name"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Publish Year</label>
                     <input
                       type="number"
-                      value={newBookData.publishYear}
+                      value={bookFormData.publishYear}
                       onChange={(e) => handleBookInputChange('publishYear', parseInt(e.target.value))}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                      placeholder="2024"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      placeholder="e.g., 2023"
                       min="1900"
                       max={new Date().getFullYear()}
                     />
                   </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Total Copies *</label>
                     <input
                       type="number"
-                      value={newBookData.totalCopies}
+                      value={bookFormData.totalCopies}
                       onChange={(e) => handleBookInputChange('totalCopies', parseInt(e.target.value))}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                      placeholder="1"
-                      min="1"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      placeholder="e.g., 5"
+                      min="0"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Location *</label>
+                    <input
+                      type="text"
+                      value={bookFormData.location}
+                      onChange={(e) => handleBookInputChange('location', e.target.value)}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      placeholder="e.g., Section A, Shelf 3"
                       required
                     />
                   </div>
                 </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Location *</label>
-                  <input
-                    type="text"
-                    value={newBookData.location}
-                    onChange={(e) => handleBookInputChange('location', e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                    placeholder="e.g., CS Section - A1"
-                    required
-                  />
-                </div>
               </form>
             </div>
-            
+
             <div className="flex justify-end space-x-3 p-6 border-t border-gray-200 bg-gray-50">
               <button
                 onClick={() => setIsAddBookModalOpen(false)}
@@ -936,11 +1168,12 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
               >
                 Cancel
               </button>
-              <button 
+              <button
                 onClick={handleAddBook}
-                className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 transition-colors"
               >
-                Add Book
+                <Save className="h-4 w-4" />
+                <span>Add Book</span>
               </button>
             </div>
           </div>
@@ -948,13 +1181,13 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
       )}
 
       {/* Add Member Modal */}
-      {isAddMemberModalOpen && canManageLibrary && (
+      {isAddMemberModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
               <div className="flex items-center space-x-3">
-                <UserPlus className="h-6 w-6" />
-                <h2 className="text-xl font-semibold">Register New Member</h2>
+                <Users className="h-6 w-6" />
+                <h2 className="text-xl font-semibold">Add New Member</h2>
               </div>
               <button
                 onClick={() => setIsAddMemberModalOpen(false)}
@@ -963,79 +1196,116 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                 <X className="h-5 w-5" />
               </button>
             </div>
-            
+
             <div className="flex-1 overflow-y-auto p-6">
-              <form className="space-y-6">
+              <form onSubmit={handleAddMember} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
                     <input
                       type="text"
-                      value={newMemberData.name}
+                      value={memberFormData.name}
                       onChange={(e) => handleMemberInputChange('name', e.target.value)}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                       placeholder="Enter full name"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
                     <input
                       type="email"
-                      value={newMemberData.email}
+                      value={memberFormData.email}
                       onChange={(e) => handleMemberInputChange('email', e.target.value)}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                      placeholder="email@college.edu"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      placeholder="Enter email address"
                       required
                     />
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Phone *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
                     <input
                       type="tel"
-                      value={newMemberData.phone}
+                      value={memberFormData.phone}
                       onChange={(e) => handleMemberInputChange('phone', e.target.value)}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                      placeholder="+1-555-0123"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      placeholder="Enter phone number"
                       required
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Member Type *</label>
-                    <select 
-                      value={newMemberData.memberType}
+                    <select
+                      value={memberFormData.memberType}
                       onChange={(e) => handleMemberInputChange('memberType', e.target.value)}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent" 
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                       required
                     >
-                      <option value="">Select Type</option>
                       <option value="Student">Student</option>
                       <option value="Faculty">Faculty</option>
                       <option value="Staff">Staff</option>
                     </select>
                   </div>
                 </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Department *</label>
-                  <select 
-                    value={newMemberData.department}
-                    onChange={(e) => handleMemberInputChange('department', e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent" 
-                    required
-                  >
-                    <option value="">Select Department</option>
-                    {categories.map(dept => (
-                      <option key={dept} value={dept}>{dept}</option>
-                    ))}
-                  </select>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Membership ID</label>
+                    <input
+                      type="text"
+                      value={memberFormData.membershipId}
+                      onChange={(e) => handleMemberInputChange('membershipId', e.target.value)}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      placeholder="Auto-generated if left blank"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Department *</label>
+                    <select
+                      value={memberFormData.department}
+                      onChange={(e) => handleMemberInputChange('department', e.target.value)}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      required
+                    >
+                      <option value="">Select Department</option>
+                      {departments.map(dept => (
+                        <option key={dept} value={dept}>{dept}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Max Books Allowed</label>
+                    <input
+                      type="number"
+                      value={memberFormData.maxBooks}
+                      onChange={(e) => handleMemberInputChange('maxBooks', parseInt(e.target.value))}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      placeholder="Default: 5 for students, 10 for faculty"
+                      min="1"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <select
+                      value={memberFormData.status}
+                      onChange={(e) => handleMemberInputChange('status', e.target.value)}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    >
+                      <option value="Active">Active</option>
+                      <option value="Inactive">Inactive</option>
+                      <option value="Suspended">Suspended</option>
+                    </select>
+                  </div>
                 </div>
               </form>
             </div>
-            
+
             <div className="flex justify-end space-x-3 p-6 border-t border-gray-200 bg-gray-50">
               <button
                 onClick={() => setIsAddMemberModalOpen(false)}
@@ -1043,11 +1313,12 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
               >
                 Cancel
               </button>
-              <button 
+              <button
                 onClick={handleAddMember}
-                className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 transition-colors"
               >
-                Register Member
+                <Save className="h-4 w-4" />
+                <span>Add Member</span>
               </button>
             </div>
           </div>
@@ -1055,12 +1326,12 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
       )}
 
       {/* Issue Book Modal */}
-      {isIssueBookModalOpen && canManageLibrary && (
+      {isIssueBookModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
               <div className="flex items-center space-x-3">
-                <Bookmark className="h-6 w-6" />
+                <Calendar className="h-6 w-6" />
                 <h2 className="text-xl font-semibold">Issue Book</h2>
               </div>
               <button
@@ -1070,18 +1341,15 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                 <X className="h-5 w-5" />
               </button>
             </div>
-            
+
             <div className="flex-1 overflow-y-auto p-6">
-              <form className="space-y-6">
+              <form onSubmit={handleIssueBook} className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Select Book *</label>
-                  <select 
-                    value={selectedBook?.id || ''}
-                    onChange={(e) => {
-                      const book = state.libraryBooks.find(b => b.id === e.target.value);
-                      setSelectedBook(book || null);
-                    }}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  <select
+                    value={issueFormData.bookId}
+                    onChange={(e) => handleIssueInputChange('bookId', e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                     required
                   >
                     <option value="">Select a book</option>
@@ -1091,20 +1359,16 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                         <option key={book.id} value={book.id}>
                           {book.title} by {book.author} ({book.availableCopies} available)
                         </option>
-                      ))
-                    }
+                      ))}
                   </select>
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Select Member *</label>
-                  <select 
-                    value={selectedMember?.id || ''}
-                    onChange={(e) => {
-                      const member = state.libraryMembers.find(m => m.id === e.target.value);
-                      setSelectedMember(member || null);
-                    }}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  <select
+                    value={issueFormData.memberId}
+                    onChange={(e) => handleIssueInputChange('memberId', e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                     required
                   >
                     <option value="">Select a member</option>
@@ -1114,34 +1378,58 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                         <option key={member.id} value={member.id}>
                           {member.name} ({member.memberType}) - {member.booksIssued}/{member.maxBooks} books
                         </option>
-                      ))
-                    }
+                      ))}
                   </select>
                 </div>
-                
-                {selectedBook && selectedMember && (
-                  <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-sm font-medium text-gray-700">Book:</span>
-                      <span className="text-sm text-gray-900">{selectedBook.title}</span>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Due Date *</label>
+                  <input
+                    type="date"
+                    value={issueFormData.dueDate}
+                    onChange={(e) => handleIssueInputChange('dueDate', e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    min={new Date().toISOString().split('T')[0]}
+                    required
+                  />
+                </div>
+
+                {/* Selected Book & Member Details */}
+                {issueFormData.bookId && issueFormData.memberId && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-200">
+                    <div className="bg-blue-50 rounded-lg p-4">
+                      <h4 className="font-medium text-blue-800 mb-2">Book Details</h4>
+                      {(() => {
+                        const book = state.libraryBooks.find(b => b.id === issueFormData.bookId);
+                        return book ? (
+                          <div className="space-y-2">
+                            <p className="text-sm"><span className="font-medium">Title:</span> {book.title}</p>
+                            <p className="text-sm"><span className="font-medium">Author:</span> {book.author}</p>
+                            <p className="text-sm"><span className="font-medium">ISBN:</span> {book.isbn}</p>
+                            <p className="text-sm"><span className="font-medium">Available:</span> {book.availableCopies} of {book.totalCopies}</p>
+                          </div>
+                        ) : null;
+                      })()}
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm font-medium text-gray-700">Member:</span>
-                      <span className="text-sm text-gray-900">{selectedMember.name}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm font-medium text-gray-700">Issue Date:</span>
-                      <span className="text-sm text-gray-900">{new Date().toLocaleDateString()}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm font-medium text-gray-700">Due Date:</span>
-                      <span className="text-sm text-gray-900">{new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString()}</span>
+                    <div className="bg-purple-50 rounded-lg p-4">
+                      <h4 className="font-medium text-purple-800 mb-2">Member Details</h4>
+                      {(() => {
+                        const member = state.libraryMembers.find(m => m.id === issueFormData.memberId);
+                        return member ? (
+                          <div className="space-y-2">
+                            <p className="text-sm"><span className="font-medium">Name:</span> {member.name}</p>
+                            <p className="text-sm"><span className="font-medium">ID:</span> {member.membershipId}</p>
+                            <p className="text-sm"><span className="font-medium">Type:</span> {member.memberType}</p>
+                            <p className="text-sm"><span className="font-medium">Books Issued:</span> {member.booksIssued} of {member.maxBooks}</p>
+                          </div>
+                        ) : null;
+                      })()}
                     </div>
                   </div>
                 )}
               </form>
             </div>
-            
+
             <div className="flex justify-end space-x-3 p-6 border-t border-gray-200 bg-gray-50">
               <button
                 onClick={() => setIsIssueBookModalOpen(false)}
@@ -1149,12 +1437,12 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
               >
                 Cancel
               </button>
-              <button 
+              <button
                 onClick={handleIssueBook}
-                disabled={!selectedBook || !selectedMember}
-                className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 transition-colors"
               >
-                Issue Book
+                <Calendar className="h-4 w-4" />
+                <span>Issue Book</span>
               </button>
             </div>
           </div>

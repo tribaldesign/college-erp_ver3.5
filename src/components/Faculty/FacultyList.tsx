@@ -65,10 +65,16 @@ export default function FacultyList({
 
   const getDesignationColor = (designation: string) => {
     switch (designation) {
-      case 'Professor': return 'bg-purple-100 text-purple-800';
-      case 'Associate Professor': return 'bg-blue-100 text-blue-800';
-      case 'Assistant Professor': return 'bg-indigo-100 text-indigo-800';
-      case 'Lecturer': return 'bg-teal-100 text-teal-800';
+      case 'Principal': return 'bg-purple-100 text-purple-800';
+      case 'Director': return 'bg-indigo-100 text-indigo-800';
+      case 'Dean': return 'bg-blue-100 text-blue-800';
+      case 'Professor': return 'bg-green-100 text-green-800';
+      case 'Associate Professor': return 'bg-teal-100 text-teal-800';
+      case 'Assistant Professor': return 'bg-cyan-100 text-cyan-800';
+      case 'Lecturer': return 'bg-yellow-100 text-yellow-800';
+      case 'Senior Lecturer': return 'bg-orange-100 text-orange-800';
+      case 'Staff': return 'bg-gray-100 text-gray-800';
+      case 'Librarian': return 'bg-pink-100 text-pink-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };

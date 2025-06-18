@@ -118,10 +118,16 @@ export default function FacultyModal({ faculty, isOpen, onClose, mode, onSave }:
 
   const getDesignationColor = (designation: string) => {
     switch (designation) {
-      case 'Professor': return 'bg-purple-100 text-purple-800';
-      case 'Associate Professor': return 'bg-blue-100 text-blue-800';
-      case 'Assistant Professor': return 'bg-indigo-100 text-indigo-800';
-      case 'Lecturer': return 'bg-teal-100 text-teal-800';
+      case 'Principal': return 'bg-purple-100 text-purple-800';
+      case 'Director': return 'bg-indigo-100 text-indigo-800';
+      case 'Dean': return 'bg-blue-100 text-blue-800';
+      case 'Professor': return 'bg-green-100 text-green-800';
+      case 'Associate Professor': return 'bg-teal-100 text-teal-800';
+      case 'Assistant Professor': return 'bg-cyan-100 text-cyan-800';
+      case 'Lecturer': return 'bg-yellow-100 text-yellow-800';
+      case 'Senior Lecturer': return 'bg-orange-100 text-orange-800';
+      case 'Staff': return 'bg-gray-100 text-gray-800';
+      case 'Librarian': return 'bg-pink-100 text-pink-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -580,6 +586,8 @@ export default function FacultyModal({ faculty, isOpen, onClose, mode, onSave }:
                     <option value="Sociology">Sociology</option>
                     <option value="Economics">Economics</option>
                     <option value="Geography">Geography</option>
+                    <option value="Library">Library</option>
+                    <option value="Administration">Administration</option>
                   </select>
                 </div>
                 <div>
@@ -593,6 +601,9 @@ export default function FacultyModal({ faculty, isOpen, onClose, mode, onSave }:
                     required
                   >
                     <option value="">Select Designation</option>
+                    <option value="Principal">Principal</option>
+                    <option value="Director">Director</option>
+                    <option value="Dean">Dean</option>
                     <option value="Professor">Professor</option>
                     <option value="Associate Professor">Associate Professor</option>
                     <option value="Assistant Professor">Assistant Professor</option>
@@ -600,6 +611,11 @@ export default function FacultyModal({ faculty, isOpen, onClose, mode, onSave }:
                     <option value="Senior Lecturer">Senior Lecturer</option>
                     <option value="Visiting Professor">Visiting Professor</option>
                     <option value="Adjunct Professor">Adjunct Professor</option>
+                    <option value="Research Professor">Research Professor</option>
+                    <option value="Clinical Professor">Clinical Professor</option>
+                    <option value="Professor Emeritus">Professor Emeritus</option>
+                    <option value="Staff">Staff</option>
+                    <option value="Librarian">Librarian</option>
                   </select>
                 </div>
               </div>

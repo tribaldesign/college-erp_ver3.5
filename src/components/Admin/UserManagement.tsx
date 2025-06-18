@@ -147,10 +147,15 @@ export default function UserManagement() {
     'Education',
     'Sociology',
     'Economics',
-    'Geography'
+    'Geography',
+    'Library',
+    'Administration'
   ];
 
   const facultyDesignations = [
+    'Principal',
+    'Director',
+    'Dean',
     'Professor',
     'Associate Professor',
     'Assistant Professor',
@@ -160,7 +165,9 @@ export default function UserManagement() {
     'Adjunct Professor',
     'Research Professor',
     'Clinical Professor',
-    'Professor Emeritus'
+    'Professor Emeritus',
+    'Staff',
+    'Librarian'
   ];
 
   const filteredUsers = users.filter(user => {
