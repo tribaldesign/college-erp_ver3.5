@@ -89,8 +89,8 @@ export default function UserManagement() {
       email: 'bob.smith@college.edu',
       phone: '+1-555-0103',
       userType: 'student',
-      department: 'Electrical Engineering',
-      rollNumber: 'EE21002',
+      department: 'Political Science',
+      rollNumber: 'PS21002',
       status: 'Pending',
       hasPassword: false,
       createdDate: '2024-01-15'
@@ -129,13 +129,13 @@ export default function UserManagement() {
 
   const departments = [
     'Computer Science',
-    'Electrical Engineering',
-    'Mechanical Engineering',
-    'Civil Engineering',
-    'Chemical Engineering',
-    'Mathematics',
-    'Physics',
-    'Chemistry'
+    'Political Science',
+    'English',
+    'History',
+    'Education',
+    'Sociology',
+    'Economics',
+    'Geography'
   ];
 
   const facultyDesignations = [

@@ -40,8 +40,8 @@ export const mockStudents: Student[] = [
     name: 'Bob Smith',
     email: 'bob.smith@college.edu',
     phone: '+1-555-0103',
-    rollNumber: 'EE21002',
-    department: 'Electrical Engineering',
+    rollNumber: 'PS21002',
+    department: 'Political Science',
     semester: 4,
     dateOfBirth: '2002-07-22',
     address: '456 Oak Street, University City, State 12345',
@@ -56,7 +56,7 @@ export const mockStudents: Student[] = [
     homeAddress: '789 Oak Avenue, Hometown, State 54321',
     presentAddress: '456 Oak Street, University City, State 12345',
     country: 'United States',
-    subjectsTaken: ['Circuit Analysis', 'Digital Systems', 'Electronics', 'Signal Processing'],
+    subjectsTaken: ['Political Theory', 'International Relations', 'Comparative Politics', 'Public Administration'],
     facultyMembers: ['Dr. Michael Brown', 'Dr. Emily Davis'],
     emergencyContact: {
       name: 'John Smith',
@@ -74,8 +74,8 @@ export const mockStudents: Student[] = [
     name: 'Carol Davis',
     email: 'carol.davis@college.edu',
     phone: '+1-555-0105',
-    rollNumber: 'ME20001',
-    department: 'Mechanical Engineering',
+    rollNumber: 'EN20001',
+    department: 'English',
     semester: 8,
     dateOfBirth: '2001-11-08',
     address: '789 Pine Road, University City, State 12345',
@@ -90,7 +90,7 @@ export const mockStudents: Student[] = [
     homeAddress: '321 Pine Street, Hometown, State 54321',
     presentAddress: '789 Pine Road, University City, State 12345',
     country: 'United States',
-    subjectsTaken: ['Thermodynamics', 'Fluid Mechanics', 'Heat Transfer', 'Manufacturing Processes'],
+    subjectsTaken: ['English Literature', 'Creative Writing', 'Linguistics', 'American Literature'],
     facultyMembers: ['Dr. Emily Davis', 'Dr. Robert Wilson'],
     emergencyContact: {
       name: 'Susan Davis',
@@ -108,8 +108,8 @@ export const mockStudents: Student[] = [
     name: 'David Wilson',
     email: 'david.wilson@college.edu',
     phone: '+1-555-0107',
-    rollNumber: 'CS22001',
-    department: 'Computer Science',
+    rollNumber: 'HI22001',
+    department: 'History',
     semester: 2,
     dateOfBirth: '2003-01-12',
     address: '321 Elm Street, University City, State 12345',
@@ -124,7 +124,7 @@ export const mockStudents: Student[] = [
     homeAddress: '654 Elm Road, Hometown, State 54321',
     presentAddress: '321 Elm Street, University City, State 12345',
     country: 'United States',
-    subjectsTaken: ['Programming Fundamentals', 'Data Structures', 'Discrete Mathematics'],
+    subjectsTaken: ['World History', 'American History', 'Historical Research Methods'],
     facultyMembers: ['Dr. Sarah Johnson', 'Dr. Robert Wilson'],
     emergencyContact: {
       name: 'Robert Wilson Sr.',
@@ -142,8 +142,8 @@ export const mockStudents: Student[] = [
     name: 'Emma Thompson',
     email: 'emma.thompson@college.edu',
     phone: '+1-555-0109',
-    rollNumber: 'CE21003',
-    department: 'Civil Engineering',
+    rollNumber: 'ED21003',
+    department: 'Education',
     semester: 5,
     dateOfBirth: '2002-05-20',
     address: '654 Maple Drive, University City, State 12345',
@@ -158,7 +158,7 @@ export const mockStudents: Student[] = [
     homeAddress: '987 Maple Avenue, Hometown, State 54321',
     presentAddress: '654 Maple Drive, University City, State 12345',
     country: 'United States',
-    subjectsTaken: ['Structural Analysis', 'Concrete Technology', 'Surveying', 'Soil Mechanics'],
+    subjectsTaken: ['Educational Psychology', 'Curriculum Development', 'Teaching Methods', 'Child Development'],
     facultyMembers: ['Dr. Robert Chen', 'Dr. Emily Davis'],
     emergencyContact: {
       name: 'James Thompson',
@@ -176,8 +176,8 @@ export const mockStudents: Student[] = [
     name: 'Frank Miller',
     email: 'frank.miller@college.edu',
     phone: '+1-555-0111',
-    rollNumber: 'EE20002',
-    department: 'Electrical Engineering',
+    rollNumber: 'SO20002',
+    department: 'Sociology',
     semester: 7,
     dateOfBirth: '2001-09-14',
     address: '987 Cedar Lane, University City, State 12345',
@@ -192,7 +192,7 @@ export const mockStudents: Student[] = [
     homeAddress: '147 Cedar Street, Hometown, State 54321',
     presentAddress: '987 Cedar Lane, University City, State 12345',
     country: 'United States',
-    subjectsTaken: ['Circuit Analysis', 'Digital Systems', 'Power Systems', 'Control Systems'],
+    subjectsTaken: ['Social Theory', 'Research Methods', 'Urban Sociology', 'Social Psychology'],
     facultyMembers: ['Dr. Michael Brown', 'Dr. James Taylor'],
     emergencyContact: {
       name: 'Linda Miller',
@@ -210,8 +210,8 @@ export const mockStudents: Student[] = [
     name: 'Grace Lee',
     email: 'grace.lee@college.edu',
     phone: '+1-555-0113',
-    rollNumber: 'CS23001',
-    department: 'Computer Science',
+    rollNumber: 'EC23001',
+    department: 'Economics',
     semester: 1,
     dateOfBirth: '2003-12-03',
     address: '147 Birch Street, University City, State 12345',
@@ -226,7 +226,7 @@ export const mockStudents: Student[] = [
     homeAddress: '258 Birch Avenue, Hometown, State 54321',
     presentAddress: '147 Birch Street, University City, State 12345',
     country: 'United States',
-    subjectsTaken: ['Programming Fundamentals', 'Mathematics I'],
+    subjectsTaken: ['Microeconomics', 'Mathematics for Economics'],
     facultyMembers: ['Dr. Sarah Johnson', 'Dr. Robert Wilson'],
     emergencyContact: {
       name: 'Helen Lee',
@@ -244,8 +244,8 @@ export const mockStudents: Student[] = [
     name: 'Henry Brown',
     email: 'henry.brown@college.edu',
     phone: '+1-555-0115',
-    rollNumber: 'ME21004',
-    department: 'Mechanical Engineering',
+    rollNumber: 'GE21004',
+    department: 'Geography',
     semester: 3,
     dateOfBirth: '2002-08-17',
     address: '258 Willow Way, University City, State 12345',
@@ -260,7 +260,7 @@ export const mockStudents: Student[] = [
     homeAddress: '369 Willow Street, Hometown, State 54321',
     presentAddress: '258 Willow Way, University City, State 12345',
     country: 'United States',
-    subjectsTaken: ['Engineering Mechanics', 'Thermodynamics', 'Materials Science'],
+    subjectsTaken: ['Physical Geography', 'Human Geography', 'Cartography'],
     facultyMembers: ['Dr. Emily Davis', 'Dr. Robert Wilson'],
     emergencyContact: {
       name: 'Patricia Brown',
@@ -278,8 +278,8 @@ export const mockStudents: Student[] = [
     name: 'Isabella Garcia',
     email: 'isabella.garcia@college.edu',
     phone: '+1-555-0117',
-    rollNumber: 'CHE22001',
-    department: 'Chemical Engineering',
+    rollNumber: 'CS22001',
+    department: 'Computer Science',
     semester: 4,
     dateOfBirth: '2002-04-25',
     address: '369 Spruce Court, University City, State 12345',
@@ -294,7 +294,7 @@ export const mockStudents: Student[] = [
     homeAddress: '741 Spruce Avenue, Hometown, State 54321',
     presentAddress: '369 Spruce Court, University City, State 12345',
     country: 'United States',
-    subjectsTaken: ['Chemical Process Principles', 'Organic Chemistry', 'Thermodynamics'],
+    subjectsTaken: ['Programming Fundamentals', 'Data Structures', 'Web Development'],
     facultyMembers: ['Dr. Maria Rodriguez', 'Dr. Emily Davis'],
     emergencyContact: {
       name: 'Carlos Garcia',
@@ -312,8 +312,8 @@ export const mockStudents: Student[] = [
     name: 'Jack Anderson',
     email: 'jack.anderson@college.edu',
     phone: '+1-555-0119',
-    rollNumber: 'CS19001',
-    department: 'Computer Science',
+    rollNumber: 'PS19001',
+    department: 'Political Science',
     semester: 8,
     dateOfBirth: '2001-01-30',
     address: '741 Aspen Avenue, University City, State 12345',
@@ -328,7 +328,7 @@ export const mockStudents: Student[] = [
     homeAddress: '852 Aspen Street, Hometown, State 54321',
     presentAddress: '741 Aspen Avenue, University City, State 12345',
     country: 'United States',
-    subjectsTaken: ['Data Structures', 'Algorithms', 'Software Engineering', 'Machine Learning', 'Capstone Project'],
+    subjectsTaken: ['Political Theory', 'International Relations', 'Public Policy', 'Comparative Politics', 'Capstone Project'],
     facultyMembers: ['Dr. Sarah Johnson', 'Dr. Kevin Zhang'],
     emergencyContact: {
       name: 'Nancy Anderson',
@@ -386,11 +386,11 @@ export const mockFaculty: Faculty[] = [
     email: 'michael.brown@college.edu',
     phone: '+1-555-0202',
     employeeId: 'FAC002',
-    department: 'Electrical Engineering',
+    department: 'Political Science',
     designation: 'Associate Professor',
-    qualification: 'Ph.D. in Electrical Engineering',
+    qualification: 'Ph.D. in Political Science',
     experience: 8,
-    subjects: ['Circuit Analysis', 'Digital Systems', 'Power Electronics'],
+    subjects: ['Political Theory', 'International Relations', 'Comparative Politics'],
     joiningDate: '2016-08-01',
     status: 'Active',
     // Enhanced profile fields
@@ -406,13 +406,13 @@ export const mockFaculty: Faculty[] = [
       relationship: 'Spouse',
       phone: '+1-555-0302'
     },
-    researchInterests: ['Power Electronics', 'Renewable Energy Systems', 'Smart Grids'],
+    researchInterests: ['International Relations', 'Political Theory', 'Comparative Government'],
     publications: [
-      { title: 'Smart Grid Technologies', year: 2023, journal: 'IEEE Power Systems' },
-      { title: 'Renewable Energy Integration', year: 2022, journal: 'Energy Systems Journal' }
+      { title: 'Modern Political Theory', year: 2023, journal: 'Political Science Quarterly' },
+      { title: 'International Relations in the 21st Century', year: 2022, journal: 'Foreign Affairs Review' }
     ],
     awards: [
-      { title: 'Outstanding Faculty Award', year: 2022, organization: 'Engineering Department' }
+      { title: 'Outstanding Faculty Award', year: 2022, organization: 'Political Science Department' }
     ]
   },
   {
@@ -421,11 +421,11 @@ export const mockFaculty: Faculty[] = [
     email: 'emily.davis@college.edu',
     phone: '+1-555-0203',
     employeeId: 'FAC003',
-    department: 'Mechanical Engineering',
+    department: 'English',
     designation: 'Professor',
-    qualification: 'Ph.D. in Mechanical Engineering',
+    qualification: 'Ph.D. in English Literature',
     experience: 15,
-    subjects: ['Thermodynamics', 'Fluid Mechanics', 'Heat Transfer'],
+    subjects: ['English Literature', 'Creative Writing', 'American Literature'],
     joiningDate: '2009-01-10',
     status: 'Active',
     // Enhanced profile fields
@@ -441,15 +441,15 @@ export const mockFaculty: Faculty[] = [
       relationship: 'Spouse',
       phone: '+1-555-0303'
     },
-    researchInterests: ['Thermal Systems', 'Energy Efficiency', 'Sustainable Engineering'],
+    researchInterests: ['Modern Literature', 'Creative Writing', 'Literary Criticism'],
     publications: [
-      { title: 'Advanced Thermodynamics Applications', year: 2023, journal: 'Mechanical Engineering Review' },
-      { title: 'Energy Efficient Systems Design', year: 2022, journal: 'Energy Engineering' },
-      { title: 'Sustainable Manufacturing Processes', year: 2021, journal: 'Green Technology' }
+      { title: 'Contemporary American Literature', year: 2023, journal: 'Literary Review' },
+      { title: 'Creative Writing in the Digital Age', year: 2022, journal: 'Writing Studies' },
+      { title: 'Narrative Techniques in Modern Fiction', year: 2021, journal: 'Literature Today' }
     ],
     awards: [
       { title: 'Distinguished Professor Award', year: 2023, organization: 'University Board' },
-      { title: 'Research Excellence in Engineering', year: 2021, organization: 'Engineering Society' }
+      { title: 'Excellence in Literature Teaching', year: 2021, organization: 'English Department' }
     ]
   },
   {
@@ -458,11 +458,11 @@ export const mockFaculty: Faculty[] = [
     email: 'robert.wilson@college.edu',
     phone: '+1-555-0204',
     employeeId: 'FAC004',
-    department: 'Mathematics',
+    department: 'History',
     designation: 'Associate Professor',
-    qualification: 'Ph.D. in Applied Mathematics',
+    qualification: 'Ph.D. in History',
     experience: 10,
-    subjects: ['Calculus', 'Linear Algebra', 'Discrete Mathematics'],
+    subjects: ['World History', 'American History', 'Historical Research Methods'],
     joiningDate: '2014-03-20',
     status: 'Active',
     // Enhanced profile fields
@@ -478,13 +478,13 @@ export const mockFaculty: Faculty[] = [
       relationship: 'Spouse',
       phone: '+1-555-0304'
     },
-    researchInterests: ['Applied Mathematics', 'Numerical Analysis', 'Mathematical Modeling'],
+    researchInterests: ['American History', 'Social History', 'Historical Methodology'],
     publications: [
-      { title: 'Numerical Methods in Engineering', year: 2023, journal: 'Applied Mathematics Quarterly' },
-      { title: 'Mathematical Modeling Techniques', year: 2022, journal: 'Mathematics in Science' }
+      { title: 'Social Movements in American History', year: 2023, journal: 'Historical Studies' },
+      { title: 'Research Methods in Historical Analysis', year: 2022, journal: 'History and Method' }
     ],
     awards: [
-      { title: 'Excellence in Teaching Mathematics', year: 2022, organization: 'Mathematics Department' }
+      { title: 'Excellence in Teaching History', year: 2022, organization: 'History Department' }
     ]
   },
   {
@@ -493,11 +493,11 @@ export const mockFaculty: Faculty[] = [
     email: 'lisa.anderson@college.edu',
     phone: '+1-555-0205',
     employeeId: 'FAC005',
-    department: 'English',
+    department: 'Education',
     designation: 'Assistant Professor',
-    qualification: 'M.A. in English Literature',
+    qualification: 'Ph.D. in Education',
     experience: 6,
-    subjects: ['Technical Writing', 'Communication Skills', 'Literature'],
+    subjects: ['Educational Psychology', 'Curriculum Development', 'Teaching Methods'],
     joiningDate: '2018-07-15',
     status: 'Active',
     // Enhanced profile fields
@@ -505,21 +505,21 @@ export const mockFaculty: Faculty[] = [
     bloodType: 'B-',
     age: 35,
     dateOfBirth: '1988-04-25',
-    homeAddress: '654 Literature Lane, University City, State 12345',
-    presentAddress: '654 Literature Lane, University City, State 12345',
+    homeAddress: '654 Education Lane, University City, State 12345',
+    presentAddress: '654 Education Lane, University City, State 12345',
     country: 'United States',
     emergencyContact: {
       name: 'Mark Anderson',
       relationship: 'Spouse',
       phone: '+1-555-0305'
     },
-    researchInterests: ['Technical Communication', 'Digital Literacy', 'Academic Writing'],
+    researchInterests: ['Educational Psychology', 'Learning Theory', 'Curriculum Design'],
     publications: [
-      { title: 'Effective Technical Communication', year: 2023, journal: 'Communication Studies' },
-      { title: 'Digital Age Writing Skills', year: 2022, journal: 'Educational Technology' }
+      { title: 'Modern Teaching Methods', year: 2023, journal: 'Education Today' },
+      { title: 'Psychology in the Classroom', year: 2022, journal: 'Educational Psychology Review' }
     ],
     awards: [
-      { title: 'Innovative Teaching Award', year: 2023, organization: 'English Department' }
+      { title: 'Innovative Teaching Award', year: 2023, organization: 'Education Department' }
     ]
   },
   {
@@ -528,11 +528,11 @@ export const mockFaculty: Faculty[] = [
     email: 'james.taylor@college.edu',
     phone: '+1-555-0206',
     employeeId: 'FAC006',
-    department: 'Physics',
+    department: 'Sociology',
     designation: 'Professor',
-    qualification: 'Ph.D. in Physics',
+    qualification: 'Ph.D. in Sociology',
     experience: 18,
-    subjects: ['Classical Mechanics', 'Quantum Physics', 'Electromagnetism'],
+    subjects: ['Social Theory', 'Research Methods', 'Urban Sociology'],
     joiningDate: '2006-09-01',
     status: 'Active',
     // Enhanced profile fields
@@ -540,22 +540,22 @@ export const mockFaculty: Faculty[] = [
     bloodType: 'AB+',
     age: 52,
     dateOfBirth: '1971-07-18',
-    homeAddress: '987 Physics Plaza, University City, State 12345',
-    presentAddress: '987 Physics Plaza, University City, State 12345',
+    homeAddress: '987 Sociology Plaza, University City, State 12345',
+    presentAddress: '987 Sociology Plaza, University City, State 12345',
     country: 'United States',
     emergencyContact: {
       name: 'Susan Taylor',
       relationship: 'Spouse',
       phone: '+1-555-0306'
     },
-    researchInterests: ['Quantum Mechanics', 'Theoretical Physics', 'Particle Physics'],
+    researchInterests: ['Social Theory', 'Urban Studies', 'Social Research Methods'],
     publications: [
-      { title: 'Quantum Mechanics in Modern Physics', year: 2023, journal: 'Physical Review' },
-      { title: 'Advanced Electromagnetic Theory', year: 2022, journal: 'Physics Today' },
-      { title: 'Particle Physics Fundamentals', year: 2021, journal: 'Journal of Physics' }
+      { title: 'Contemporary Social Theory', year: 2023, journal: 'Sociological Review' },
+      { title: 'Urban Sociology in the Modern Era', year: 2022, journal: 'Urban Studies' },
+      { title: 'Research Methods in Social Science', year: 2021, journal: 'Methodology Today' }
     ],
     awards: [
-      { title: 'Lifetime Achievement in Physics', year: 2023, organization: 'Physics Society' },
+      { title: 'Lifetime Achievement in Sociology', year: 2023, organization: 'Sociology Society' },
       { title: 'Distinguished Researcher Award', year: 2020, organization: 'University Research Committee' }
     ]
   },
@@ -565,11 +565,11 @@ export const mockFaculty: Faculty[] = [
     email: 'maria.rodriguez@college.edu',
     phone: '+1-555-0207',
     employeeId: 'FAC007',
-    department: 'Chemistry',
+    department: 'Economics',
     designation: 'Associate Professor',
-    qualification: 'Ph.D. in Organic Chemistry',
+    qualification: 'Ph.D. in Economics',
     experience: 9,
-    subjects: ['Organic Chemistry', 'Analytical Chemistry', 'Biochemistry'],
+    subjects: ['Microeconomics', 'Macroeconomics', 'Economic Theory'],
     joiningDate: '2015-01-12',
     status: 'Active',
     // Enhanced profile fields
@@ -577,21 +577,21 @@ export const mockFaculty: Faculty[] = [
     bloodType: 'O-',
     age: 41,
     dateOfBirth: '1982-09-05',
-    homeAddress: '147 Chemistry Circle, University City, State 12345',
-    presentAddress: '147 Chemistry Circle, University City, State 12345',
+    homeAddress: '147 Economics Circle, University City, State 12345',
+    presentAddress: '147 Economics Circle, University City, State 12345',
     country: 'United States',
     emergencyContact: {
       name: 'Carlos Rodriguez',
       relationship: 'Spouse',
       phone: '+1-555-0307'
     },
-    researchInterests: ['Organic Synthesis', 'Green Chemistry', 'Pharmaceutical Chemistry'],
+    researchInterests: ['Economic Theory', 'Development Economics', 'Behavioral Economics'],
     publications: [
-      { title: 'Green Chemistry Applications', year: 2023, journal: 'Green Chemistry Letters' },
-      { title: 'Organic Synthesis Methods', year: 2022, journal: 'Organic Chemistry Review' }
+      { title: 'Modern Economic Theory', year: 2023, journal: 'Economic Review' },
+      { title: 'Behavioral Economics Applications', year: 2022, journal: 'Economics Today' }
     ],
     awards: [
-      { title: 'Green Chemistry Innovation Award', year: 2022, organization: 'Chemistry Department' }
+      { title: 'Economics Research Award', year: 2022, organization: 'Economics Department' }
     ]
   },
   {
@@ -600,11 +600,11 @@ export const mockFaculty: Faculty[] = [
     email: 'kevin.zhang@college.edu',
     phone: '+1-555-0208',
     employeeId: 'FAC008',
-    department: 'Computer Science',
+    department: 'Geography',
     designation: 'Assistant Professor',
-    qualification: 'Ph.D. in Artificial Intelligence',
+    qualification: 'Ph.D. in Geography',
     experience: 4,
-    subjects: ['Artificial Intelligence', 'Neural Networks', 'Computer Vision'],
+    subjects: ['Physical Geography', 'Human Geography', 'Geographic Information Systems'],
     joiningDate: '2020-08-25',
     status: 'Active',
     // Enhanced profile fields
@@ -612,21 +612,21 @@ export const mockFaculty: Faculty[] = [
     bloodType: 'A+',
     age: 33,
     dateOfBirth: '1990-03-12',
-    homeAddress: '258 Innovation Street, University City, State 12345',
-    presentAddress: '258 Innovation Street, University City, State 12345',
+    homeAddress: '258 Geography Street, University City, State 12345',
+    presentAddress: '258 Geography Street, University City, State 12345',
     country: 'United States',
     emergencyContact: {
       name: 'Amy Zhang',
       relationship: 'Spouse',
       phone: '+1-555-0308'
     },
-    researchInterests: ['Deep Learning', 'Computer Vision', 'Natural Language Processing'],
+    researchInterests: ['Geographic Information Systems', 'Environmental Geography', 'Spatial Analysis'],
     publications: [
-      { title: 'Deep Learning in Computer Vision', year: 2023, journal: 'AI Research Quarterly' },
-      { title: 'Neural Network Architectures', year: 2022, journal: 'Machine Learning Today' }
+      { title: 'GIS Applications in Environmental Studies', year: 2023, journal: 'Geography Today' },
+      { title: 'Spatial Analysis Methods', year: 2022, journal: 'Geographic Research' }
     ],
     awards: [
-      { title: 'Young Researcher Award', year: 2023, organization: 'AI Research Society' }
+      { title: 'Young Researcher Award', year: 2023, organization: 'Geography Research Society' }
     ]
   }
 ];
@@ -652,90 +652,125 @@ export const mockCourses: Course[] = [
   },
   {
     id: '2',
-    name: 'Circuit Analysis',
-    code: 'EE201',
+    name: 'Political Theory',
+    code: 'PS201',
     credits: 3,
-    department: 'Electrical Engineering',
+    department: 'Political Science',
     semester: 2,
     instructor: 'Dr. Michael Brown',
     schedule: [
-      { day: 'Tuesday', time: '9:00 AM - 10:30 AM', room: 'EE Lab 1' },
-      { day: 'Thursday', time: '9:00 AM - 10:30 AM', room: 'EE Lab 1' }
+      { day: 'Tuesday', time: '9:00 AM - 10:30 AM', room: 'Room 301' },
+      { day: 'Thursday', time: '9:00 AM - 10:30 AM', room: 'Room 301' }
     ],
-    description: 'Analysis of electrical circuits using various techniques',
-    prerequisites: ['Physics I', 'Calculus I'],
+    description: 'Introduction to major political theories and concepts',
+    prerequisites: ['Introduction to Political Science'],
     maxStudents: 40,
     enrolledStudents: 35
   },
   {
     id: '3',
-    name: 'Thermodynamics',
-    code: 'ME301',
+    name: 'English Literature',
+    code: 'EN301',
     credits: 4,
-    department: 'Mechanical Engineering',
+    department: 'English',
     semester: 3,
     instructor: 'Dr. Emily Davis',
     schedule: [
-      { day: 'Monday', time: '2:00 PM - 3:30 PM', room: 'ME Lab 1' },
-      { day: 'Wednesday', time: '2:00 PM - 3:30 PM', room: 'ME Lab 1' },
-      { day: 'Friday', time: '10:00 AM - 11:30 AM', room: 'Room 301' }
+      { day: 'Monday', time: '2:00 PM - 3:30 PM', room: 'Literature Hall' },
+      { day: 'Wednesday', time: '2:00 PM - 3:30 PM', room: 'Literature Hall' },
+      { day: 'Friday', time: '10:00 AM - 11:30 AM', room: 'Room 401' }
     ],
-    description: 'Principles of thermodynamics and their applications',
-    prerequisites: ['Physics I', 'Calculus II'],
+    description: 'Survey of English literature from medieval to modern times',
+    prerequisites: ['Introduction to Literature'],
     maxStudents: 50,
     enrolledStudents: 42
   },
   {
     id: '4',
-    name: 'Machine Learning',
-    code: 'CS501',
+    name: 'World History',
+    code: 'HI501',
     credits: 3,
-    department: 'Computer Science',
+    department: 'History',
     semester: 5,
-    instructor: 'Dr. Kevin Zhang',
+    instructor: 'Dr. Robert Wilson',
     schedule: [
-      { day: 'Monday', time: '3:30 PM - 5:00 PM', room: 'CS Lab 2' },
-      { day: 'Wednesday', time: '3:30 PM - 5:00 PM', room: 'CS Lab 2' }
+      { day: 'Monday', time: '3:30 PM - 5:00 PM', room: 'History Hall' },
+      { day: 'Wednesday', time: '3:30 PM - 5:00 PM', room: 'History Hall' }
     ],
-    description: 'Introduction to machine learning algorithms and applications',
-    prerequisites: ['Data Structures', 'Statistics', 'Linear Algebra'],
+    description: 'Comprehensive study of world civilizations and their development',
+    prerequisites: ['Introduction to History', 'Research Methods'],
     maxStudents: 30,
     enrolledStudents: 25
   },
   {
     id: '5',
-    name: 'Digital Systems',
-    code: 'EE301',
+    name: 'Educational Psychology',
+    code: 'ED301',
     credits: 4,
-    department: 'Electrical Engineering',
+    department: 'Education',
     semester: 3,
-    instructor: 'Dr. Michael Brown',
+    instructor: 'Prof. Lisa Anderson',
     schedule: [
-      { day: 'Tuesday', time: '2:00 PM - 3:30 PM', room: 'EE Lab 2' },
-      { day: 'Thursday', time: '2:00 PM - 3:30 PM', room: 'EE Lab 2' },
+      { day: 'Tuesday', time: '2:00 PM - 3:30 PM', room: 'Education Building' },
+      { day: 'Thursday', time: '2:00 PM - 3:30 PM', room: 'Education Building' },
       { day: 'Friday', time: '11:00 AM - 12:30 PM', room: 'Room 302' }
     ],
-    description: 'Design and analysis of digital systems and circuits',
-    prerequisites: ['Circuit Analysis', 'Boolean Algebra'],
+    description: 'Psychological principles applied to teaching and learning',
+    prerequisites: ['Introduction to Psychology', 'Introduction to Education'],
     maxStudents: 45,
     enrolledStudents: 38
   },
   {
     id: '6',
-    name: 'Fluid Mechanics',
-    code: 'ME401',
+    name: 'Social Theory',
+    code: 'SO401',
     credits: 3,
-    department: 'Mechanical Engineering',
+    department: 'Sociology',
     semester: 4,
-    instructor: 'Dr. Emily Davis',
+    instructor: 'Dr. James Taylor',
     schedule: [
-      { day: 'Tuesday', time: '11:00 AM - 12:30 PM', room: 'ME Lab 2' },
-      { day: 'Thursday', time: '11:00 AM - 12:30 PM', room: 'ME Lab 2' }
+      { day: 'Tuesday', time: '11:00 AM - 12:30 PM', room: 'Social Sciences Building' },
+      { day: 'Thursday', time: '11:00 AM - 12:30 PM', room: 'Social Sciences Building' }
     ],
-    description: 'Study of fluid behavior and applications in engineering',
-    prerequisites: ['Thermodynamics', 'Calculus III'],
+    description: 'Major sociological theories and their contemporary applications',
+    prerequisites: ['Introduction to Sociology', 'Research Methods'],
     maxStudents: 35,
     enrolledStudents: 28
+  },
+  {
+    id: '7',
+    name: 'Microeconomics',
+    code: 'EC201',
+    credits: 3,
+    department: 'Economics',
+    semester: 2,
+    instructor: 'Dr. Maria Rodriguez',
+    schedule: [
+      { day: 'Monday', time: '9:00 AM - 10:30 AM', room: 'Economics Hall' },
+      { day: 'Wednesday', time: '9:00 AM - 10:30 AM', room: 'Economics Hall' }
+    ],
+    description: 'Principles of microeconomic theory and market analysis',
+    prerequisites: ['Mathematics for Economics'],
+    maxStudents: 50,
+    enrolledStudents: 45
+  },
+  {
+    id: '8',
+    name: 'Physical Geography',
+    code: 'GE301',
+    credits: 4,
+    department: 'Geography',
+    semester: 3,
+    instructor: 'Dr. Kevin Zhang',
+    schedule: [
+      { day: 'Tuesday', time: '10:00 AM - 11:30 AM', room: 'Geography Lab' },
+      { day: 'Thursday', time: '10:00 AM - 11:30 AM', room: 'Geography Lab' },
+      { day: 'Friday', time: '2:00 PM - 3:30 PM', room: 'Room 501' }
+    ],
+    description: 'Study of Earth\'s physical systems and processes',
+    prerequisites: ['Introduction to Geography'],
+    maxStudents: 40,
+    enrolledStudents: 32
   }
 ];
 
@@ -744,7 +779,7 @@ export const mockDepartments: Department[] = [
     id: '1',
     name: 'Computer Science',
     code: 'CS',
-    description: 'Department of Computer Science and Engineering focusing on software development, algorithms, and emerging technologies.',
+    description: 'Department of Computer Science focusing on software development, algorithms, and emerging technologies.',
     head: 'Dr. Sarah Johnson',
     establishedYear: 1995,
     totalStudents: 245,
@@ -807,262 +842,423 @@ export const mockDepartments: Department[] = [
         semester: 5,
         type: 'Elective',
         description: 'Introduction to machine learning algorithms and applications',
-        prerequisites: ['CS301', 'MATH201'],
-        status: 'Active'
-      },
-      {
-        id: 'cs6',
-        name: 'Computer Networks',
-        code: 'CS401',
-        credits: 3,
-        semester: 4,
-        type: 'Core',
-        description: 'Network protocols, architecture, and security',
-        prerequisites: ['CS201'],
+        prerequisites: ['CS301'],
         status: 'Active'
       }
     ]
   },
   {
     id: '2',
-    name: 'Electrical Engineering',
-    code: 'EE',
-    description: 'Department of Electrical Engineering specializing in electronics, power systems, and telecommunications.',
+    name: 'Political Science',
+    code: 'PS',
+    description: 'Department of Political Science specializing in political theory, international relations, and public administration.',
     head: 'Dr. Michael Brown',
     establishedYear: 1987,
     totalStudents: 189,
     totalFaculty: 15,
     totalCourses: 38,
-    building: 'Engineering Complex B',
-    contactEmail: 'ee@college.edu',
+    building: 'Social Sciences Building',
+    contactEmail: 'ps@college.edu',
     contactPhone: '+1-555-0302',
     status: 'Active',
     subjects: [
       {
-        id: 'ee1',
-        name: 'Circuit Analysis',
-        code: 'EE101',
-        credits: 4,
+        id: 'ps1',
+        name: 'Introduction to Political Science',
+        code: 'PS101',
+        credits: 3,
         semester: 1,
         type: 'Core',
-        description: 'Basic electrical circuit analysis and design',
-        prerequisites: ['MATH101'],
+        description: 'Basic concepts and principles of political science',
+        prerequisites: [],
         status: 'Active'
       },
       {
-        id: 'ee2',
-        name: 'Electronics',
-        code: 'EE201',
-        credits: 4,
+        id: 'ps2',
+        name: 'Political Theory',
+        code: 'PS201',
+        credits: 3,
         semester: 2,
         type: 'Core',
-        description: 'Electronic devices and circuit design',
-        prerequisites: ['EE101'],
+        description: 'Major political theories from ancient to modern times',
+        prerequisites: ['PS101'],
         status: 'Active'
       },
       {
-        id: 'ee3',
-        name: 'Digital Systems',
-        code: 'EE301',
+        id: 'ps3',
+        name: 'International Relations',
+        code: 'PS301',
         credits: 3,
         semester: 3,
         type: 'Core',
-        description: 'Digital logic design and computer architecture',
-        prerequisites: ['EE201'],
+        description: 'Study of international politics and diplomacy',
+        prerequisites: ['PS201'],
         status: 'Active'
       },
       {
-        id: 'ee4',
-        name: 'Power Systems',
-        code: 'EE401',
+        id: 'ps4',
+        name: 'Comparative Politics',
+        code: 'PS401',
         credits: 3,
         semester: 4,
         type: 'Core',
-        description: 'Power generation, transmission, and distribution',
-        prerequisites: ['EE201'],
-        status: 'Active'
-      },
-      {
-        id: 'ee5',
-        name: 'Control Systems',
-        code: 'EE402',
-        credits: 3,
-        semester: 4,
-        type: 'Elective',
-        description: 'Automatic control systems design and analysis',
-        prerequisites: ['EE301', 'MATH301'],
+        description: 'Comparative analysis of political systems',
+        prerequisites: ['PS201'],
         status: 'Active'
       }
     ]
   },
   {
     id: '3',
-    name: 'Mechanical Engineering',
-    code: 'ME',
-    description: 'Department of Mechanical Engineering covering thermodynamics, fluid mechanics, and manufacturing.',
+    name: 'English',
+    code: 'EN',
+    description: 'Department of English covering literature, creative writing, and language studies.',
     head: 'Dr. Emily Davis',
     establishedYear: 1982,
     totalStudents: 167,
     totalFaculty: 12,
     totalCourses: 35,
-    building: 'Engineering Complex C',
-    contactEmail: 'me@college.edu',
+    building: 'Humanities Building',
+    contactEmail: 'english@college.edu',
     contactPhone: '+1-555-0303',
     status: 'Active',
     subjects: [
       {
-        id: 'me1',
-        name: 'Engineering Mechanics',
-        code: 'ME101',
-        credits: 4,
+        id: 'en1',
+        name: 'Introduction to Literature',
+        code: 'EN101',
+        credits: 3,
         semester: 1,
         type: 'Core',
-        description: 'Statics and dynamics of engineering systems',
-        prerequisites: ['MATH101', 'PHYS101'],
+        description: 'Introduction to literary analysis and major works',
+        prerequisites: [],
         status: 'Active'
       },
       {
-        id: 'me2',
-        name: 'Thermodynamics',
-        code: 'ME201',
+        id: 'en2',
+        name: 'English Literature',
+        code: 'EN201',
         credits: 4,
         semester: 2,
         type: 'Core',
-        description: 'Principles of thermodynamics and heat transfer',
-        prerequisites: ['ME101'],
+        description: 'Survey of English literature from medieval to modern',
+        prerequisites: ['EN101'],
         status: 'Active'
       },
       {
-        id: 'me3',
-        name: 'Fluid Mechanics',
-        code: 'ME301',
+        id: 'en3',
+        name: 'Creative Writing',
+        code: 'EN301',
         credits: 3,
         semester: 3,
-        type: 'Core',
-        description: 'Fluid statics, dynamics, and applications',
-        prerequisites: ['ME201'],
+        type: 'Elective',
+        description: 'Workshop in creative writing techniques',
+        prerequisites: ['EN201'],
         status: 'Active'
       },
       {
-        id: 'me4',
-        name: 'Manufacturing Processes',
-        code: 'ME401',
+        id: 'en4',
+        name: 'American Literature',
+        code: 'EN401',
         credits: 3,
         semester: 4,
         type: 'Core',
-        description: 'Manufacturing techniques and process optimization',
-        prerequisites: ['ME101'],
+        description: 'Survey of American literature and authors',
+        prerequisites: ['EN201'],
         status: 'Active'
       }
     ]
   },
   {
     id: '4',
-    name: 'Civil Engineering',
-    code: 'CE',
-    description: 'Department of Civil Engineering focusing on infrastructure, construction, and environmental engineering.',
-    head: 'Dr. Robert Chen',
+    name: 'History',
+    code: 'HI',
+    description: 'Department of History focusing on world history, American history, and historical research methods.',
+    head: 'Dr. Robert Wilson',
     establishedYear: 1978,
     totalStudents: 134,
     totalFaculty: 10,
     totalCourses: 32,
-    building: 'Engineering Complex D',
-    contactEmail: 'ce@college.edu',
+    building: 'Humanities Building',
+    contactEmail: 'history@college.edu',
     contactPhone: '+1-555-0304',
     status: 'Active',
     subjects: [
       {
-        id: 'ce1',
-        name: 'Structural Analysis',
-        code: 'CE101',
-        credits: 4,
+        id: 'hi1',
+        name: 'Introduction to History',
+        code: 'HI101',
+        credits: 3,
         semester: 1,
         type: 'Core',
-        description: 'Analysis of structural systems and load calculations',
-        prerequisites: ['MATH101', 'PHYS101'],
+        description: 'Introduction to historical thinking and methodology',
+        prerequisites: [],
         status: 'Active'
       },
       {
-        id: 'ce2',
-        name: 'Concrete Technology',
-        code: 'CE201',
-        credits: 3,
+        id: 'hi2',
+        name: 'World History',
+        code: 'HI201',
+        credits: 4,
         semester: 2,
         type: 'Core',
-        description: 'Properties and applications of concrete materials',
-        prerequisites: ['CE101'],
+        description: 'Survey of world civilizations and cultures',
+        prerequisites: ['HI101'],
         status: 'Active'
       },
       {
-        id: 'ce3',
-        name: 'Transportation Engineering',
-        code: 'CE301',
+        id: 'hi3',
+        name: 'American History',
+        code: 'HI301',
         credits: 3,
         semester: 3,
-        type: 'Elective',
-        description: 'Design and planning of transportation systems',
-        prerequisites: ['CE101'],
+        type: 'Core',
+        description: 'History of the United States from colonial times to present',
+        prerequisites: ['HI201'],
         status: 'Active'
       }
     ]
   },
   {
     id: '5',
-    name: 'Mathematics',
-    code: 'MATH',
-    description: 'Department of Mathematics providing foundational mathematical education and research.',
-    head: 'Dr. Robert Wilson',
+    name: 'Education',
+    code: 'ED',
+    description: 'Department of Education providing teacher preparation and educational research.',
+    head: 'Prof. Lisa Anderson',
     establishedYear: 1975,
     totalStudents: 89,
     totalFaculty: 8,
     totalCourses: 28,
-    building: 'Science Building A',
-    contactEmail: 'math@college.edu',
+    building: 'Education Building',
+    contactEmail: 'education@college.edu',
     contactPhone: '+1-555-0305',
     status: 'Active',
     subjects: [
       {
-        id: 'math1',
-        name: 'Calculus I',
-        code: 'MATH101',
-        credits: 4,
+        id: 'ed1',
+        name: 'Introduction to Education',
+        code: 'ED101',
+        credits: 3,
         semester: 1,
         type: 'Core',
-        description: 'Differential calculus and applications',
+        description: 'Foundations of education and teaching',
         prerequisites: [],
         status: 'Active'
       },
       {
-        id: 'math2',
-        name: 'Calculus II',
-        code: 'MATH102',
+        id: 'ed2',
+        name: 'Educational Psychology',
+        code: 'ED201',
+        credits: 3,
+        semester: 2,
+        type: 'Core',
+        description: 'Psychology applied to learning and teaching',
+        prerequisites: ['ED101'],
+        status: 'Active'
+      },
+      {
+        id: 'ed3',
+        name: 'Curriculum Development',
+        code: 'ED301',
+        credits: 3,
+        semester: 3,
+        type: 'Core',
+        description: 'Design and development of educational curricula',
+        prerequisites: ['ED201'],
+        status: 'Active'
+      },
+      {
+        id: 'ed4',
+        name: 'Teaching Methods',
+        code: 'ED401',
+        credits: 4,
+        semester: 4,
+        type: 'Core',
+        description: 'Effective teaching strategies and classroom management',
+        prerequisites: ['ED301'],
+        status: 'Active'
+      }
+    ]
+  },
+  {
+    id: '6',
+    name: 'Sociology',
+    code: 'SO',
+    description: 'Department of Sociology studying social behavior, institutions, and social change.',
+    head: 'Dr. James Taylor',
+    establishedYear: 1985,
+    totalStudents: 156,
+    totalFaculty: 11,
+    totalCourses: 30,
+    building: 'Social Sciences Building',
+    contactEmail: 'sociology@college.edu',
+    contactPhone: '+1-555-0306',
+    status: 'Active',
+    subjects: [
+      {
+        id: 'so1',
+        name: 'Introduction to Sociology',
+        code: 'SO101',
+        credits: 3,
+        semester: 1,
+        type: 'Core',
+        description: 'Basic concepts and principles of sociology',
+        prerequisites: [],
+        status: 'Active'
+      },
+      {
+        id: 'so2',
+        name: 'Social Theory',
+        code: 'SO201',
+        credits: 3,
+        semester: 2,
+        type: 'Core',
+        description: 'Major sociological theories and theorists',
+        prerequisites: ['SO101'],
+        status: 'Active'
+      },
+      {
+        id: 'so3',
+        name: 'Research Methods',
+        code: 'SO301',
+        credits: 3,
+        semester: 3,
+        type: 'Core',
+        description: 'Quantitative and qualitative research methods',
+        prerequisites: ['SO201'],
+        status: 'Active'
+      },
+      {
+        id: 'so4',
+        name: 'Urban Sociology',
+        code: 'SO401',
+        credits: 3,
+        semester: 4,
+        type: 'Elective',
+        description: 'Study of urban communities and social issues',
+        prerequisites: ['SO301'],
+        status: 'Active'
+      }
+    ]
+  },
+  {
+    id: '7',
+    name: 'Economics',
+    code: 'EC',
+    description: 'Department of Economics covering microeconomics, macroeconomics, and economic theory.',
+    head: 'Dr. Maria Rodriguez',
+    establishedYear: 1990,
+    totalStudents: 198,
+    totalFaculty: 14,
+    totalCourses: 36,
+    building: 'Business Building',
+    contactEmail: 'economics@college.edu',
+    contactPhone: '+1-555-0307',
+    status: 'Active',
+    subjects: [
+      {
+        id: 'ec1',
+        name: 'Introduction to Economics',
+        code: 'EC101',
+        credits: 3,
+        semester: 1,
+        type: 'Core',
+        description: 'Basic economic principles and concepts',
+        prerequisites: [],
+        status: 'Active'
+      },
+      {
+        id: 'ec2',
+        name: 'Microeconomics',
+        code: 'EC201',
+        credits: 3,
+        semester: 2,
+        type: 'Core',
+        description: 'Individual and firm economic behavior',
+        prerequisites: ['EC101'],
+        status: 'Active'
+      },
+      {
+        id: 'ec3',
+        name: 'Macroeconomics',
+        code: 'EC301',
+        credits: 3,
+        semester: 3,
+        type: 'Core',
+        description: 'National and international economic systems',
+        prerequisites: ['EC201'],
+        status: 'Active'
+      },
+      {
+        id: 'ec4',
+        name: 'Economic Theory',
+        code: 'EC401',
+        credits: 4,
+        semester: 4,
+        type: 'Core',
+        description: 'Advanced economic theory and applications',
+        prerequisites: ['EC301'],
+        status: 'Active'
+      }
+    ]
+  },
+  {
+    id: '8',
+    name: 'Geography',
+    code: 'GE',
+    description: 'Department of Geography studying physical and human geography, GIS, and environmental systems.',
+    head: 'Dr. Kevin Zhang',
+    establishedYear: 1988,
+    totalStudents: 112,
+    totalFaculty: 9,
+    totalCourses: 25,
+    building: 'Science Building',
+    contactEmail: 'geography@college.edu',
+    contactPhone: '+1-555-0308',
+    status: 'Active',
+    subjects: [
+      {
+        id: 'ge1',
+        name: 'Introduction to Geography',
+        code: 'GE101',
+        credits: 3,
+        semester: 1,
+        type: 'Core',
+        description: 'Basic concepts in physical and human geography',
+        prerequisites: [],
+        status: 'Active'
+      },
+      {
+        id: 'ge2',
+        name: 'Physical Geography',
+        code: 'GE201',
         credits: 4,
         semester: 2,
         type: 'Core',
-        description: 'Integral calculus and series',
-        prerequisites: ['MATH101'],
+        description: 'Earth\'s physical systems and processes',
+        prerequisites: ['GE101'],
         status: 'Active'
       },
       {
-        id: 'math3',
-        name: 'Linear Algebra',
-        code: 'MATH201',
+        id: 'ge3',
+        name: 'Human Geography',
+        code: 'GE301',
         credits: 3,
         semester: 3,
         type: 'Core',
-        description: 'Vector spaces, matrices, and linear transformations',
-        prerequisites: ['MATH102'],
+        description: 'Human activities and their spatial patterns',
+        prerequisites: ['GE201'],
         status: 'Active'
       },
       {
-        id: 'math4',
-        name: 'Discrete Mathematics',
-        code: 'MATH301',
-        credits: 3,
-        semester: 3,
-        type: 'Core',
-        description: 'Logic, sets, combinatorics, and graph theory',
-        prerequisites: ['MATH201'],
+        id: 'ge4',
+        name: 'Geographic Information Systems',
+        code: 'GE401',
+        credits: 4,
+        semester: 4,
+        type: 'Elective',
+        description: 'GIS technology and spatial analysis',
+        prerequisites: ['GE301'],
         status: 'Active'
       }
     ]
