@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, User, Phone, GraduationCap, Users, ArrowLeft, Check } from 'lucide-react';
+import { Mail, User, Phone, GraduationCap, Users, ArrowLeft, Check, School } from 'lucide-react';
 
 interface SignUpPageProps {
   onSignUp: (userData: any) => void;
@@ -48,13 +48,13 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
 
   const departments = [
     'Computer Science',
-    'Electrical Engineering',
-    'Mechanical Engineering',
-    'Civil Engineering',
-    'Chemical Engineering',
-    'Mathematics',
-    'Physics',
-    'Chemistry'
+    'Political Science',
+    'English',
+    'History',
+    'Education',
+    'Sociology',
+    'Economics',
+    'Geography'
   ];
 
   const isStepValid = () => {
@@ -79,8 +79,8 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
         <div className="hidden lg:block space-y-8">
           <div className="text-center lg:text-left">
             <div className="flex items-center justify-center lg:justify-start space-x-3 mb-6">
-               <div>
-                  <img src="/src/logo.png" alt="College Logo" className="h-13 w-auto object-contain" />
+               <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <School className="h-6 w-6 text-white" />
                 </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">St. Dominic's College</h1>
@@ -162,8 +162,8 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
             {/* Mobile Header */}
             <div className="lg:hidden text-center mb-6">
               <div className="flex items-center justify-center space-x-3 mb-4">
-                <div>
-                  <img src="/src/logo.png" alt="College Logo" className="h-13 w-auto object-contain" />
+                <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <School className="h-6 w-6 text-white" />
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">St. Dominic's College</h1>

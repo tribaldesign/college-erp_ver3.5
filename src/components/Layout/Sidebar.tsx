@@ -12,7 +12,8 @@ import {
   Building,
   X,
   Library,
-  UserCog
+  UserCog,
+  School
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -80,8 +81,8 @@ export default function Sidebar({ activeTab, setActiveTab, user, onClose }: Side
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div>
-              <img src="/src/logo.png" alt="College Logo" className="h-13 w-auto object-contain" />
+            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+              <School className="h-6 w-6 text-white" />
             </div>
             <div>
               <h1 className="text-xl font-bold text-gray-900">St. Dominic's College</h1>

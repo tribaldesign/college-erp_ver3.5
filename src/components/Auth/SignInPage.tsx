@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, User, Lock, GraduationCap, Users, Shield } from 'lucide-react';
+import { Eye, EyeOff, User, Lock, GraduationCap, Users, Shield, School } from 'lucide-react';
 
 interface SignInPageProps {
   onSignIn: (usernameOrEmail: string, password: string, userType: string) => void;
@@ -44,8 +44,8 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
         <div className="hidden lg:block space-y-8">
           <div className="text-center lg:text-left">
             <div className="flex items-center justify-center lg:justify-start space-x-3 mb-6">
-                <div>
-                  <img src="/src/logo.png" alt="College Logo" className="h-13 w-auto object-contain" />
+                <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <School className="h-6 w-6 text-white" />
                 </div>
             <div>
                 <h1 className="text-3xl font-bold text-gray-900">St. Dominic's College</h1>
@@ -102,8 +102,8 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
             {/* Mobile Header */}
             <div className="lg:hidden text-center mb-8">
               <div className="flex items-center justify-center space-x-3 mb-4">
-                <div>
-                  <img src="/src/logo.png" alt="College Logo" className="h-13 w-auto object-contain" />
+                <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <School className="h-6 w-6 text-white" />
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">St. Dominic's College</h1>
