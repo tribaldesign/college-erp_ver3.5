@@ -289,38 +289,52 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/*  Sidebar */}
-      <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out`}>
-        <Sidebar 
-          activeTab={activeTab} 
-          setActiveTab={setActiveTab} 
-          user={user}
-          onClose={handleSidebarClose}
-        />
-      </div>
+    <div className="flex h-screen bg-gray-50 flex-col">
+      <div className="flex flex-1 overflow-hidden">
+        {/*  Sidebar */}
+        <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out`}>
+          <Sidebar 
+            activeTab={activeTab} 
+            setActiveTab={setActiveTab} 
+            user={user}
+            onClose={handleSidebarClose}
+          />
+        </div>
 
-      {/* Mobile overlay */}
-      {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
-          onClick={handleSidebarClose}
-        />
-      )}
+        {/* Mobile overlay */}
+        {isSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+            onClick={handleSidebarClose}
+          />
+        )}
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col lg:ml-64" onClick={handleMainContentClick}>
-        <Header 
-          title={getPageTitle()} 
-          subtitle={getPageSubtitle()}
-          onMenuClick={handleSidebarToggle}
-          user={user}
-          onLogout={handleLogout}
-        />
-        
-        <main className="flex-1 overflow-y-auto p-6">
-          {renderContent()}
-        </main>
+        {/* Main content */}
+        <div className="flex-1 flex flex-col lg:ml-64" onClick={handleMainContentClick}>
+          <Header 
+            title={getPageTitle()} 
+            subtitle={getPageSubtitle()}
+            onMenuClick={handleSidebarToggle}
+            user={user}
+            onLogout={handleLogout}
+          />
+          
+          <main className="flex-1 overflow-y-auto p-6">
+            {renderContent()}
+          </main>
+          
+          {/* Footer */}
+          <footer className="bg-white border-t border-gray-200 py-4 px-6 text-center text-sm text-gray-600">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <div>
+                &copy; {new Date().getFullYear()} St. Dominic's College. All rights reserved.
+              </div>
+              <div>
+                Made by <a href="https://www.tribaldesignsolution.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 font-medium">Tribal Design Solutions</a>
+              </div>
+            </div>
+          </footer>
+        </div>
       </div>
 
       {/* Student Modal */}
