@@ -9,7 +9,7 @@ interface SignInPageProps {
 export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPageProps) {
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [userType, setUserType] = useState('student');
+  const [userType, setUserType] = useState('admin');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,26 +20,21 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
     setIsLoading(true);
     setError('');
     
-    // Simulate API call
-    setTimeout(() => {
-      // Check for admin credentials
-      if (userType === 'admin' && usernameOrEmail === 'admin' && password === 'Tribalde@#53') {
-        onSignIn(usernameOrEmail, password, userType);
-      } else if (userType === 'student' && usernameOrEmail === 'student@college.edu' && password === 'demo123') {
-        onSignIn(usernameOrEmail, password, userType);
-      } else if (userType === 'faculty' && usernameOrEmail === 'faculty@college.edu' && password === 'demo123') {
-        onSignIn(usernameOrEmail, password, userType);
-      } else {
-        setError('Invalid username/email or password. Please check your credentials.');
-      }
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      onSignIn(usernameOrEmail, password, userType);
+    } catch (err: any) {
+      setError(err.message || 'Invalid username or password. Please check your credentials.');
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const userTypes = [
+    { id: 'admin', label: 'Admin', icon: Shield, color: 'bg-purple-500' },
     { id: 'student', label: 'Student', icon: GraduationCap, color: 'bg-blue-500' },
-    { id: 'faculty', label: 'Faculty', icon: Users, color: 'bg-green-500' },
-    { id: 'admin', label: 'Admin', icon: Shield, color: 'bg-purple-500' }
+    { id: 'faculty', label: 'Faculty', icon: Users, color: 'bg-green-500' }
   ];
 
   return (
@@ -251,24 +246,26 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
               </div>
             )}
 
-            {/* Demo Credentials */}
-            <div className="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
-              <p className="text-xs text-gray-500 text-center mb-2">Demo Credentials:</p>
-              <div className="space-y-2 text-xs">
-                <div className="flex justify-between">
-                  <span className="font-medium text-gray-700">Admin:</span>
-                  <span className="text-gray-600">admin / Tribalde@#53</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-medium text-gray-700">Student:</span>
-                  <span className="text-gray-600">student@college.edu / demo123</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-medium text-gray-700">Faculty:</span>
-                  <span className="text-gray-600">faculty@college.edu / demo123</span>
+            {/* Admin Credentials Info */}
+            {userType === 'admin' && (
+              <div className="mt-6 p-4 bg-purple-50 rounded-xl border border-purple-200">
+                <p className="text-xs text-purple-700 text-center mb-2">Admin Access Only</p>
+                <div className="text-xs text-center">
+                  <p className="text-purple-600">Contact system administrator for credentials</p>
                 </div>
               </div>
-            </div>
+            )}
+
+            {/* Non-Admin Notice */}
+            {userType !== 'admin' && (
+              <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
+                <p className="text-xs text-blue-700 text-center mb-2">Student & Faculty Access</p>
+                <div className="text-xs text-center">
+                  <p className="text-blue-600">Login credentials are assigned by the administrator</p>
+                  <p className="text-blue-600 mt-1">Please contact admin for your username and password</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
