@@ -1,5 +1,7 @@
-import React from 'react';
-import { Bell, Search, Menu, LogOut, User } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Bell, Search, Menu, LogOut, User, X, Mail, Phone } from 'lucide-react';
+import { useAppContext } from '../../context/AppContext';
+import NotificationPanel from './NotificationPanel';
 
 interface HeaderProps {
   title: string;
@@ -10,6 +12,26 @@ interface HeaderProps {
 }
 
 export default function Header({ title, subtitle, onMenuClick, user, onLogout }: HeaderProps) {
+  const { state } = useAppContext();
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const notificationRef = useRef<HTMLDivElement>(null);
+  
+  const unreadNotifications = state.notifications.filter(n => !n.read).length;
+
+  // Close notification panel when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+        setIsNotificationOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
@@ -38,10 +60,23 @@ export default function Header({ title, subtitle, onMenuClick, user, onLogout }:
             />
           </div>
           
-          <button className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg">
-            <Bell className="h-5 w-5" />
-            <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
-          </button>
+          <div className="relative" ref={notificationRef}>
+            <button 
+              className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg"
+              onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+            >
+              <Bell className="h-5 w-5" />
+              {unreadNotifications > 0 && (
+                <span className="absolute top-0 right-0 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                  {unreadNotifications > 9 ? '9+' : unreadNotifications}
+                </span>
+              )}
+            </button>
+            
+            {isNotificationOpen && (
+              <NotificationPanel onClose={() => setIsNotificationOpen(false)} />
+            )}
+          </div>
 
           {/* User Menu */}
           {user && (
