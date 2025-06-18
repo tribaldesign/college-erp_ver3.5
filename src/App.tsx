@@ -196,7 +196,7 @@ function App() {
       case 'departments':
         return <DepartmentList />;
       case 'library':
-        return <LibraryDashboard />;
+        return <LibraryDashboard user={user} />;
       case 'schedule':
         return <ScheduleDashboard />;
       case 'attendance':
