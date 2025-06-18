@@ -35,8 +35,8 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
     <div className="w-64 bg-white shadow-lg h-screen fixed left-0 top-0 z-40">
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-            <GraduationCap className="h-6 w-6 text-white" />
+           <div>
+             <img src="/src/logo.png" alt="College Logo" className="h-13 w-auto object-contain" />
           </div>
           <div>
             <h1 className="text-xl font-bold text-gray-900">St. Dominic's College</h1>
