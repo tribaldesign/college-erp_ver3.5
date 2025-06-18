@@ -78,8 +78,9 @@ export default function Sidebar({ activeTab, setActiveTab, user, onClose }: Side
   };
 
   return (
-    <div className="w-64 bg-white shadow-lg h-screen fixed left-0 top-0 z-40">
-      <div className="p-6 border-b border-gray-200">
+    <div className="w-64 bg-white shadow-lg h-screen fixed left-0 top-0 z-40 flex flex-col">
+      {/* Header */}
+      <div className="p-6 border-b border-gray-200 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="w-16 h-16 rounded-lg overflow-hidden flex items-center justify-center bg-white shadow-sm border border-gray-100">
@@ -113,7 +114,8 @@ export default function Sidebar({ activeTab, setActiveTab, user, onClose }: Side
         </div>
       </div>
 
-      <nav className="mt-6">
+      {/* Navigation - Scrollable */}
+      <nav className="flex-1 overflow-y-auto py-6">
         <ul className="space-y-1 px-3">
           {filteredMenuItems.map((item) => {
             const Icon = item.icon;
@@ -143,7 +145,8 @@ export default function Sidebar({ activeTab, setActiveTab, user, onClose }: Side
         </ul>
       </nav>
 
-      <div className="absolute bottom-4 left-4 right-4">
+      {/* User Info - Fixed at bottom */}
+      <div className="p-4 border-t border-gray-200 flex-shrink-0">
         <div className="bg-gray-50 rounded-lg p-4">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
