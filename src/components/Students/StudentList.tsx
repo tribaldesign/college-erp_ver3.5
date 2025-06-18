@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
 import { Search, Filter, Plus, Edit, Trash2, Eye, Download, Upload, MoreVertical, Users, GraduationCap } from 'lucide-react';
 import { Student } from '../../types';
-import { mockStudents } from '../../data/mockData';
 
 interface StudentListProps {
+  students: Student[];
   onViewStudent: (student: Student) => void;
   onEditStudent: (student: Student) => void;
   onAddStudent: () => void;
+  onDeleteStudent: (studentId: string) => void;
 }
 
-export default function StudentList({ onViewStudent, onEditStudent, onAddStudent }: StudentListProps) {
-  const [students] = useState<Student[]>(mockStudents);
+export default function StudentList({ 
+  students, 
+  onViewStudent, 
+  onEditStudent, 
+  onAddStudent,
+  onDeleteStudent
+}: StudentListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDepartment, setFilterDepartment] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
@@ -90,8 +96,12 @@ export default function StudentList({ onViewStudent, onEditStudent, onAddStudent
     }
   };
 
+  const handleDeleteStudent = (studentId: string) => {
+    onDeleteStudent(studentId);
+  };
+
   const activeStudents = students.filter(s => s.status === 'Active').length;
-  const averageGPA = (students.reduce((sum, s) => sum + s.gpa, 0) / students.length).toFixed(2);
+  const averageGPA = (students.reduce((sum, student) => sum + student.gpa, 0) / students.length).toFixed(2);
 
   return (
     <div className="space-y-6">
@@ -373,6 +383,7 @@ export default function StudentList({ onViewStudent, onEditStudent, onAddStudent
                           <Edit className="h-4 w-4" />
                         </button>
                         <button
+                          onClick={() => handleDeleteStudent(student.id)}
                           className="text-gray-600 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-50 transition-colors"
                           title="Delete Student"
                         >
@@ -449,6 +460,7 @@ export default function StudentList({ onViewStudent, onEditStudent, onAddStudent
                     <Edit className="h-4 w-4" />
                   </button>
                   <button
+                    onClick={() => handleDeleteStudent(student.id)}
                     className="text-gray-600 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-50 transition-colors"
                     title="Delete Student"
                   >

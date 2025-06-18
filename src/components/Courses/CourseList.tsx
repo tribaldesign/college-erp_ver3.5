@@ -1,18 +1,26 @@
 import React, { useState } from 'react';
 import { Search, Filter, Plus, Edit, Trash2, Eye, Clock, Users } from 'lucide-react';
 import { Course } from '../../types';
-import { mockCourses } from '../../data/mockData';
 import CourseModal from './CourseModal';
 import CourseDetailsModal from './CourseDetailsModal';
 
 interface CourseListProps {
+  courses: Course[];
   onViewCourse: (course: Course) => void;
   onEditCourse: (course: Course) => void;
   onAddCourse: () => void;
+  onSaveCourse: (course: Course) => void;
+  onDeleteCourse: (courseId: string) => void;
 }
 
-export default function CourseList({ onViewCourse, onEditCourse, onAddCourse }: CourseListProps) {
-  const [courses, setCourses] = useState<Course[]>(mockCourses);
+export default function CourseList({ 
+  courses, 
+  onViewCourse, 
+  onEditCourse, 
+  onAddCourse,
+  onSaveCourse,
+  onDeleteCourse
+}: CourseListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDepartment, setFilterDepartment] = useState('');
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
@@ -31,36 +39,37 @@ export default function CourseList({ onViewCourse, onEditCourse, onAddCourse }: 
 
   // Handlers
   const handleAddCourse = (course: Course) => {
-    setCourses(prev => [...prev, course]);
+    onSaveCourse(course);
     setModalMode(null);
     setSelectedCourse(null);
   };
 
   const handleEditCourse = (course: Course) => {
-    setCourses(prev => prev.map(c => c.id === course.id ? course : c));
+    onSaveCourse(course);
     setModalMode(null);
     setSelectedCourse(null);
   };
 
   const handleDeleteCourse = (courseId: string) => {
-    if (window.confirm('Are you sure you want to delete this course?')) {
-      setCourses(prev => prev.filter(c => c.id !== courseId));
-    }
+    onDeleteCourse(courseId);
   };
 
   const handleOpenAddModal = () => {
     setSelectedCourse(null);
     setModalMode('add');
+    onAddCourse();
   };
 
   const handleOpenEditModal = (course: Course) => {
     setSelectedCourse(course);
     setModalMode('edit');
+    onEditCourse(course);
   };
 
   const handleOpenDetailsModal = (course: Course) => {
     setSelectedCourse(course);
     setDetailsOpen(true);
+    onViewCourse(course);
   };
 
   const handleSaveCourse = (course: Course) => {

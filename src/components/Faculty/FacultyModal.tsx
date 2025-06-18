@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Mail, Phone, MapPin, Calendar, User, Save, Edit3, GraduationCap, BookOpen, Award, Clock, Users, Star } from 'lucide-react';
 import { Faculty } from '../../types';
 
@@ -7,11 +7,12 @@ interface FacultyModalProps {
   isOpen: boolean;
   onClose: () => void;
   mode: 'view' | 'edit' | 'add';
+  onSave?: (faculty: Faculty) => void;
 }
 
-export default function FacultyModal({ faculty, isOpen, onClose, mode }: FacultyModalProps) {
+export default function FacultyModal({ faculty, isOpen, onClose, mode, onSave }: FacultyModalProps) {
   const [activeTab, setActiveTab] = useState('personal');
-  const [formData, setFormData] = useState(faculty || {
+  const [formData, setFormData] = useState<Faculty>(faculty || {
     id: '',
     name: '',
     email: '',
@@ -23,8 +24,44 @@ export default function FacultyModal({ faculty, isOpen, onClose, mode }: Faculty
     experience: 0,
     subjects: [],
     joiningDate: '',
-    status: 'Active' as const
+    status: 'Active' as const,
+    idNumber: '',
+    bloodType: '',
+    age: 0,
+    dateOfBirth: '',
+    homeAddress: '',
+    presentAddress: '',
+    country: 'United States'
   });
+
+  useEffect(() => {
+    if (faculty) {
+      setFormData(faculty);
+    } else {
+      // Reset form for add mode
+      setFormData({
+        id: '',
+        name: '',
+        email: '',
+        phone: '',
+        employeeId: '',
+        department: '',
+        designation: '',
+        qualification: '',
+        experience: 0,
+        subjects: [],
+        joiningDate: new Date().toISOString().split('T')[0],
+        status: 'Active',
+        idNumber: '',
+        bloodType: '',
+        age: 0,
+        dateOfBirth: '',
+        homeAddress: '',
+        presentAddress: '',
+        country: 'United States'
+      });
+    }
+  }, [faculty, isOpen]);
 
   if (!isOpen) return null;
 
@@ -32,8 +69,15 @@ export default function FacultyModal({ faculty, isOpen, onClose, mode }: Faculty
   const title = mode === 'add' ? 'Add New Faculty' : 
                mode === 'edit' ? 'Edit Faculty' : 'Faculty Profile';
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: keyof Faculty, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (onSave) {
+      onSave(formData);
+    }
   };
 
   const tabs = [
@@ -457,7 +501,7 @@ export default function FacultyModal({ faculty, isOpen, onClose, mode }: Faculty
             </div>
           ) : (
             // Form for Add/Edit modes
-            <form className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -469,6 +513,7 @@ export default function FacultyModal({ faculty, isOpen, onClose, mode }: Faculty
                     onChange={(e) => handleInputChange('name', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
                     placeholder="Enter full name"
+                    required
                   />
                 </div>
                 <div>
@@ -481,6 +526,7 @@ export default function FacultyModal({ faculty, isOpen, onClose, mode }: Faculty
                     onChange={(e) => handleInputChange('employeeId', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
                     placeholder="e.g., FAC001"
+                    required
                   />
                 </div>
               </div>
@@ -496,6 +542,7 @@ export default function FacultyModal({ faculty, isOpen, onClose, mode }: Faculty
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
                     placeholder="faculty@college.edu"
+                    required
                   />
                 </div>
                 <div>
@@ -508,6 +555,7 @@ export default function FacultyModal({ faculty, isOpen, onClose, mode }: Faculty
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
                     placeholder="+1-555-0123"
+                    required
                   />
                 </div>
               </div>
@@ -521,13 +569,17 @@ export default function FacultyModal({ faculty, isOpen, onClose, mode }: Faculty
                     value={formData.department}
                     onChange={(e) => handleInputChange('department', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
+                    required
                   >
                     <option value="">Select Department</option>
                     <option value="Computer Science">Computer Science</option>
-                    <option value="Electrical Engineering">Electrical Engineering</option>
-                    <option value="Mechanical Engineering">Mechanical Engineering</option>
-                    <option value="Civil Engineering">Civil Engineering</option>
-                    <option value="Chemical Engineering">Chemical Engineering</option>
+                    <option value="Political Science">Political Science</option>
+                    <option value="English">English</option>
+                    <option value="History">History</option>
+                    <option value="Education">Education</option>
+                    <option value="Sociology">Sociology</option>
+                    <option value="Economics">Economics</option>
+                    <option value="Geography">Geography</option>
                   </select>
                 </div>
                 <div>
@@ -538,12 +590,16 @@ export default function FacultyModal({ faculty, isOpen, onClose, mode }: Faculty
                     value={formData.designation}
                     onChange={(e) => handleInputChange('designation', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
+                    required
                   >
                     <option value="">Select Designation</option>
                     <option value="Professor">Professor</option>
                     <option value="Associate Professor">Associate Professor</option>
                     <option value="Assistant Professor">Assistant Professor</option>
                     <option value="Lecturer">Lecturer</option>
+                    <option value="Senior Lecturer">Senior Lecturer</option>
+                    <option value="Visiting Professor">Visiting Professor</option>
+                    <option value="Adjunct Professor">Adjunct Professor</option>
                   </select>
                 </div>
               </div>
@@ -559,6 +615,7 @@ export default function FacultyModal({ faculty, isOpen, onClose, mode }: Faculty
                     onChange={(e) => handleInputChange('qualification', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
                     placeholder="e.g., Ph.D. in Computer Science"
+                    required
                   />
                 </div>
                 <div>
@@ -572,6 +629,7 @@ export default function FacultyModal({ faculty, isOpen, onClose, mode }: Faculty
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
                     placeholder="0"
                     min="0"
+                    required
                   />
                 </div>
               </div>
@@ -586,6 +644,7 @@ export default function FacultyModal({ faculty, isOpen, onClose, mode }: Faculty
                     value={formData.joiningDate}
                     onChange={(e) => handleInputChange('joiningDate', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
+                    required
                   />
                 </div>
                 <div>
@@ -596,6 +655,7 @@ export default function FacultyModal({ faculty, isOpen, onClose, mode }: Faculty
                     value={formData.status}
                     onChange={(e) => handleInputChange('status', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
+                    required
                   >
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
@@ -630,6 +690,7 @@ export default function FacultyModal({ faculty, isOpen, onClose, mode }: Faculty
           {!isViewMode && (
             <button
               type="submit"
+              onClick={handleSubmit}
               className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center space-x-2 transition-colors"
             >
               <Save className="h-4 w-4" />

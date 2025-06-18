@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
 import { Search, Filter, Plus, Edit, Trash2, Eye, Download, Upload, MoreVertical, Users, GraduationCap, Award, Calendar } from 'lucide-react';
 import { Faculty } from '../../types';
-import { mockFaculty } from '../../data/mockData';
 
 interface FacultyListProps {
+  faculty: Faculty[];
   onViewFaculty: (faculty: Faculty) => void;
   onEditFaculty: (faculty: Faculty) => void;
   onAddFaculty: () => void;
+  onDeleteFaculty: (facultyId: string) => void;
 }
 
-export default function FacultyList({ onViewFaculty, onEditFaculty, onAddFaculty }: FacultyListProps) {
-  const [faculty] = useState<Faculty[]>(mockFaculty);
+export default function FacultyList({ 
+  faculty, 
+  onViewFaculty, 
+  onEditFaculty, 
+  onAddFaculty,
+  onDeleteFaculty
+}: FacultyListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDepartment, setFilterDepartment] = useState('');
   const [filterDesignation, setFilterDesignation] = useState('');
@@ -90,6 +96,10 @@ export default function FacultyList({ onViewFaculty, onEditFaculty, onAddFaculty
       setSortBy(field);
       setSortOrder('asc');
     }
+  };
+
+  const handleDeleteFaculty = (facultyId: string) => {
+    onDeleteFaculty(facultyId);
   };
 
   const activeFaculty = faculty.filter(f => f.status === 'Active').length;
@@ -375,6 +385,7 @@ export default function FacultyList({ onViewFaculty, onEditFaculty, onAddFaculty
                           <Edit className="h-4 w-4" />
                         </button>
                         <button
+                          onClick={() => handleDeleteFaculty(member.id)}
                           className="text-gray-600 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-50 transition-colors"
                           title="Delete Faculty"
                         >
@@ -466,6 +477,7 @@ export default function FacultyList({ onViewFaculty, onEditFaculty, onAddFaculty
                     <Edit className="h-4 w-4" />
                   </button>
                   <button
+                    onClick={() => handleDeleteFaculty(member.id)}
                     className="text-gray-600 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-50 transition-colors"
                     title="Delete Faculty"
                   >

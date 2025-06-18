@@ -18,8 +18,10 @@ import AttendanceDashboard from './components/Attendance/AttendanceDashboard';
 import ReportsDashboard from './components/Reports/ReportsDashboard';
 import SettingsDashboard from './components/Settings/SettingsDashboard';
 import { Student, Faculty, Course } from './types';
+import { useAppContext, actions } from './context/AppContext';
 
 function App() {
+  const { state, dispatch } = useAppContext();
   const [user, setUser] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
@@ -34,7 +36,6 @@ function App() {
   // Auto-hide sidebar on mobile/tablet when clicking outside or changing tabs
   useEffect(() => {
     const handleResize = () => {
-      // Auto-close sidebar on mobile/tablet when resizing to larger screen
       if (window.innerWidth >= 1024) {
         setIsSidebarOpen(false);
       }
@@ -51,6 +52,13 @@ function App() {
     }
   }, [activeTab]);
 
+  // Update global state when user changes
+  useEffect(() => {
+    if (user) {
+      dispatch(actions.setCurrentUser(user));
+    }
+  }, [user, dispatch]);
+
   // If user is not authenticated, show auth pages
   if (!user?.isAuthenticated) {
     return <AuthWrapper onAuthenticated={setUser} />;
@@ -60,9 +68,9 @@ function App() {
     setUser(null);
     setActiveTab('dashboard');
     setIsSidebarOpen(false);
-    // Clear any stored session data
     localStorage.removeItem('user');
     sessionStorage.removeItem('user');
+    dispatch(actions.setCurrentUser(null));
   };
 
   const handleViewStudent = (student: Student) => {
@@ -83,6 +91,26 @@ function App() {
     setIsStudentModalOpen(true);
   };
 
+  const handleSaveStudent = (studentData: Student) => {
+    if (studentModalMode === 'add') {
+      const newStudent = {
+        ...studentData,
+        id: Date.now().toString()
+      };
+      dispatch(actions.addStudent(newStudent));
+    } else if (studentModalMode === 'edit' && selectedStudent) {
+      dispatch(actions.updateStudent(studentData));
+    }
+    setIsStudentModalOpen(false);
+    setSelectedStudent(null);
+  };
+
+  const handleDeleteStudent = (studentId: string) => {
+    if (window.confirm('Are you sure you want to delete this student?')) {
+      dispatch(actions.deleteStudent(studentId));
+    }
+  };
+
   const handleViewFaculty = (faculty: Faculty) => {
     setSelectedFaculty(faculty);
     setFacultyModalMode('view');
@@ -101,6 +129,26 @@ function App() {
     setIsFacultyModalOpen(true);
   };
 
+  const handleSaveFaculty = (facultyData: Faculty) => {
+    if (facultyModalMode === 'add') {
+      const newFaculty = {
+        ...facultyData,
+        id: Date.now().toString()
+      };
+      dispatch(actions.addFaculty(newFaculty));
+    } else if (facultyModalMode === 'edit' && selectedFaculty) {
+      dispatch(actions.updateFaculty(facultyData));
+    }
+    setIsFacultyModalOpen(false);
+    setSelectedFaculty(null);
+  };
+
+  const handleDeleteFaculty = (facultyId: string) => {
+    if (window.confirm('Are you sure you want to delete this faculty member?')) {
+      dispatch(actions.deleteFaculty(facultyId));
+    }
+  };
+
   const handleViewCourse = (course: Course) => {
     setSelectedCourse(course);
     console.log('View course:', course);
@@ -116,6 +164,24 @@ function App() {
     console.log('Add course');
   };
 
+  const handleSaveCourse = (courseData: Course) => {
+    if (selectedCourse) {
+      dispatch(actions.updateCourse(courseData));
+    } else {
+      const newCourse = {
+        ...courseData,
+        id: Date.now().toString()
+      };
+      dispatch(actions.addCourse(newCourse));
+    }
+  };
+
+  const handleDeleteCourse = (courseId: string) => {
+    if (window.confirm('Are you sure you want to delete this course?')) {
+      dispatch(actions.deleteCourse(courseId));
+    }
+  };
+
   const handleSidebarToggle = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -125,7 +191,6 @@ function App() {
   };
 
   const handleMainContentClick = () => {
-    // Auto-close sidebar when clicking on main content on mobile/tablet
     if (window.innerWidth < 1024 && isSidebarOpen) {
       setIsSidebarOpen(false);
     }
@@ -170,34 +235,40 @@ function App() {
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        // Show Faculty Dashboard for faculty users, regular Dashboard for others
         return user?.userType === 'faculty' ? <FacultyDashboard /> : <Dashboard />;
       case 'students':
         return (
           <StudentList
+            students={state.students}
             onViewStudent={handleViewStudent}
             onEditStudent={handleEditStudent}
             onAddStudent={handleAddStudent}
+            onDeleteStudent={handleDeleteStudent}
           />
         );
       case 'faculty':
         return (
           <FacultyList
+            faculty={state.faculty}
             onViewFaculty={handleViewFaculty}
             onEditFaculty={handleEditFaculty}
             onAddFaculty={handleAddFaculty}
+            onDeleteFaculty={handleDeleteFaculty}
           />
         );
       case 'courses':
         return (
           <CourseList
+            courses={state.courses}
             onViewCourse={handleViewCourse}
             onEditCourse={handleEditCourse}
             onAddCourse={handleAddCourse}
+            onSaveCourse={handleSaveCourse}
+            onDeleteCourse={handleDeleteCourse}
           />
         );
       case 'departments':
-        return <DepartmentList />;
+        return <DepartmentList departments={state.departments} />;
       case 'library':
         return <LibraryDashboard user={user} />;
       case 'users':
@@ -219,7 +290,7 @@ function App() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
+      {/*  Sidebar */}
       <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out`}>
         <Sidebar 
           activeTab={activeTab} 
@@ -258,6 +329,7 @@ function App() {
         isOpen={isStudentModalOpen}
         onClose={() => setIsStudentModalOpen(false)}
         mode={studentModalMode}
+        onSave={handleSaveStudent}
       />
 
       {/* Faculty Modal */}
@@ -266,6 +338,7 @@ function App() {
         isOpen={isFacultyModalOpen}
         onClose={() => setIsFacultyModalOpen(false)}
         mode={facultyModalMode}
+        onSave={handleSaveFaculty}
       />
     </div>
   );

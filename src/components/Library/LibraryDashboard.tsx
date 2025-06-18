@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   BookOpen, 
   Users, 
@@ -30,59 +30,15 @@ import {
   ArrowUpDown,
   X
 } from 'lucide-react';
-
-interface Book {
-  id: string;
-  title: string;
-  author: string;
-  isbn: string;
-  category: string;
-  publisher: string;
-  publishYear: number;
-  totalCopies: number;
-  availableCopies: number;
-  location: string;
-  status: 'Available' | 'Limited' | 'Out of Stock';
-  addedDate: string;
-  addedBy: string;
-}
-
-interface Member {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  memberType: 'Student' | 'Faculty' | 'Staff';
-  membershipId: string;
-  department: string;
-  joinDate: string;
-  status: 'Active' | 'Suspended' | 'Expired';
-  booksIssued: number;
-  maxBooks: number;
-  fineAmount: number;
-}
-
-interface Transaction {
-  id: string;
-  bookId: string;
-  bookTitle: string;
-  memberId: string;
-  memberName: string;
-  memberType: string;
-  issueDate: string;
-  dueDate: string;
-  returnDate?: string;
-  status: 'Issued' | 'Returned' | 'Overdue';
-  fine: number;
-  issuedBy: string;
-  returnedBy?: string;
-}
+import { LibraryBook, LibraryMember, LibraryTransaction } from '../../types';
+import { useAppContext, actions } from '../../context/AppContext';
 
 interface LibraryDashboardProps {
   user: any;
 }
 
 export default function LibraryDashboard({ user }: LibraryDashboardProps) {
+  const { state, dispatch } = useAppContext();
   const [activeTab, setActiveTab] = useState('overview');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
@@ -90,146 +46,25 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
   const [isAddBookModalOpen, setIsAddBookModalOpen] = useState(false);
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false);
   const [isIssueBookModalOpen, setIsIssueBookModalOpen] = useState(false);
-  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
-  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
-
-  // Mock data
-  const [books, setBooks] = useState<Book[]>([
-    {
-      id: '1',
-      title: 'Introduction to Computer Science',
-      author: 'John Smith',
-      isbn: '978-0123456789',
-      category: 'Computer Science',
-      publisher: 'Tech Publications',
-      publishYear: 2023,
-      totalCopies: 5,
-      availableCopies: 3,
-      location: 'CS Section - A1',
-      status: 'Available',
-      addedDate: '2024-01-01',
-      addedBy: 'Admin'
-    },
-    {
-      id: '2',
-      title: 'Political Theory and Practice',
-      author: 'Jane Doe',
-      isbn: '978-0987654321',
-      category: 'Political Science',
-      publisher: 'Academic Press',
-      publishYear: 2022,
-      totalCopies: 3,
-      availableCopies: 1,
-      location: 'PS Section - B2',
-      status: 'Limited',
-      addedDate: '2024-01-02',
-      addedBy: 'Librarian'
-    },
-    {
-      id: '3',
-      title: 'Modern English Literature',
-      author: 'Robert Johnson',
-      isbn: '978-0456789123',
-      category: 'English',
-      publisher: 'Literary House',
-      publishYear: 2021,
-      totalCopies: 4,
-      availableCopies: 0,
-      location: 'EN Section - C3',
-      status: 'Out of Stock',
-      addedDate: '2024-01-03',
-      addedBy: 'Admin'
-    }
-  ]);
-
-  const [members, setMembers] = useState<Member[]>([
-    {
-      id: '1',
-      name: 'Alice Johnson',
-      email: 'alice.johnson@college.edu',
-      phone: '+1-555-0101',
-      memberType: 'Student',
-      membershipId: 'LIB001',
-      department: 'Computer Science',
-      joinDate: '2024-01-01',
-      status: 'Active',
-      booksIssued: 2,
-      maxBooks: 5,
-      fineAmount: 0
-    },
-    {
-      id: '2',
-      name: 'Dr. Sarah Johnson',
-      email: 'sarah.johnson@college.edu',
-      phone: '+1-555-0201',
-      memberType: 'Faculty',
-      membershipId: 'LIB002',
-      department: 'Computer Science',
-      joinDate: '2024-01-01',
-      status: 'Active',
-      booksIssued: 3,
-      maxBooks: 10,
-      fineAmount: 5.50
-    },
-    {
-      id: '3',
-      name: 'Bob Smith',
-      email: 'bob.smith@college.edu',
-      phone: '+1-555-0103',
-      memberType: 'Student',
-      membershipId: 'LIB003',
-      department: 'Political Science',
-      joinDate: '2024-01-02',
-      status: 'Active',
-      booksIssued: 1,
-      maxBooks: 5,
-      fineAmount: 2.00
-    }
-  ]);
-
-  const [transactions, setTransactions] = useState<Transaction[]>([
-    {
-      id: '1',
-      bookId: '1',
-      bookTitle: 'Introduction to Computer Science',
-      memberId: '1',
-      memberName: 'Alice Johnson',
-      memberType: 'Student',
-      issueDate: '2024-01-10',
-      dueDate: '2024-01-24',
-      status: 'Issued',
-      fine: 0,
-      issuedBy: 'Librarian'
-    },
-    {
-      id: '2',
-      bookId: '2',
-      bookTitle: 'Political Theory and Practice',
-      memberId: '2',
-      memberName: 'Dr. Sarah Johnson',
-      memberType: 'Faculty',
-      issueDate: '2024-01-05',
-      dueDate: '2024-01-19',
-      returnDate: '2024-01-20',
-      status: 'Returned',
-      fine: 1.00,
-      issuedBy: 'Admin',
-      returnedBy: 'Librarian'
-    },
-    {
-      id: '3',
-      bookId: '3',
-      bookTitle: 'Modern English Literature',
-      memberId: '3',
-      memberName: 'Bob Smith',
-      memberType: 'Student',
-      issueDate: '2024-01-01',
-      dueDate: '2024-01-15',
-      status: 'Overdue',
-      fine: 5.00,
-      issuedBy: 'Librarian'
-    }
-  ]);
+  const [selectedBook, setSelectedBook] = useState<LibraryBook | null>(null);
+  const [selectedMember, setSelectedMember] = useState<LibraryMember | null>(null);
+  const [newBookData, setNewBookData] = useState<Partial<LibraryBook>>({
+    title: '',
+    author: '',
+    isbn: '',
+    category: '',
+    publisher: '',
+    publishYear: new Date().getFullYear(),
+    totalCopies: 1,
+    location: '',
+  });
+  const [newMemberData, setNewMemberData] = useState<Partial<LibraryMember>>({
+    name: '',
+    email: '',
+    phone: '',
+    memberType: 'Student',
+    department: '',
+  });
 
   // Check if user can manage library (admin or library faculty)
   const canManageLibrary = user?.userType === 'admin' || 
@@ -281,39 +116,118 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
     { id: 'reports', label: 'Reports', icon: FileText },
   ];
 
-  const totalBooks = books.reduce((sum, book) => sum + book.totalCopies, 0);
-  const availableBooks = books.reduce((sum, book) => sum + book.availableCopies, 0);
+  const totalBooks = state.libraryBooks.reduce((sum, book) => sum + book.totalCopies, 0);
+  const availableBooks = state.libraryBooks.reduce((sum, book) => sum + book.availableCopies, 0);
   const issuedBooks = totalBooks - availableBooks;
-  const activeMembers = members.filter(m => m.status === 'Active').length;
-  const overdueBooks = transactions.filter(t => t.status === 'Overdue').length;
-  const totalFines = members.reduce((sum, member) => sum + member.fineAmount, 0);
+  const activeMembers = state.libraryMembers.filter(m => m.status === 'Active').length;
+  const overdueBooks = state.libraryTransactions.filter(t => t.status === 'Overdue').length;
+  const totalFines = state.libraryMembers.reduce((sum, member) => sum + member.fineAmount, 0);
 
-  const handleAddBook = (bookData: any) => {
-    const newBook: Book = {
+  const handleAddBook = () => {
+    const newBook: LibraryBook = {
       id: Date.now().toString(),
-      ...bookData,
-      availableCopies: bookData.totalCopies,
-      status: 'Available' as const,
+      title: newBookData.title || '',
+      author: newBookData.author || '',
+      isbn: newBookData.isbn || '',
+      category: newBookData.category || '',
+      publisher: newBookData.publisher || '',
+      publishYear: newBookData.publishYear || new Date().getFullYear(),
+      totalCopies: newBookData.totalCopies || 1,
+      availableCopies: newBookData.totalCopies || 1,
+      location: newBookData.location || '',
+      status: 'Available',
       addedDate: new Date().toISOString().split('T')[0],
       addedBy: user?.name || 'Admin'
     };
-    setBooks(prev => [...prev, newBook]);
+    
+    dispatch(actions.addLibraryBook(newBook));
     setIsAddBookModalOpen(false);
+    setNewBookData({
+      title: '',
+      author: '',
+      isbn: '',
+      category: '',
+      publisher: '',
+      publishYear: new Date().getFullYear(),
+      totalCopies: 1,
+      location: '',
+    });
   };
 
-  const handleAddMember = (memberData: any) => {
-    const newMember: Member = {
+  const handleAddMember = () => {
+    const newMember: LibraryMember = {
       id: Date.now().toString(),
-      ...memberData,
-      membershipId: `LIB${String(members.length + 1).padStart(3, '0')}`,
+      name: newMemberData.name || '',
+      email: newMemberData.email || '',
+      phone: newMemberData.phone || '',
+      memberType: newMemberData.memberType as 'Student' | 'Faculty' | 'Staff',
+      membershipId: `LIB${String(state.libraryMembers.length + 1).padStart(3, '0')}`,
+      department: newMemberData.department || '',
       joinDate: new Date().toISOString().split('T')[0],
-      status: 'Active' as const,
+      status: 'Active',
       booksIssued: 0,
-      fineAmount: 0,
-      maxBooks: memberData.memberType === 'Faculty' ? 10 : 5
+      maxBooks: newMemberData.memberType === 'Faculty' ? 10 : 5,
+      fineAmount: 0
     };
-    setMembers(prev => [...prev, newMember]);
+    
+    dispatch(actions.addLibraryMember(newMember));
     setIsAddMemberModalOpen(false);
+    setNewMemberData({
+      name: '',
+      email: '',
+      phone: '',
+      memberType: 'Student',
+      department: '',
+    });
+  };
+
+  const handleIssueBook = () => {
+    if (!selectedBook || !selectedMember) return;
+    
+    // Update book available copies
+    const updatedBook = {
+      ...selectedBook,
+      availableCopies: selectedBook.availableCopies - 1,
+      status: selectedBook.availableCopies <= 1 ? 'Out of Stock' : 
+              selectedBook.availableCopies <= 3 ? 'Limited' : 'Available'
+    };
+    
+    // Update member books issued
+    const updatedMember = {
+      ...selectedMember,
+      booksIssued: selectedMember.booksIssued + 1
+    };
+    
+    // Create transaction
+    const newTransaction: LibraryTransaction = {
+      id: Date.now().toString(),
+      bookId: selectedBook.id,
+      bookTitle: selectedBook.title,
+      memberId: selectedMember.id,
+      memberName: selectedMember.name,
+      memberType: selectedMember.memberType,
+      issueDate: new Date().toISOString().split('T')[0],
+      dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      status: 'Issued',
+      fine: 0,
+      issuedBy: user?.name || 'Librarian'
+    };
+    
+    dispatch(actions.updateLibraryBook(updatedBook));
+    dispatch(actions.updateLibraryMember(updatedMember));
+    dispatch(actions.addLibraryTransaction(newTransaction));
+    
+    setIsIssueBookModalOpen(false);
+    setSelectedBook(null);
+    setSelectedMember(null);
+  };
+
+  const handleBookInputChange = (field: keyof LibraryBook, value: any) => {
+    setNewBookData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleMemberInputChange = (field: keyof LibraryMember, value: any) => {
+    setNewMemberData(prev => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -507,7 +421,7 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Transactions</h3>
                 <div className="space-y-4">
-                  {transactions.slice(0, 5).map((transaction) => (
+                  {state.libraryTransactions.slice(0, 5).map((transaction) => (
                     <div key={transaction.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div className="flex items-center space-x-3">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
@@ -535,7 +449,7 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Category Distribution</h3>
                 <div className="space-y-3">
                   {categories.slice(0, 6).map((category, index) => {
-                    const categoryBooks = books.filter(book => book.category === category).length;
+                    const categoryBooks = state.libraryBooks.filter(book => book.category === category).length;
                     const percentage = totalBooks > 0 ? (categoryBooks / totalBooks) * 100 : 0;
                     return (
                       <div key={category} className="flex items-center justify-between">
@@ -610,7 +524,7 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
 
             {/* Books Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {books.map((book) => (
+              {state.libraryBooks.map((book) => (
                 <div key={book.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
                   <div className="flex items-center justify-between mb-4">
                     <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(book.status)}`}>
@@ -698,7 +612,7 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {members.map((member) => (
+                    {state.libraryMembers.map((member) => (
                       <tr key={member.id} className="hover:bg-gray-50 transition-colors">
                         <td className="py-4 px-6">
                           <div className="flex items-center space-x-3">
@@ -775,7 +689,7 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {transactions.map((transaction) => (
+                    {state.libraryTransactions.map((transaction) => (
                       <tr key={transaction.id} className="hover:bg-gray-50 transition-colors">
                         <td className="py-4 px-6">
                           <p className="font-semibold text-gray-900">{transaction.bookTitle}</p>
@@ -879,11 +793,11 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                   <p className="text-sm text-gray-600">Utilization Rate</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-purple-600">{(members.reduce((sum, m) => sum + m.booksIssued, 0) / activeMembers).toFixed(1)}</p>
+                  <p className="text-2xl font-bold text-purple-600">{(state.libraryMembers.reduce((sum, m) => sum + m.booksIssued, 0) / activeMembers || 0).toFixed(1)}</p>
                   <p className="text-sm text-gray-600">Avg Books/Member</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-orange-600">{((overdueBooks / issuedBooks) * 100).toFixed(1)}%</p>
+                  <p className="text-2xl font-bold text-orange-600">{((overdueBooks / issuedBooks) * 100 || 0).toFixed(1)}%</p>
                   <p className="text-sm text-gray-600">Overdue Rate</p>
                 </div>
               </div>
@@ -916,6 +830,8 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Book Title *</label>
                     <input
                       type="text"
+                      value={newBookData.title}
+                      onChange={(e) => handleBookInputChange('title', e.target.value)}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                       placeholder="Enter book title"
                       required
@@ -925,6 +841,8 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Author *</label>
                     <input
                       type="text"
+                      value={newBookData.author}
+                      onChange={(e) => handleBookInputChange('author', e.target.value)}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                       placeholder="Enter author name"
                       required
@@ -937,6 +855,8 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                     <label className="block text-sm font-medium text-gray-700 mb-2">ISBN *</label>
                     <input
                       type="text"
+                      value={newBookData.isbn}
+                      onChange={(e) => handleBookInputChange('isbn', e.target.value)}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                       placeholder="978-0123456789"
                       required
@@ -944,7 +864,12 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Category *</label>
-                    <select className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent" required>
+                    <select 
+                      value={newBookData.category}
+                      onChange={(e) => handleBookInputChange('category', e.target.value)}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent" 
+                      required
+                    >
                       <option value="">Select Category</option>
                       {categories.map(category => (
                         <option key={category} value={category}>{category}</option>
@@ -958,6 +883,8 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Publisher</label>
                     <input
                       type="text"
+                      value={newBookData.publisher}
+                      onChange={(e) => handleBookInputChange('publisher', e.target.value)}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                       placeholder="Publisher name"
                     />
@@ -966,6 +893,8 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Publish Year</label>
                     <input
                       type="number"
+                      value={newBookData.publishYear}
+                      onChange={(e) => handleBookInputChange('publishYear', parseInt(e.target.value))}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                       placeholder="2024"
                       min="1900"
@@ -976,6 +905,8 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Total Copies *</label>
                     <input
                       type="number"
+                      value={newBookData.totalCopies}
+                      onChange={(e) => handleBookInputChange('totalCopies', parseInt(e.target.value))}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                       placeholder="1"
                       min="1"
@@ -988,6 +919,8 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Location *</label>
                   <input
                     type="text"
+                    value={newBookData.location}
+                    onChange={(e) => handleBookInputChange('location', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                     placeholder="e.g., CS Section - A1"
                     required
@@ -1003,7 +936,10 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
               >
                 Cancel
               </button>
-              <button className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
+              <button 
+                onClick={handleAddBook}
+                className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+              >
                 Add Book
               </button>
             </div>
@@ -1035,6 +971,8 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
                     <input
                       type="text"
+                      value={newMemberData.name}
+                      onChange={(e) => handleMemberInputChange('name', e.target.value)}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                       placeholder="Enter full name"
                       required
@@ -1044,6 +982,8 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Email *</label>
                     <input
                       type="email"
+                      value={newMemberData.email}
+                      onChange={(e) => handleMemberInputChange('email', e.target.value)}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                       placeholder="email@college.edu"
                       required
@@ -1056,6 +996,8 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Phone *</label>
                     <input
                       type="tel"
+                      value={newMemberData.phone}
+                      onChange={(e) => handleMemberInputChange('phone', e.target.value)}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                       placeholder="+1-555-0123"
                       required
@@ -1063,7 +1005,12 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Member Type *</label>
-                    <select className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent" required>
+                    <select 
+                      value={newMemberData.memberType}
+                      onChange={(e) => handleMemberInputChange('memberType', e.target.value)}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent" 
+                      required
+                    >
                       <option value="">Select Type</option>
                       <option value="Student">Student</option>
                       <option value="Faculty">Faculty</option>
@@ -1074,7 +1021,12 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Department *</label>
-                  <select className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent" required>
+                  <select 
+                    value={newMemberData.department}
+                    onChange={(e) => handleMemberInputChange('department', e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent" 
+                    required
+                  >
                     <option value="">Select Department</option>
                     {categories.map(dept => (
                       <option key={dept} value={dept}>{dept}</option>
@@ -1091,8 +1043,118 @@ export default function LibraryDashboard({ user }: LibraryDashboardProps) {
               >
                 Cancel
               </button>
-              <button className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
+              <button 
+                onClick={handleAddMember}
+                className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+              >
                 Register Member
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Issue Book Modal */}
+      {isIssueBookModalOpen && canManageLibrary && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
+              <div className="flex items-center space-x-3">
+                <Bookmark className="h-6 w-6" />
+                <h2 className="text-xl font-semibold">Issue Book</h2>
+              </div>
+              <button
+                onClick={() => setIsIssueBookModalOpen(false)}
+                className="text-white/80 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-6">
+              <form className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Select Book *</label>
+                  <select 
+                    value={selectedBook?.id || ''}
+                    onChange={(e) => {
+                      const book = state.libraryBooks.find(b => b.id === e.target.value);
+                      setSelectedBook(book || null);
+                    }}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    required
+                  >
+                    <option value="">Select a book</option>
+                    {state.libraryBooks
+                      .filter(book => book.availableCopies > 0)
+                      .map(book => (
+                        <option key={book.id} value={book.id}>
+                          {book.title} by {book.author} ({book.availableCopies} available)
+                        </option>
+                      ))
+                    }
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Select Member *</label>
+                  <select 
+                    value={selectedMember?.id || ''}
+                    onChange={(e) => {
+                      const member = state.libraryMembers.find(m => m.id === e.target.value);
+                      setSelectedMember(member || null);
+                    }}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    required
+                  >
+                    <option value="">Select a member</option>
+                    {state.libraryMembers
+                      .filter(member => member.status === 'Active' && member.booksIssued < member.maxBooks)
+                      .map(member => (
+                        <option key={member.id} value={member.id}>
+                          {member.name} ({member.memberType}) - {member.booksIssued}/{member.maxBooks} books
+                        </option>
+                      ))
+                    }
+                  </select>
+                </div>
+                
+                {selectedBook && selectedMember && (
+                  <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium text-gray-700">Book:</span>
+                      <span className="text-sm text-gray-900">{selectedBook.title}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium text-gray-700">Member:</span>
+                      <span className="text-sm text-gray-900">{selectedMember.name}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium text-gray-700">Issue Date:</span>
+                      <span className="text-sm text-gray-900">{new Date().toLocaleDateString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium text-gray-700">Due Date:</span>
+                      <span className="text-sm text-gray-900">{new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString()}</span>
+                    </div>
+                  </div>
+                )}
+              </form>
+            </div>
+            
+            <div className="flex justify-end space-x-3 p-6 border-t border-gray-200 bg-gray-50">
+              <button
+                onClick={() => setIsIssueBookModalOpen(false)}
+                className="px-6 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleIssueBook}
+                disabled={!selectedBook || !selectedMember}
+                className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+              >
+                Issue Book
               </button>
             </div>
           </div>

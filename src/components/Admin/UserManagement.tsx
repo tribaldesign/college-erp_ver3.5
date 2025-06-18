@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Users, 
   Plus, 
@@ -22,6 +22,7 @@ import {
   Download,
   Upload
 } from 'lucide-react';
+import { useAppContext, actions } from '../../context/AppContext';
 
 interface User {
   id: string;
@@ -55,6 +56,7 @@ interface UserFormData {
 }
 
 export default function UserManagement() {
+  const { state, dispatch } = useAppContext();
   const [users, setUsers] = useState<User[]>([
     {
       id: '1',
@@ -96,6 +98,16 @@ export default function UserManagement() {
       createdDate: '2024-01-15'
     }
   ]);
+
+  // Sync with global state
+  useEffect(() => {
+    if (state.users && state.users.length > 0) {
+      setUsers(state.users);
+    } else {
+      // Initialize global state with local users
+      dispatch({ type: 'SYNC_DATA', payload: { users } });
+    }
+  }, [state.users, dispatch]);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('');
@@ -192,7 +204,7 @@ export default function UserManagement() {
       createdDate: new Date().toISOString().split('T')[0]
     };
 
-    setUsers(prev => [...prev, newUser]);
+    dispatch(actions.addUser(newUser));
     setIsAddModalOpen(false);
     setFormData({
       name: '',
@@ -231,12 +243,13 @@ export default function UserManagement() {
       return;
     }
 
-    setUsers(prev => prev.map(user => 
-      user.id === passwordData.userId 
-        ? { ...user, hasPassword: true, status: 'Active' as const }
-        : user
-    ));
+    const updatedUser = {
+      ...selectedUser,
+      hasPassword: true,
+      status: 'Active' as const
+    };
 
+    dispatch(actions.updateUser(updatedUser));
     setIsPasswordModalOpen(false);
     setPasswordData({
       userId: '',
@@ -250,7 +263,7 @@ export default function UserManagement() {
 
   const handleDeleteUser = (userId: string) => {
     if (window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
-      setUsers(prev => prev.filter(user => user.id !== userId));
+      dispatch(actions.deleteUser(userId));
     }
   };
 

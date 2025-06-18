@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Mail, Phone, MapPin, Calendar, User, Save, Edit3, GraduationCap, BookOpen, Award, Clock } from 'lucide-react';
 import { Student } from '../../types';
 
@@ -7,11 +7,12 @@ interface StudentModalProps {
   isOpen: boolean;
   onClose: () => void;
   mode: 'view' | 'edit' | 'add';
+  onSave?: (student: Student) => void;
 }
 
-export default function StudentModal({ student, isOpen, onClose, mode }: StudentModalProps) {
+export default function StudentModal({ student, isOpen, onClose, mode, onSave }: StudentModalProps) {
   const [activeTab, setActiveTab] = useState('personal');
-  const [formData, setFormData] = useState(student || {
+  const [formData, setFormData] = useState<Student>(student || {
     id: '',
     name: '',
     email: '',
@@ -24,8 +25,47 @@ export default function StudentModal({ student, isOpen, onClose, mode }: Student
     parentContact: '',
     admissionDate: '',
     status: 'Active' as const,
-    gpa: 0
+    gpa: 0,
+    idNumber: '',
+    bloodType: '',
+    age: 0,
+    homeAddress: '',
+    presentAddress: '',
+    country: 'United States',
+    subjectsTaken: [],
+    facultyMembers: []
   });
+
+  useEffect(() => {
+    if (student) {
+      setFormData(student);
+    } else {
+      // Reset form for add mode
+      setFormData({
+        id: '',
+        name: '',
+        email: '',
+        phone: '',
+        rollNumber: '',
+        department: '',
+        semester: 1,
+        dateOfBirth: '',
+        address: '',
+        parentContact: '',
+        admissionDate: new Date().toISOString().split('T')[0],
+        status: 'Active',
+        gpa: 0,
+        idNumber: '',
+        bloodType: '',
+        age: 0,
+        homeAddress: '',
+        presentAddress: '',
+        country: 'United States',
+        subjectsTaken: [],
+        facultyMembers: []
+      });
+    }
+  }, [student, isOpen]);
 
   if (!isOpen) return null;
 
@@ -33,8 +73,15 @@ export default function StudentModal({ student, isOpen, onClose, mode }: Student
   const title = mode === 'add' ? 'Add New Student' : 
                mode === 'edit' ? 'Edit Student' : 'Student Profile';
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: keyof Student, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (onSave) {
+      onSave(formData);
+    }
   };
 
   const tabs = [
@@ -44,7 +91,7 @@ export default function StudentModal({ student, isOpen, onClose, mode }: Student
     { id: 'performance', label: 'Performance', icon: Award },
   ];
 
-  // Mock academic data
+  // Mock data for student performance and courses
   const academicHistory = [
     { semester: 1, gpa: 3.6, credits: 18, status: 'Completed' },
     { semester: 2, gpa: 3.8, credits: 20, status: 'Completed' },
@@ -376,7 +423,7 @@ export default function StudentModal({ student, isOpen, onClose, mode }: Student
             </div>
           ) : (
             // Form for Add/Edit modes
-            <form className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -388,6 +435,7 @@ export default function StudentModal({ student, isOpen, onClose, mode }: Student
                     onChange={(e) => handleInputChange('name', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                     placeholder="Enter full name"
+                    required
                   />
                 </div>
                 <div>
@@ -400,6 +448,7 @@ export default function StudentModal({ student, isOpen, onClose, mode }: Student
                     onChange={(e) => handleInputChange('rollNumber', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                     placeholder="e.g., CS21001"
+                    required
                   />
                 </div>
               </div>
@@ -415,6 +464,7 @@ export default function StudentModal({ student, isOpen, onClose, mode }: Student
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                     placeholder="student@college.edu"
+                    required
                   />
                 </div>
                 <div>
@@ -427,6 +477,7 @@ export default function StudentModal({ student, isOpen, onClose, mode }: Student
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                     placeholder="+1-555-0123"
+                    required
                   />
                 </div>
               </div>
@@ -440,13 +491,17 @@ export default function StudentModal({ student, isOpen, onClose, mode }: Student
                     value={formData.department}
                     onChange={(e) => handleInputChange('department', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    required
                   >
                     <option value="">Select Department</option>
                     <option value="Computer Science">Computer Science</option>
-                    <option value="Electrical Engineering">Electrical Engineering</option>
-                    <option value="Mechanical Engineering">Mechanical Engineering</option>
-                    <option value="Civil Engineering">Civil Engineering</option>
-                    <option value="Chemical Engineering">Chemical Engineering</option>
+                    <option value="Political Science">Political Science</option>
+                    <option value="English">English</option>
+                    <option value="History">History</option>
+                    <option value="Education">Education</option>
+                    <option value="Sociology">Sociology</option>
+                    <option value="Economics">Economics</option>
+                    <option value="Geography">Geography</option>
                   </select>
                 </div>
                 <div>
@@ -457,6 +512,7 @@ export default function StudentModal({ student, isOpen, onClose, mode }: Student
                     value={formData.semester}
                     onChange={(e) => handleInputChange('semester', parseInt(e.target.value))}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    required
                   >
                     <option value="">Select Semester</option>
                     {[1,2,3,4,5,6,7,8].map(sem => (
@@ -476,6 +532,7 @@ export default function StudentModal({ student, isOpen, onClose, mode }: Student
                     value={formData.dateOfBirth}
                     onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    required
                   />
                 </div>
                 <div>
@@ -487,6 +544,7 @@ export default function StudentModal({ student, isOpen, onClose, mode }: Student
                     value={formData.admissionDate}
                     onChange={(e) => handleInputChange('admissionDate', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    required
                   />
                 </div>
               </div>
@@ -501,6 +559,7 @@ export default function StudentModal({ student, isOpen, onClose, mode }: Student
                   rows={3}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   placeholder="Enter complete address"
+                  required
                 />
               </div>
 
@@ -515,6 +574,7 @@ export default function StudentModal({ student, isOpen, onClose, mode }: Student
                     onChange={(e) => handleInputChange('parentContact', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                     placeholder="+1-555-0123"
+                    required
                   />
                 </div>
                 <div>
@@ -525,6 +585,7 @@ export default function StudentModal({ student, isOpen, onClose, mode }: Student
                     value={formData.status}
                     onChange={(e) => handleInputChange('status', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    required
                   >
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
@@ -532,6 +593,24 @@ export default function StudentModal({ student, isOpen, onClose, mode }: Student
                   </select>
                 </div>
               </div>
+
+              {mode === 'edit' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    GPA
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.gpa}
+                    onChange={(e) => handleInputChange('gpa', parseFloat(e.target.value))}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    placeholder="0.0"
+                    min="0"
+                    max="4.0"
+                    step="0.1"
+                  />
+                </div>
+              )}
             </form>
           )}
         </div>
@@ -547,6 +626,7 @@ export default function StudentModal({ student, isOpen, onClose, mode }: Student
           {!isViewMode && (
             <button
               type="submit"
+              onClick={handleSubmit}
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 transition-colors"
             >
               <Save className="h-4 w-4" />
