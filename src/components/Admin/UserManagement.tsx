@@ -21,7 +21,8 @@ import {
   AlertCircle,
   Download,
   Upload,
-  Bell
+  Bell,
+  BookOpen
 } from 'lucide-react';
 import { useAppContext, actions } from '../../context/AppContext';
 import { Link } from 'react-router-dom';
