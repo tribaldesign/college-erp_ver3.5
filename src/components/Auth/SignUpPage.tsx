@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, User, Phone, GraduationCap, Users, ArrowLeft, Check, School } from 'lucide-react';
+import { Mail, User, Phone, GraduationCap, Users, ArrowLeft, Check } from 'lucide-react';
 
 interface SignUpPageProps {
   onSignUp: (userData: any) => void;
@@ -79,9 +79,18 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
         <div className="hidden lg:block space-y-8">
           <div className="text-center lg:text-left">
             <div className="flex items-center justify-center lg:justify-start space-x-3 mb-6">
-               <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <School className="h-6 w-6 text-white" />
-                </div>
+              <div className="w-12 h-12 rounded-lg overflow-hidden flex items-center justify-center">
+                <img 
+                  src="https://i.ibb.co/1GyxzVc0/logo.png" 
+                  alt="St. Dominic's College Logo" 
+                  className="w-full h-full object-contain"
+                  onError={(e) => {
+                    // Fallback to a colored div if image fails to load
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.parentElement!.innerHTML = '<div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">SD</div>';
+                  }}
+                />
+              </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">St. Dominic's College</h1>
                 <p className="text-gray-600">College ERP System</p>
@@ -162,8 +171,17 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
             {/* Mobile Header */}
             <div className="lg:hidden text-center mb-6">
               <div className="flex items-center justify-center space-x-3 mb-4">
-                <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <School className="h-6 w-6 text-white" />
+                <div className="w-12 h-12 rounded-lg overflow-hidden flex items-center justify-center">
+                  <img 
+                    src="https://i.ibb.co/1GyxzVc0/logo.png" 
+                    alt="St. Dominic's College Logo" 
+                    className="w-full h-full object-contain"
+                    onError={(e) => {
+                      // Fallback to a colored div if image fails to load
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.parentElement!.innerHTML = '<div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">SD</div>';
+                    }}
+                  />
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">St. Dominic's College</h1>
