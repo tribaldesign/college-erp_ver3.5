@@ -82,8 +82,6 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
               <div className="w-12 h-12 rounded-lg overflow-hidden flex items-center justify-center">
                 <img
                   img src="https://i.ibb.co/1GyxzVc0/logo.png" alt="logo" border="0"
-                  alt="St. Dominic's College Logo" 
-                  className="w-full h-full object-contain"
                   onError={(e) => {
                     // Fallback to a colored div if image fails to load
                     e.currentTarget.style.display = 'none';
