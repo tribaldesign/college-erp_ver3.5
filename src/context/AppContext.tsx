@@ -12,6 +12,7 @@ interface AppState {
   libraryMembers: LibraryMember[];
   libraryTransactions: LibraryTransaction[];
   users: any[];
+  signupRequests: any[];
   currentUser: any;
   notifications: Notification[];
   lastUpdated: string;
@@ -53,6 +54,9 @@ type AppAction =
   | { type: 'ADD_USER'; payload: any }
   | { type: 'UPDATE_USER'; payload: any }
   | { type: 'DELETE_USER'; payload: string }
+  | { type: 'ADD_SIGNUP_REQUEST'; payload: any }
+  | { type: 'UPDATE_SIGNUP_REQUEST'; payload: any }
+  | { type: 'DELETE_SIGNUP_REQUEST'; payload: string }
   | { type: 'ADD_NOTIFICATION'; payload: Notification }
   | { type: 'MARK_NOTIFICATION_READ'; payload: string }
   | { type: 'CLEAR_NOTIFICATIONS'; payload?: void }
@@ -128,6 +132,7 @@ const initialState: AppState = {
     }
   ],
   users: [],
+  signupRequests: [],
   currentUser: null,
   notifications: [],
   lastUpdated: new Date().toISOString()
@@ -470,6 +475,32 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
         }]
       };
 
+    case 'ADD_SIGNUP_REQUEST':
+      return { 
+        ...newState, 
+        signupRequests: [...state.signupRequests, action.payload],
+        notifications: [...state.notifications, {
+          id: Date.now().toString(),
+          type: 'info',
+          title: 'New Signup Request',
+          message: `${action.payload.firstName} ${action.payload.lastName} has requested account access`,
+          timestamp: new Date().toISOString(),
+          read: false
+        }]
+      };
+
+    case 'UPDATE_SIGNUP_REQUEST':
+      return { 
+        ...newState, 
+        signupRequests: state.signupRequests.map(r => r.id === action.payload.id ? action.payload : r)
+      };
+
+    case 'DELETE_SIGNUP_REQUEST':
+      return { 
+        ...newState, 
+        signupRequests: state.signupRequests.filter(r => r.id !== action.payload)
+      };
+
     case 'ADD_NOTIFICATION':
       return { 
         ...newState, 
@@ -522,6 +553,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       libraryMembers: state.libraryMembers,
       libraryTransactions: state.libraryTransactions,
       users: state.users,
+      signupRequests: state.signupRequests,
       notifications: state.notifications,
       lastUpdated: state.lastUpdated
     };
@@ -583,6 +615,9 @@ export const actions = {
   addUser: (user: any) => ({ type: 'ADD_USER' as const, payload: user }),
   updateUser: (user: any) => ({ type: 'UPDATE_USER' as const, payload: user }),
   deleteUser: (id: string) => ({ type: 'DELETE_USER' as const, payload: id }),
+  addSignupRequest: (request: any) => ({ type: 'ADD_SIGNUP_REQUEST' as const, payload: request }),
+  updateSignupRequest: (request: any) => ({ type: 'UPDATE_SIGNUP_REQUEST' as const, payload: request }),
+  deleteSignupRequest: (id: string) => ({ type: 'DELETE_SIGNUP_REQUEST' as const, payload: id }),
   addNotification: (notification: Notification) => ({ type: 'ADD_NOTIFICATION' as const, payload: notification }),
   markNotificationRead: (id: string) => ({ type: 'MARK_NOTIFICATION_READ' as const, payload: id }),
   clearNotifications: () => ({ type: 'CLEAR_NOTIFICATIONS' as const })

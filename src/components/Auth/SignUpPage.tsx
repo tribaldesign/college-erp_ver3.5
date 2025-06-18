@@ -20,9 +20,55 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
     agreeToTerms: false
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [phoneError, setPhoneError] = useState('');
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    
+    // Validate Indian phone number
+    if (field === 'phone') {
+      validateIndianPhone(value);
+    }
+  };
+
+  const validateIndianPhone = (phone: string) => {
+    // Remove all non-digit characters
+    const cleanPhone = phone.replace(/\D/g, '');
+    
+    // Indian phone number patterns:
+    // Mobile: 10 digits starting with 6,7,8,9
+    // Landline: 10-11 digits with STD codes
+    const mobilePattern = /^[6-9]\d{9}$/;
+    const landlinePattern = /^0?[1-9]\d{8,9}$/;
+    
+    if (cleanPhone.length === 0) {
+      setPhoneError('');
+      return;
+    }
+    
+    if (cleanPhone.length === 10 && mobilePattern.test(cleanPhone)) {
+      setPhoneError('');
+      return;
+    }
+    
+    if ((cleanPhone.length === 10 || cleanPhone.length === 11) && landlinePattern.test(cleanPhone)) {
+      setPhoneError('');
+      return;
+    }
+    
+    setPhoneError('Please enter a valid Indian phone number (10 digits starting with 6,7,8,9 for mobile)');
+  };
+
+  const formatPhoneNumber = (phone: string) => {
+    // Remove all non-digit characters
+    const cleanPhone = phone.replace(/\D/g, '');
+    
+    // Format as +91-XXXXX-XXXXX for mobile numbers
+    if (cleanPhone.length === 10 && /^[6-9]/.test(cleanPhone)) {
+      return `+91-${cleanPhone.slice(0, 5)}-${cleanPhone.slice(5)}`;
+    }
+    
+    return phone;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,11 +78,24 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
       return;
     }
 
+    if (phoneError) {
+      alert('Please fix the phone number error before submitting.');
+      return;
+    }
+
     setIsLoading(true);
     
     // Simulate API call
     setTimeout(() => {
-      onSignUp(formData);
+      const signupRequest = {
+        ...formData,
+        phone: formatPhoneNumber(formData.phone),
+        status: 'pending_approval',
+        submittedAt: new Date().toISOString(),
+        id: Date.now().toString()
+      };
+      
+      onSignUp(signupRequest);
       setIsLoading(false);
     }, 2000);
   };
@@ -54,7 +113,9 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
     'Education',
     'Sociology',
     'Economics',
-    'Geography'
+    'Geography',
+    'Library',
+    'Staff'
   ];
 
   const isStepValid = () => {
@@ -62,7 +123,7 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
       case 1:
         return formData.userType && formData.firstName && formData.lastName && formData.email;
       case 2:
-        return formData.phone;
+        return formData.phone && !phoneError;
       case 3:
         return formData.department && 
                (formData.userType === 'student' ? formData.rollNumber : formData.employeeId) &&
@@ -295,7 +356,7 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
                   {/* Phone */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone Number
+                      Phone Number (Indian)
                     </label>
                     <div className="relative">
                       <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -303,11 +364,19 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => handleInputChange('phone', e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors bg-white/50 backdrop-blur-sm"
-                        placeholder="+1-555-0123"
+                        className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors bg-white/50 backdrop-blur-sm ${
+                          phoneError ? 'border-red-300' : 'border-gray-300'
+                        }`}
+                        placeholder="10-digit mobile number (e.g., 9876543210)"
                         required
                       />
                     </div>
+                    {phoneError && (
+                      <p className="text-sm text-red-600 mt-1">{phoneError}</p>
+                    )}
+                    <p className="text-xs text-gray-500 mt-1">
+                      Enter 10-digit mobile number starting with 6, 7, 8, or 9
+                    </p>
                   </div>
 
                   {/* Information Note */}
@@ -319,7 +388,7 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
                       <div>
                         <h4 className="text-sm font-medium text-blue-900 mb-1">Account Credentials</h4>
                         <p className="text-sm text-blue-700">
-                          Your login username and password will be assigned by the administrator after your account is reviewed and approved.
+                          Your login username and password will be assigned by the administrator after your account is reviewed and approved. You will receive an email notification once approved.
                         </p>
                       </div>
                     </div>
@@ -398,7 +467,7 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
                       <div>
                         <h4 className="text-sm font-medium text-green-900 mb-1">Next Steps</h4>
                         <p className="text-sm text-green-700">
-                          After submitting your application, an administrator will review your information and provide you with login credentials via email.
+                          After submitting your application, an administrator will review your information and provide you with login credentials via email. You will also receive a confirmation email shortly.
                         </p>
                       </div>
                     </div>

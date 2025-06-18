@@ -12,6 +12,7 @@ import CourseList from './components/Courses/CourseList';
 import DepartmentList from './components/Departments/DepartmentList';
 import LibraryDashboard from './components/Library/LibraryDashboard';
 import UserManagement from './components/Admin/UserManagement';
+import SignupRequestsPanel from './components/Admin/SignupRequestsPanel';
 import ProfileDashboard from './components/Profile/ProfileDashboard';
 import ScheduleDashboard from './components/Schedule/ScheduleDashboard';
 import AttendanceDashboard from './components/Attendance/AttendanceDashboard';
@@ -205,6 +206,7 @@ function App() {
       case 'departments': return 'Departments';
       case 'library': return 'Library';
       case 'users': return 'User Management';
+      case 'signup-requests': return 'Signup Requests';
       case 'schedule': return 'Schedule & Calendar';
       case 'attendance': return 'Attendance Management';
       case 'reports': return 'Reports & Analytics';
@@ -223,6 +225,7 @@ function App() {
       case 'departments': return 'Manage academic departments and curriculum';
       case 'library': return 'Manage library books, members, and transactions';
       case 'users': return 'Add and manage user accounts with login credentials';
+      case 'signup-requests': return 'Review and approve new user registration requests';
       case 'schedule': return 'Manage class schedules and academic calendar';
       case 'attendance': return 'Track and manage student attendance';
       case 'reports': return 'Generate and view various reports';
@@ -273,6 +276,8 @@ function App() {
         return <LibraryDashboard user={user} />;
       case 'users':
         return <UserManagement />;
+      case 'signup-requests':
+        return <SignupRequestsPanel />;
       case 'schedule':
         return <ScheduleDashboard />;
       case 'attendance':

@@ -20,16 +20,18 @@ import {
   CheckCircle,
   AlertCircle,
   Download,
-  Upload
+  Upload,
+  Bell
 } from 'lucide-react';
 import { useAppContext, actions } from '../../context/AppContext';
+import { Link } from 'react-router-dom';
 
 interface User {
   id: string;
   name: string;
   email: string;
   phone: string;
-  userType: 'student' | 'faculty' | 'admin';
+  userType: 'student' | 'faculty' | 'admin' | 'staff' | 'librarian';
   designation?: string;
   department?: string;
   rollNumber?: string;
@@ -44,7 +46,7 @@ interface UserFormData {
   name: string;
   email: string;
   phone: string;
-  userType: 'student' | 'faculty';
+  userType: 'student' | 'faculty' | 'staff' | 'librarian';
   designation: string;
   department: string;
   rollNumber?: string;
@@ -62,7 +64,7 @@ export default function UserManagement() {
       id: '1',
       name: 'Dr. Sarah Johnson',
       email: 'sarah.johnson@college.edu',
-      phone: '+1-555-0201',
+      phone: '+91-98765-43210',
       userType: 'faculty',
       designation: 'Professor',
       department: 'Computer Science',
@@ -76,7 +78,7 @@ export default function UserManagement() {
       id: '2',
       name: 'Alice Johnson',
       email: 'alice.johnson@college.edu',
-      phone: '+1-555-0101',
+      phone: '+91-87654-32109',
       userType: 'student',
       department: 'Computer Science',
       rollNumber: 'CS21001',
@@ -89,13 +91,41 @@ export default function UserManagement() {
       id: '3',
       name: 'Bob Smith',
       email: 'bob.smith@college.edu',
-      phone: '+1-555-0103',
+      phone: '+91-76543-21098',
       userType: 'student',
       department: 'Political Science',
       rollNumber: 'PS21002',
       status: 'Pending',
       hasPassword: false,
       createdDate: '2024-01-15'
+    },
+    {
+      id: '4',
+      name: 'Rajesh Kumar',
+      email: 'rajesh.kumar@college.edu',
+      phone: '+91-98765-12345',
+      userType: 'librarian',
+      designation: 'Librarian',
+      department: 'Library',
+      employeeId: 'LIB001',
+      status: 'Active',
+      hasPassword: true,
+      lastLogin: '2024-01-14 10:15 AM',
+      createdDate: '2024-01-01'
+    },
+    {
+      id: '5',
+      name: 'Priya Sharma',
+      email: 'priya.sharma@college.edu',
+      phone: '+91-87654-56789',
+      userType: 'staff',
+      designation: 'Administrative Assistant',
+      department: 'Administration',
+      employeeId: 'STF001',
+      status: 'Active',
+      hasPassword: true,
+      lastLogin: '2024-01-15 11:20 AM',
+      createdDate: '2024-01-01'
     }
   ]);
 
@@ -116,6 +146,7 @@ export default function UserManagement() {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState('all');
+  const [signupRequestsCount, setSignupRequestsCount] = useState(0);
 
   const [formData, setFormData] = useState<UserFormData>({
     name: '',
@@ -139,6 +170,14 @@ export default function UserManagement() {
     sendEmail: true
   });
 
+  // Get signup requests count
+  useEffect(() => {
+    if (state.signupRequests) {
+      const pendingCount = state.signupRequests.filter(req => req.status === 'pending_approval').length;
+      setSignupRequestsCount(pendingCount);
+    }
+  }, [state.signupRequests]);
+
   const departments = [
     'Computer Science',
     'Political Science',
@@ -149,7 +188,8 @@ export default function UserManagement() {
     'Economics',
     'Geography',
     'Library',
-    'Administration'
+    'Administration',
+    'Staff'
   ];
 
   const facultyDesignations = [
@@ -180,6 +220,7 @@ export default function UserManagement() {
     const matchesTab = activeTab === 'all' || 
                       (activeTab === 'students' && user.userType === 'student') ||
                       (activeTab === 'faculty' && user.userType === 'faculty') ||
+                      (activeTab === 'staff' && (user.userType === 'staff' || user.userType === 'librarian')) ||
                       (activeTab === 'pending' && user.status === 'Pending');
     return matchesSearch && matchesType && matchesStatus && matchesTab;
   });
@@ -202,10 +243,10 @@ export default function UserManagement() {
       email: formData.email,
       phone: formData.phone,
       userType: formData.userType,
-      designation: formData.userType === 'faculty' ? formData.designation : undefined,
+      designation: formData.userType === 'faculty' || formData.userType === 'staff' || formData.userType === 'librarian' ? formData.designation : undefined,
       department: formData.department,
       rollNumber: formData.userType === 'student' ? formData.rollNumber : undefined,
-      employeeId: formData.userType === 'faculty' ? formData.employeeId : undefined,
+      employeeId: formData.userType !== 'student' ? formData.employeeId : undefined,
       status: 'Active',
       hasPassword: true,
       createdDate: new Date().toISOString().split('T')[0]
@@ -228,7 +269,7 @@ export default function UserManagement() {
       confirmPassword: ''
     });
 
-    alert(`${formData.userType === 'student' ? 'Student' : 'Faculty member'} added successfully with login credentials!`);
+    alert(`${formData.userType === 'student' ? 'Student' : formData.userType === 'faculty' ? 'Faculty member' : formData.userType === 'librarian' ? 'Librarian' : 'Staff member'} added successfully with login credentials!`);
   };
 
   const handleAssignPassword = (user: User) => {
@@ -288,6 +329,8 @@ export default function UserManagement() {
       case 'student': return <GraduationCap className="h-4 w-4" />;
       case 'faculty': return <Users className="h-4 w-4" />;
       case 'admin': return <Shield className="h-4 w-4" />;
+      case 'librarian': return <BookOpen className="h-4 w-4" />;
+      case 'staff': return <Users className="h-4 w-4" />;
       default: return <Users className="h-4 w-4" />;
     }
   };
@@ -296,6 +339,7 @@ export default function UserManagement() {
     { id: 'all', label: 'All Users', count: users.length },
     { id: 'students', label: 'Students', count: users.filter(u => u.userType === 'student').length },
     { id: 'faculty', label: 'Faculty', count: users.filter(u => u.userType === 'faculty').length },
+    { id: 'staff', label: 'Staff', count: users.filter(u => u.userType === 'staff' || u.userType === 'librarian').length },
     { id: 'pending', label: 'Pending', count: users.filter(u => u.status === 'Pending').length }
   ];
 
@@ -360,6 +404,16 @@ export default function UserManagement() {
             <span>Export</span>
           </button>
         </div>
+
+        {signupRequestsCount > 0 && (
+          <button 
+            onClick={() => setActiveTab('signup-requests')}
+            className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors shadow-sm"
+          >
+            <Bell className="h-4 w-4" />
+            <span>Signup Requests ({signupRequestsCount})</span>
+          </button>
+        )}
       </div>
 
       {/* Tabs */}
@@ -411,6 +465,9 @@ export default function UserManagement() {
               <option value="">All Types</option>
               <option value="student">Students</option>
               <option value="faculty">Faculty</option>
+              <option value="staff">Staff</option>
+              <option value="librarian">Librarian</option>
+              <option value="admin">Admin</option>
             </select>
           </div>
 
@@ -560,12 +617,12 @@ export default function UserManagement() {
                 {/* User Type Selection */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-3">User Type</label>
-                  <div className="grid grid-cols-2 gap-3">
-                    {['student', 'faculty'].map((type) => (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {['student', 'faculty', 'staff', 'librarian'].map((type) => (
                       <button
                         key={type}
                         type="button"
-                        onClick={() => handleInputChange('userType', type)}
+                        onClick={() => handleInputChange('userType', type as any)}
                         className={`p-3 rounded-xl border-2 transition-all duration-200 ${
                           formData.userType === type
                             ? 'border-purple-500 bg-purple-50 text-purple-700'
@@ -573,7 +630,10 @@ export default function UserManagement() {
                         }`}
                       >
                         <div className="flex items-center justify-center space-x-2">
-                          {type === 'student' ? <GraduationCap className="h-5 w-5" /> : <Users className="h-5 w-5" />}
+                          {type === 'student' ? <GraduationCap className="h-5 w-5" /> : 
+                           type === 'faculty' ? <Users className="h-5 w-5" /> :
+                           type === 'librarian' ? <BookOpen className="h-5 w-5" /> :
+                           <Users className="h-5 w-5" />}
                           <span className="font-medium capitalize">{type}</span>
                         </div>
                       </button>
@@ -609,15 +669,16 @@ export default function UserManagement() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number (Indian) *</label>
                     <input
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => handleInputChange('phone', e.target.value)}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
-                      placeholder="+1-555-0123"
+                      placeholder="+91-98765-43210"
                       required
                     />
+                    <p className="text-xs text-gray-500 mt-1">Format: +91-XXXXX-XXXXX</p>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Department *</label>
@@ -635,8 +696,8 @@ export default function UserManagement() {
                   </div>
                 </div>
 
-                {/* Faculty-specific fields */}
-                {formData.userType === 'faculty' && (
+                {/* Faculty/Staff/Librarian-specific fields */}
+                {(formData.userType === 'faculty' || formData.userType === 'staff' || formData.userType === 'librarian') && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Designation *</label>
@@ -659,7 +720,7 @@ export default function UserManagement() {
                         value={formData.employeeId}
                         onChange={(e) => handleInputChange('employeeId', e.target.value)}
                         className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
-                        placeholder="e.g., FAC001"
+                        placeholder={`e.g., ${formData.userType === 'faculty' ? 'FAC001' : formData.userType === 'librarian' ? 'LIB001' : 'STF001'}`}
                         required
                       />
                     </div>

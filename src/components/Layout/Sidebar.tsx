@@ -12,7 +12,8 @@ import {
   Building,
   X,
   Library,
-  UserCog
+  UserCog,
+  UserPlus
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -30,6 +31,7 @@ const menuItems = [
   { id: 'departments', label: 'Departments', icon: Building },
   { id: 'library', label: 'Library', icon: Library },
   { id: 'users', label: 'User Management', icon: UserCog, adminOnly: true },
+  { id: 'signup-requests', label: 'Signup Requests', icon: UserPlus, adminOnly: true },
   { id: 'schedule', label: 'Schedule', icon: Calendar },
   { id: 'attendance', label: 'Attendance', icon: ClipboardCheck },
   { id: 'reports', label: 'Reports', icon: BarChart3 },
