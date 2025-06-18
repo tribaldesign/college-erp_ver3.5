@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock, User, Phone, GraduationCap, Users, ArrowLeft, Check } from 'lucide-react';
+import { Mail, User, Phone, GraduationCap, Users, ArrowLeft, Check } from 'lucide-react';
 
 interface SignUpPageProps {
   onSignUp: (userData: any) => void;
@@ -14,15 +14,11 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
     lastName: '',
     email: '',
     phone: '',
-    password: '',
-    confirmPassword: '',
     department: '',
     rollNumber: '',
     employeeId: '',
     agreeToTerms: false
   });
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (field: string, value: any) => {
@@ -66,8 +62,7 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
       case 1:
         return formData.userType && formData.firstName && formData.lastName && formData.email;
       case 2:
-        return formData.phone && formData.password && formData.confirmPassword && 
-               formData.password === formData.confirmPassword && formData.password.length >= 6;
+        return formData.phone;
       case 3:
         return formData.department && 
                (formData.userType === 'student' ? formData.rollNumber : formData.employeeId) &&
@@ -155,7 +150,7 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
             </div>
             <div className="flex justify-between text-xs text-gray-600 mt-2">
               <span>Basic Info</span>
-              <span>Security</span>
+              <span>Contact</span>
               <span>Academic</span>
             </div>
           </div>
@@ -276,7 +271,7 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
                 </>
               )}
 
-              {/* Step 2: Security */}
+              {/* Step 2: Contact Information */}
               {step === 2 && (
                 <>
                   {/* Phone */}
@@ -297,58 +292,19 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
                     </div>
                   </div>
 
-                  {/* Password */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Password
-                    </label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                      <input
-                        type={showPassword ? 'text' : 'password'}
-                        value={formData.password}
-                        onChange={(e) => handleInputChange('password', e.target.value)}
-                        className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors bg-white/50 backdrop-blur-sm"
-                        placeholder="Create a password"
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                      >
-                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                      </button>
+                  {/* Information Note */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <User className="h-3 w-3 text-blue-600" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-medium text-blue-900 mb-1">Account Credentials</h4>
+                        <p className="text-sm text-blue-700">
+                          Your login username and password will be assigned by the administrator after your account is reviewed and approved.
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">Minimum 6 characters</p>
-                  </div>
-
-                  {/* Confirm Password */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Confirm Password
-                    </label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                      <input
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        value={formData.confirmPassword}
-                        onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                        className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors bg-white/50 backdrop-blur-sm"
-                        placeholder="Confirm your password"
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                      >
-                        {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                      </button>
-                    </div>
-                    {formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword && (
-                      <p className="text-xs text-red-500 mt-1">Passwords do not match</p>
-                    )}
                   </div>
                 </>
               )}
@@ -413,6 +369,21 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
                         </button>
                       </span>
                     </label>
+                  </div>
+
+                  {/* Final Note */}
+                  <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Check className="h-3 w-3 text-green-600" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-medium text-green-900 mb-1">Next Steps</h4>
+                        <p className="text-sm text-green-700">
+                          After submitting your application, an administrator will review your information and provide you with login credentials via email.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </>
               )}
