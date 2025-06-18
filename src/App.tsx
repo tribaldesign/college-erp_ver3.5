@@ -10,6 +10,7 @@ import FacultyModal from './components/Faculty/FacultyModal';
 import FacultyDashboard from './components/Faculty/FacultyDashboard';
 import CourseList from './components/Courses/CourseList';
 import DepartmentList from './components/Departments/DepartmentList';
+import LibraryDashboard from './components/Library/LibraryDashboard';
 import ProfileDashboard from './components/Profile/ProfileDashboard';
 import ScheduleDashboard from './components/Schedule/ScheduleDashboard';
 import AttendanceDashboard from './components/Attendance/AttendanceDashboard';
@@ -136,6 +137,7 @@ function App() {
       case 'faculty': return 'Faculty';
       case 'courses': return 'Courses';
       case 'departments': return 'Departments';
+      case 'library': return 'Library';
       case 'schedule': return 'Schedule & Calendar';
       case 'attendance': return 'Attendance Management';
       case 'reports': return 'Reports & Analytics';
@@ -152,6 +154,7 @@ function App() {
       case 'faculty': return 'Manage faculty members and their details';
       case 'courses': return 'Manage course offerings and schedules';
       case 'departments': return 'Manage academic departments and curriculum';
+      case 'library': return 'Manage library books, members, and transactions';
       case 'schedule': return 'Manage class schedules and academic calendar';
       case 'attendance': return 'Track and manage student attendance';
       case 'reports': return 'Generate and view various reports';
@@ -192,6 +195,8 @@ function App() {
         );
       case 'departments':
         return <DepartmentList />;
+      case 'library':
+        return <LibraryDashboard />;
       case 'schedule':
         return <ScheduleDashboard />;
       case 'attendance':

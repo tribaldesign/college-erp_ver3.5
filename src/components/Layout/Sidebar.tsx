@@ -10,7 +10,8 @@ import {
   Settings,
   User,
   Building,
-  X
+  X,
+  Library
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -26,6 +27,7 @@ const menuItems = [
   { id: 'faculty', label: 'Faculty', icon: GraduationCap },
   { id: 'courses', label: 'Courses', icon: BookOpen },
   { id: 'departments', label: 'Departments', icon: Building },
+  { id: 'library', label: 'Library', icon: Library },
   { id: 'schedule', label: 'Schedule', icon: Calendar },
   { id: 'attendance', label: 'Attendance', icon: ClipboardCheck },
   { id: 'reports', label: 'Reports', icon: BarChart3 },
@@ -49,7 +51,7 @@ export default function Sidebar({ activeTab, setActiveTab, user, onClose }: Side
     // Students can only see limited items
     if (user.userType === 'student') {
       return menuItems.filter(item => 
-        ['dashboard', 'courses', 'schedule', 'attendance', 'profile'].includes(item.id)
+        ['dashboard', 'courses', 'library', 'schedule', 'attendance', 'profile'].includes(item.id)
       );
     }
     
