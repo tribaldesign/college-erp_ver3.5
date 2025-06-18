@@ -25,7 +25,6 @@ import {
   BookOpen
 } from 'lucide-react';
 import { useAppContext, actions } from '../../context/AppContext';
-import { Link } from 'react-router-dom';
 
 interface User {
   id: string;
