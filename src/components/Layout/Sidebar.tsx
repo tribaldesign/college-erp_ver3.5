@@ -39,7 +39,7 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
             <GraduationCap className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-900">EduManage</h1>
+            <h1 className="text-xl font-bold text-gray-900">St. Dominic's College</h1>
             <p className="text-sm text-gray-500">College ERP</p>
           </div>
         </div>
