@@ -43,16 +43,16 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
         {/* Left Side - Branding */}
         <div className="hidden lg:block space-y-8">
           <div className="text-center lg:text-left">
-            <div className="flex items-center justify-center lg:justify-start space-x-3 mb-6">
-              <div className="w-12 h-12 rounded-lg overflow-hidden flex items-center justify-center">
+            <div className="flex items-center justify-center lg:justify-start space-x-4 mb-6">
+              <div className="w-20 h-20 rounded-xl overflow-hidden flex items-center justify-center bg-white shadow-lg border border-gray-100">
                 <img 
                   src="https://i.ibb.co/1GyxzVc0/logo.png" 
                   alt="St. Dominic's College Logo" 
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-contain p-2"
                   onError={(e) => {
                     // Fallback to a colored div if image fails to load
                     e.currentTarget.style.display = 'none';
-                    e.currentTarget.parentElement!.innerHTML = '<div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">SD</div>';
+                    e.currentTarget.parentElement!.innerHTML = '<div class="w-20 h-20 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl">SD</div>';
                   }}
                 />
               </div>
@@ -111,15 +111,15 @@ export default function SignInPage({ onSignIn, onSwitchToSignUp }: SignInPagePro
             {/* Mobile Header */}
             <div className="lg:hidden text-center mb-8">
               <div className="flex items-center justify-center space-x-3 mb-4">
-                <div className="w-12 h-12 rounded-lg overflow-hidden flex items-center justify-center">
+                <div className="w-16 h-16 rounded-xl overflow-hidden flex items-center justify-center bg-white shadow-lg border border-gray-100">
                   <img 
                     src="https://i.ibb.co/1GyxzVc0/logo.png" 
                     alt="St. Dominic's College Logo" 
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-contain p-2"
                     onError={(e) => {
                       // Fallback to a colored div if image fails to load
                       e.currentTarget.style.display = 'none';
-                      e.currentTarget.parentElement!.innerHTML = '<div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">SD</div>';
+                      e.currentTarget.parentElement!.innerHTML = '<div class="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-xl">SD</div>';
                     }}
                   />
                 </div>

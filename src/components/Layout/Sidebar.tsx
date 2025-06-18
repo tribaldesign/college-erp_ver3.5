@@ -80,15 +80,15 @@ export default function Sidebar({ activeTab, setActiveTab, user, onClose }: Side
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-lg overflow-hidden flex items-center justify-center">
+            <div className="w-16 h-16 rounded-lg overflow-hidden flex items-center justify-center bg-white shadow-sm border border-gray-100">
               <img 
                 src="https://i.ibb.co/1GyxzVc0/logo.png" 
                 alt="St. Dominic's College Logo" 
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain p-1"
                 onError={(e) => {
                   // Fallback to a colored div if image fails to load
                   e.currentTarget.style.display = 'none';
-                  e.currentTarget.parentElement!.innerHTML = '<div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">SD</div>';
+                  e.currentTarget.parentElement!.innerHTML = '<div class="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">SD</div>';
                 }}
               />
             </div>
