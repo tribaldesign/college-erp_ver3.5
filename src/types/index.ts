@@ -151,3 +151,51 @@ export interface Grade {
   maxScore: number;
   date: string;
 }
+
+// Library Management Types
+export interface LibraryBook {
+  id: string;
+  title: string;
+  author: string;
+  isbn: string;
+  category: string;
+  publisher: string;
+  publishYear: number;
+  totalCopies: number;
+  availableCopies: number;
+  location: string;
+  status: 'Available' | 'Limited' | 'Out of Stock';
+  addedDate: string;
+  addedBy: string;
+}
+
+export interface LibraryMember {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  memberType: 'Student' | 'Faculty' | 'Staff';
+  membershipId: string;
+  department: string;
+  joinDate: string;
+  status: 'Active' | 'Suspended' | 'Expired';
+  booksIssued: number;
+  maxBooks: number;
+  fineAmount: number;
+}
+
+export interface LibraryTransaction {
+  id: string;
+  bookId: string;
+  bookTitle: string;
+  memberId: string;
+  memberName: string;
+  memberType: string;
+  issueDate: string;
+  dueDate: string;
+  returnDate?: string;
+  status: 'Issued' | 'Returned' | 'Overdue';
+  fine: number;
+  issuedBy: string;
+  returnedBy?: string;
+}
