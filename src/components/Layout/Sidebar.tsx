@@ -11,7 +11,8 @@ import {
   User,
   Building,
   X,
-  Library
+  Library,
+  UserCog
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -28,6 +29,7 @@ const menuItems = [
   { id: 'courses', label: 'Courses', icon: BookOpen },
   { id: 'departments', label: 'Departments', icon: Building },
   { id: 'library', label: 'Library', icon: Library },
+  { id: 'users', label: 'User Management', icon: UserCog, adminOnly: true },
   { id: 'schedule', label: 'Schedule', icon: Calendar },
   { id: 'attendance', label: 'Attendance', icon: ClipboardCheck },
   { id: 'reports', label: 'Reports', icon: BarChart3 },
@@ -43,9 +45,9 @@ export default function Sidebar({ activeTab, setActiveTab, user, onClose }: Side
     // Admin can see everything
     if (user.userType === 'admin') return menuItems;
     
-    // Faculty can see most items except settings
+    // Faculty can see most items except settings and user management
     if (user.userType === 'faculty') {
-      return menuItems.filter(item => item.id !== 'settings');
+      return menuItems.filter(item => !item.adminOnly && item.id !== 'settings');
     }
     
     // Students can only see limited items
@@ -55,9 +57,9 @@ export default function Sidebar({ activeTab, setActiveTab, user, onClose }: Side
       );
     }
     
-    // Staff can see most items except settings
+    // Staff can see most items except settings and user management
     if (user.userType === 'staff') {
-      return menuItems.filter(item => item.id !== 'settings');
+      return menuItems.filter(item => !item.adminOnly && item.id !== 'settings');
     }
     
     return menuItems;
@@ -118,6 +120,11 @@ export default function Sidebar({ activeTab, setActiveTab, user, onClose }: Side
                     activeTab === item.id ? 'text-blue-700' : 'text-gray-500'
                   }`} />
                   <span className="font-medium">{item.label}</span>
+                  {item.adminOnly && (
+                    <span className="ml-auto text-xs bg-purple-100 text-purple-600 px-1.5 py-0.5 rounded">
+                      Admin
+                    </span>
+                  )}
                 </button>
               </li>
             );
