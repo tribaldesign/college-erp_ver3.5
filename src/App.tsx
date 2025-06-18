@@ -7,6 +7,7 @@ import StudentList from './components/Students/StudentList';
 import StudentModal from './components/Students/StudentModal';
 import FacultyList from './components/Faculty/FacultyList';
 import FacultyModal from './components/Faculty/FacultyModal';
+import FacultyDashboard from './components/Faculty/FacultyDashboard';
 import CourseList from './components/Courses/CourseList';
 import DepartmentList from './components/Departments/DepartmentList';
 import ProfileDashboard from './components/Profile/ProfileDashboard';
@@ -94,7 +95,7 @@ function App() {
 
   const getPageTitle = () => {
     switch (activeTab) {
-      case 'dashboard': return 'Dashboard';
+      case 'dashboard': return user?.userType === 'faculty' ? 'Faculty Dashboard' : 'Dashboard';
       case 'students': return 'Students';
       case 'faculty': return 'Faculty';
       case 'courses': return 'Courses';
@@ -110,7 +111,7 @@ function App() {
 
   const getPageSubtitle = () => {
     switch (activeTab) {
-      case 'dashboard': return 'Overview of your college management system';
+      case 'dashboard': return user?.userType === 'faculty' ? 'Your teaching overview and course management' : 'Overview of your college management system';
       case 'students': return 'Manage student records and information';
       case 'faculty': return 'Manage faculty members and their details';
       case 'courses': return 'Manage course offerings and schedules';
@@ -127,7 +128,8 @@ function App() {
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <Dashboard />;
+        // Show Faculty Dashboard for faculty users, regular Dashboard for others
+        return user?.userType === 'faculty' ? <FacultyDashboard /> : <Dashboard />;
       case 'students':
         return (
           <StudentList
@@ -165,7 +167,7 @@ function App() {
       case 'settings':
         return <SettingsDashboard />;
       default:
-        return <Dashboard />;
+        return user?.userType === 'faculty' ? <FacultyDashboard /> : <Dashboard />;
     }
   };
 
