@@ -218,7 +218,7 @@ function App() {
 
   const getPageSubtitle = () => {
     switch (activeTab) {
-      case 'dashboard': return user?.userType === 'faculty' ? 'Your teaching overview and course management' : 'Overview of your college management system';
+      case 'dashboard': return user?.userType === 'faculty' ? 'Your teaching overview and course management' : 'Overview of your college management';
       case 'students': return 'Manage student records and information';
       case 'faculty': return 'Manage faculty members and their details';
       case 'courses': return 'Manage course offerings and schedules';
