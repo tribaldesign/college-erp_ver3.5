@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { Student, Faculty, Course, Department, LibraryBook, LibraryMember, LibraryTransaction } from '../types';
-import { mockStudents, mockFaculty, mockCourses, mockDepartments } from '../data/mockData';
 
 // Define the global state interface
 interface AppState {
@@ -64,73 +63,13 @@ type AppAction =
 
 // Initial state
 const initialState: AppState = {
-  students: mockStudents,
-  faculty: mockFaculty,
-  courses: mockCourses,
-  departments: mockDepartments,
-  libraryBooks: [
-    {
-      id: '1',
-      title: 'Introduction to Computer Science',
-      author: 'John Smith',
-      isbn: '978-0123456789',
-      category: 'Computer Science',
-      publisher: 'Tech Publications',
-      publishYear: 2023,
-      totalCopies: 5,
-      availableCopies: 3,
-      location: 'CS Section - A1',
-      status: 'Available',
-      addedDate: '2024-01-01',
-      addedBy: 'Admin'
-    },
-    {
-      id: '2',
-      title: 'Political Theory and Practice',
-      author: 'Jane Doe',
-      isbn: '978-0987654321',
-      category: 'Political Science',
-      publisher: 'Academic Press',
-      publishYear: 2022,
-      totalCopies: 3,
-      availableCopies: 1,
-      location: 'PS Section - B2',
-      status: 'Limited',
-      addedDate: '2024-01-02',
-      addedBy: 'Librarian'
-    }
-  ],
-  libraryMembers: [
-    {
-      id: '1',
-      name: 'Alice Johnson',
-      email: 'alice.johnson@college.edu',
-      phone: '+1-555-0101',
-      memberType: 'Student',
-      membershipId: 'LIB001',
-      department: 'Computer Science',
-      joinDate: '2024-01-01',
-      status: 'Active',
-      booksIssued: 2,
-      maxBooks: 5,
-      fineAmount: 0
-    }
-  ],
-  libraryTransactions: [
-    {
-      id: '1',
-      bookId: '1',
-      bookTitle: 'Introduction to Computer Science',
-      memberId: '1',
-      memberName: 'Alice Johnson',
-      memberType: 'Student',
-      issueDate: '2024-01-10',
-      dueDate: '2024-01-24',
-      status: 'Issued',
-      fine: 0,
-      issuedBy: 'Librarian'
-    }
-  ],
+  students: [],
+  faculty: [],
+  courses: [],
+  departments: [],
+  libraryBooks: [],
+  libraryMembers: [],
+  libraryTransactions: [],
   users: [],
   signupRequests: [],
   currentUser: null,

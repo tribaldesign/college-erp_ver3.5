@@ -13,7 +13,8 @@ import {
   X,
   Library,
   UserCog,
-  UserPlus
+  UserPlus,
+  School
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -84,16 +85,7 @@ export default function Sidebar({ activeTab, setActiveTab, user, onClose }: Side
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="w-16 h-16 rounded-lg overflow-hidden flex items-center justify-center bg-white shadow-sm border border-gray-100">
-              <img 
-                src="https://i.ibb.co/1GyxzVc0/logo.png" 
-                alt="St. Dominic's College Logo" 
-                className="w-full h-full object-contain p-1"
-                onError={(e) => {
-                  // Fallback to a colored div if image fails to load
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.parentElement!.innerHTML = '<div class="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">SD</div>';
-                }}
-              />
+              <School className="w-12 h-12 text-blue-600" />
             </div>
             <div>
               <h1 className="text-xl font-bold text-gray-900">St. Dominic's College</h1>

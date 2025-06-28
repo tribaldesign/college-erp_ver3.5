@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, User, Phone, GraduationCap, Users, ArrowLeft, Check } from 'lucide-react';
+import { Mail, User, Phone, GraduationCap, Users, ArrowLeft, Check, School } from 'lucide-react';
 
 interface SignUpPageProps {
   onSignUp: (userData: any) => void;
@@ -142,16 +142,7 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
             <div className="text-center lg:text-left">
               <div className="flex items-center justify-center lg:justify-start space-x-4 mb-6">
                 <div className="w-20 h-20 rounded-xl overflow-hidden flex items-center justify-center bg-white shadow-lg border border-gray-100">
-                  <img 
-                    src="https://i.ibb.co/1GyxzVc0/logo.png" 
-                    alt="St. Dominic's College Logo" 
-                    className="w-full h-full object-contain p-2"
-                    onError={(e) => {
-                      // Fallback to a colored div if image fails to load
-                      e.currentTarget.style.display = 'none';
-                      e.currentTarget.parentElement!.innerHTML = '<div class="w-20 h-20 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl">SD</div>';
-                    }}
-                  />
+                  <School className="w-16 h-16 text-blue-600" />
                 </div>
                 <div>
                   <h1 className="text-3xl font-bold text-gray-900">St. Dominic's College</h1>
@@ -234,16 +225,7 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
               <div className="lg:hidden text-center mb-6">
                 <div className="flex items-center justify-center space-x-3 mb-4">
                   <div className="w-16 h-16 rounded-xl overflow-hidden flex items-center justify-center bg-white shadow-lg border border-gray-100">
-                    <img 
-                      src="https://i.ibb.co/1GyxzVc0/logo.png" 
-                      alt="St. Dominic's College Logo" 
-                      className="w-full h-full object-contain p-2"
-                      onError={(e) => {
-                        // Fallback to a colored div if image fails to load
-                        e.currentTarget.style.display = 'none';
-                        e.currentTarget.parentElement!.innerHTML = '<div class="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-xl">SD</div>';
-                      }}
-                    />
+                    <School className="w-12 h-12 text-blue-600" />
                   </div>
                   <div>
                     <h1 className="text-2xl font-bold text-gray-900">St. Dominic's College</h1>
@@ -516,7 +498,7 @@ export default function SignUpPage({ onSignUp, onSwitchToSignIn }: SignUpPagePro
       <footer className="bg-white/80 backdrop-blur-sm border-t border-gray-200 py-4 px-6 text-center text-sm text-gray-600">
         <div className="flex flex-col md:flex-row justify-center items-center space-y-2 md:space-y-0 md:space-x-4">
           <div>
-            © 2025 St. Dominic's College. All rights reserved.
+            © {new Date().getFullYear()} St. Dominic's College. All rights reserved.
           </div>
           <div>
             Made by <a href="https://www.tribaldesignsolution.com" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-800 font-medium transition-colors">Tribal Design Solutions</a>

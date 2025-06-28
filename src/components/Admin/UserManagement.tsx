@@ -22,7 +22,8 @@ import {
   Download,
   Upload,
   Bell,
-  BookOpen
+  BookOpen,
+  School
 } from 'lucide-react';
 import { useAppContext, actions } from '../../context/AppContext';
 
@@ -59,85 +60,14 @@ interface UserFormData {
 
 export default function UserManagement() {
   const { state, dispatch } = useAppContext();
-  const [users, setUsers] = useState<User[]>([
-    {
-      id: '1',
-      name: 'Dr. Sarah Johnson',
-      email: 'sarah.johnson@college.edu',
-      phone: '+91-98765-43210',
-      userType: 'faculty',
-      designation: 'Professor',
-      department: 'Computer Science',
-      employeeId: 'FAC001',
-      status: 'Active',
-      hasPassword: true,
-      lastLogin: '2024-01-15 09:30 AM',
-      createdDate: '2024-01-01'
-    },
-    {
-      id: '2',
-      name: 'Alice Johnson',
-      email: 'alice.johnson@college.edu',
-      phone: '+91-87654-32109',
-      userType: 'student',
-      department: 'Computer Science',
-      rollNumber: 'CS21001',
-      status: 'Active',
-      hasPassword: true,
-      lastLogin: '2024-01-15 08:45 AM',
-      createdDate: '2024-01-01'
-    },
-    {
-      id: '3',
-      name: 'Bob Smith',
-      email: 'bob.smith@college.edu',
-      phone: '+91-76543-21098',
-      userType: 'student',
-      department: 'Political Science',
-      rollNumber: 'PS21002',
-      status: 'Pending',
-      hasPassword: false,
-      createdDate: '2024-01-15'
-    },
-    {
-      id: '4',
-      name: 'Rajesh Kumar',
-      email: 'rajesh.kumar@college.edu',
-      phone: '+91-98765-12345',
-      userType: 'librarian',
-      designation: 'Librarian',
-      department: 'Library',
-      employeeId: 'LIB001',
-      status: 'Active',
-      hasPassword: true,
-      lastLogin: '2024-01-14 10:15 AM',
-      createdDate: '2024-01-01'
-    },
-    {
-      id: '5',
-      name: 'Priya Sharma',
-      email: 'priya.sharma@college.edu',
-      phone: '+91-87654-56789',
-      userType: 'staff',
-      designation: 'Administrative Assistant',
-      department: 'Administration',
-      employeeId: 'STF001',
-      status: 'Active',
-      hasPassword: true,
-      lastLogin: '2024-01-15 11:20 AM',
-      createdDate: '2024-01-01'
-    }
-  ]);
+  const [users, setUsers] = useState<User[]>([]);
 
   // Sync with global state
   useEffect(() => {
     if (state.users && state.users.length > 0) {
       setUsers(state.users);
-    } else {
-      // Initialize global state with local users
-      dispatch({ type: 'SYNC_DATA', payload: { users } });
     }
-  }, [state.users, dispatch]);
+  }, [state.users]);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('');
