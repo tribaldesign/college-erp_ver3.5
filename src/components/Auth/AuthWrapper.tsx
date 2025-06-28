@@ -10,11 +10,11 @@ interface AuthWrapperProps {
 
 export default function AuthWrapper({ onAuthenticated }: AuthWrapperProps) {
   const [currentPage, setCurrentPage] = useState<'signin' | 'signup'>('signin');
-  const { dispatch } = useAppContext();
+  const { state, dispatch } = useAppContext();
   const { sendEmailNotification } = useNotifications();
 
   const handleSignIn = (usernameOrEmail: string, password: string, userType: string) => {
-    // Only allow admin login with specific credentials
+    // Admin login with specific credentials
     if (userType === 'admin' && usernameOrEmail === 'admin' && password === 'Tribalde@#53') {
       const user = {
         id: 'admin-1',
@@ -31,10 +31,43 @@ export default function AuthWrapper({ onAuthenticated }: AuthWrapperProps) {
         }
       };
       onAuthenticated(user);
-    } else {
-      // For non-admin users, show error message
-      throw new Error('Invalid credentials. Only admin can sign in. Contact administrator for access.');
+      return;
     }
+    
+    // Student or Faculty login
+    if (userType === 'student' || userType === 'faculty') {
+      // Find user in the users array
+      const user = state.users.find(u => 
+        (u.email === usernameOrEmail || u.username === usernameOrEmail) && 
+        u.userType === userType
+      );
+      
+      if (user && user.password === password && user.status === 'Active') {
+        const authenticatedUser = {
+          ...user,
+          isAuthenticated: true,
+          permissions: {
+            canManageUsers: false,
+            canAssignCredentials: false,
+            canViewAllData: false,
+            canModifySystem: false
+          }
+        };
+        
+        // Update last login time
+        const updatedUser = {
+          ...user,
+          lastLogin: new Date().toLocaleString()
+        };
+        dispatch(actions.updateUser(updatedUser));
+        
+        onAuthenticated(authenticatedUser);
+        return;
+      }
+    }
+    
+    // If we get here, authentication failed
+    throw new Error('Invalid credentials. Please check your username/email and password.');
   };
 
   const handleSignUp = (userData: any) => {

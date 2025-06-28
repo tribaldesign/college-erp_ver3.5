@@ -34,6 +34,19 @@ function App() {
   const [isFacultyModalOpen, setIsFacultyModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  // Check for saved user on mount
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (savedUser) {
+      try {
+        const parsedUser = JSON.parse(savedUser);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error('Error parsing saved user:', error);
+      }
+    }
+  }, []);
+
   // Auto-hide sidebar on mobile/tablet when clicking outside or changing tabs
   useEffect(() => {
     const handleResize = () => {

@@ -49,6 +49,8 @@ export default function SignupRequestsPanel() {
       id: Date.now().toString(),
       name: `${request.firstName} ${request.lastName}`,
       email: request.email,
+      username: request.email.split('@')[0],
+      password: tempPassword,
       phone: request.phone,
       userType: request.userType,
       department: request.department,
@@ -83,7 +85,7 @@ export default function SignupRequestsPanel() {
 Congratulations! Your account has been approved by the administration.
 
 Your login credentials:
-- Username: ${request.email}
+- Username: ${request.email.split('@')[0]}
 - Temporary Password: ${tempPassword}
 - User Type: ${request.userType}
 

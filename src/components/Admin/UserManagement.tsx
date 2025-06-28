@@ -31,6 +31,8 @@ interface User {
   id: string;
   name: string;
   email: string;
+  username?: string;
+  password?: string;
   phone: string;
   userType: 'student' | 'faculty' | 'admin' | 'staff' | 'librarian';
   designation?: string;
@@ -46,6 +48,7 @@ interface User {
 interface UserFormData {
   name: string;
   email: string;
+  username: string;
   phone: string;
   userType: 'student' | 'faculty' | 'staff' | 'librarian';
   designation: string;
@@ -81,6 +84,7 @@ export default function UserManagement() {
   const [formData, setFormData] = useState<UserFormData>({
     name: '',
     email: '',
+    username: '',
     phone: '',
     userType: 'student',
     designation: '',
@@ -156,7 +160,16 @@ export default function UserManagement() {
   });
 
   const handleInputChange = (field: keyof UserFormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => {
+      const newData = { ...prev, [field]: value };
+      
+      // Auto-generate username from email if email changes
+      if (field === 'email' && value) {
+        newData.username = value.split('@')[0];
+      }
+      
+      return newData;
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -171,6 +184,8 @@ export default function UserManagement() {
       id: Date.now().toString(),
       name: formData.name,
       email: formData.email,
+      username: formData.username,
+      password: formData.password,
       phone: formData.phone,
       userType: formData.userType,
       designation: formData.userType === 'faculty' || formData.userType === 'staff' || formData.userType === 'librarian' ? formData.designation : undefined,
@@ -187,6 +202,7 @@ export default function UserManagement() {
     setFormData({
       name: '',
       email: '',
+      username: '',
       phone: '',
       userType: 'student',
       designation: '',
@@ -223,6 +239,7 @@ export default function UserManagement() {
 
     const updatedUser = {
       ...selectedUser,
+      password: passwordData.password,
       hasPassword: true,
       status: 'Active' as const
     };
@@ -443,6 +460,9 @@ export default function UserManagement() {
                       <div>
                         <p className="font-semibold text-gray-900">{user.name}</p>
                         <p className="text-sm text-gray-600">{user.email}</p>
+                        {user.username && (
+                          <p className="text-xs text-gray-500">@{user.username}</p>
+                        )}
                       </div>
                     </div>
                   </td>
@@ -599,6 +619,18 @@ export default function UserManagement() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Username *</label>
+                    <input
+                      type="text"
+                      value={formData.username}
+                      onChange={(e) => handleInputChange('username', e.target.value)}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
+                      placeholder="username"
+                      required
+                    />
+                    <p className="text-xs text-gray-500 mt-1">This will be used for login</p>
+                  </div>
+                  <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number (Indian) *</label>
                     <input
                       type="tel"
@@ -610,6 +642,9 @@ export default function UserManagement() {
                     />
                     <p className="text-xs text-gray-500 mt-1">Format: +91-XXXXX-XXXXX</p>
                   </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Department *</label>
                     <select
@@ -624,11 +659,9 @@ export default function UserManagement() {
                       ))}
                     </select>
                   </div>
-                </div>
 
-                {/* Faculty/Staff/Librarian-specific fields */}
-                {(formData.userType === 'faculty' || formData.userType === 'staff' || formData.userType === 'librarian') && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Faculty/Staff/Librarian-specific fields */}
+                  {(formData.userType === 'faculty' || formData.userType === 'staff' || formData.userType === 'librarian') && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Designation *</label>
                       <select
@@ -643,6 +676,12 @@ export default function UserManagement() {
                         ))}
                       </select>
                     </div>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Faculty/Staff/Librarian-specific fields */}
+                  {(formData.userType === 'faculty' || formData.userType === 'staff' || formData.userType === 'librarian') && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Employee ID *</label>
                       <input
@@ -654,23 +693,23 @@ export default function UserManagement() {
                         required
                       />
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {/* Student-specific fields */}
-                {formData.userType === 'student' && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Roll Number *</label>
-                    <input
-                      type="text"
-                      value={formData.rollNumber}
-                      onChange={(e) => handleInputChange('rollNumber', e.target.value)}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
-                      placeholder="e.g., CS21001"
-                      required
-                    />
-                  </div>
-                )}
+                  {/* Student-specific fields */}
+                  {formData.userType === 'student' && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Roll Number *</label>
+                      <input
+                        type="text"
+                        value={formData.rollNumber}
+                        onChange={(e) => handleInputChange('rollNumber', e.target.value)}
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
+                        placeholder="e.g., CS21001"
+                        required
+                      />
+                    </div>
+                  )}
+                </div>
 
                 {/* Additional Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
