@@ -59,9 +59,10 @@ type AppAction =
   | { type: 'ADD_NOTIFICATION'; payload: Notification }
   | { type: 'MARK_NOTIFICATION_READ'; payload: string }
   | { type: 'CLEAR_NOTIFICATIONS'; payload?: void }
-  | { type: 'SYNC_DATA'; payload: Partial<AppState> };
+  | { type: 'SYNC_DATA'; payload: Partial<AppState> }
+  | { type: 'RESET_ALL_DATA'; payload?: void };
 
-// Initial state
+// Initial state - completely empty for production
 const initialState: AppState = {
   students: [],
   faculty: [],
@@ -466,6 +467,11 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
         ...action.payload
       };
 
+    case 'RESET_ALL_DATA':
+      // Clear localStorage and reset to initial state
+      localStorage.removeItem('collegeERPData');
+      return initialState;
+
     default:
       return state;
   }
@@ -508,6 +514,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         dispatch({ type: 'SYNC_DATA', payload: parsedData });
       } catch (error) {
         console.error('Error loading saved data:', error);
+        // If there's an error loading data, start fresh
+        localStorage.removeItem('collegeERPData');
       }
     }
   }, []);
@@ -559,5 +567,6 @@ export const actions = {
   deleteSignupRequest: (id: string) => ({ type: 'DELETE_SIGNUP_REQUEST' as const, payload: id }),
   addNotification: (notification: Notification) => ({ type: 'ADD_NOTIFICATION' as const, payload: notification }),
   markNotificationRead: (id: string) => ({ type: 'MARK_NOTIFICATION_READ' as const, payload: id }),
-  clearNotifications: () => ({ type: 'CLEAR_NOTIFICATIONS' as const })
+  clearNotifications: () => ({ type: 'CLEAR_NOTIFICATIONS' as const }),
+  resetAllData: () => ({ type: 'RESET_ALL_DATA' as const })
 };
